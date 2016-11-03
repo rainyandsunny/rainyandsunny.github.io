@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>Archives | 小小黄金屋</title>
+  <title>Md语法 | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -84,7 +84,7 @@
 </head>
 
 <!--
-<body class="home-template">
+<body class="post-template">
 -->
 <body id="index" class="lightnav animsition">
 
@@ -191,78 +191,112 @@
         <!-- ============================ Header & Logo bar =========================== -->
 
 
-      <!-- ============================ Hero Image =========================== -->
-
-<section id="hero" class="scrollme">
-    <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
-        <div class="row">
-            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
-                <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
-                    <div>
-                        
-                        <h2>YOU'VE MADE A <span>BRAVE</span> DECISION, WELCOME.</h2>
-                        <p></p>
-                        
-                        <h2></h2>
-                        <p><span><h3>码中自有颜如玉</h3></span></p>
-                        
-
-                    </div>
-                </div>
-            </div>
-            <!-- // .col-md-12 -->
-        </div>
-        <div class="herofade beige-dk"></div>
-    </div>
-</section>
-
-<!-- Height spacing helper -->
-<div class="heightblock"></div>
-<!-- // End height spacing helper -->
-
-<!-- ============================ END Hero Image =========================== -->
-
-
-
-
-<section id="services">
+      
+<section id="intro">
     <div class="container">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="row boxes">
-                    
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2016/11/03/Md使用/">Md语法</a></h4>
-                            
-                            <p><time datetime="2016-11-03T01:24:06.000Z"><a href="/2016/11/03/Md使用/">2016-11-03</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2016/10/09/hello-world/">Hello World</a></h4>
-                            
-                            <p><time datetime="2016-10-09T00:32:04.962Z"><a href="/2016/10/09/hello-world/">2016-10-09</a></time></p>
-                        </div>
-                    
-                </div>
-            </div>    
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2016-11-03T01:24:06.000Z" itemprop="datePublished">
+          2016-11-03
+      </time>
+    
+</span>
+                <h1>Md语法</h1>
+            </div>
         </div>
-    </div>
-</section> 
+        <div class="col-md-8 col-md-offset-2">
+      		<h1 id="MarkDown语法"><a href="#MarkDown语法" class="headerlink" title="MarkDown语法"></a>MarkDown语法</h1><p>用hexo与Github搭建了个个人博客，发现不会md语法。所以先来学习下基本的语法。</p>
+<h2 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h2><ol>
+<li><h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1></li>
+<li><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2></li>
+<li><h2 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h2></li>
+<li>…</li>
+</ol>
+<p>依次类推，总共6个标题，在#号后加一个空格。</p>
+<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>列表的显示只需要在文字前面加上-或者*即可以变为无序列表，有序列表则直接在文字前加1. 2. 3. 其中符号和文字间加一个空格。</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>在文本前加入 &gt; 符号即可。</p>
+<p>例如：</p>
+<blockquote>
+<p>我是引用别人的</p>
+</blockquote>
+<h2 id="图片与链接"><a href="#图片与链接" class="headerlink" title="图片与链接"></a>图片与链接</h2><ol>
+<li>插入图片的语法为：<img src="" alt=""> :其中[]中写图片描述，（）中写图片地址。</li>
+<li>插入链接的语法为：<a href=""></a> :其中[]中写链接描述，（）中写链接地址。</li>
+</ol>
+<p>其中插入图片需要工具，工具的作用就是上传图片然后给我们url地址。常用的工具有：</p>
+<ol>
+<li><a href="https://www.getcloudapp.com/" target="_blank" rel="external">Cloudapp</a></li>
+<li><a href="http://weibotuchuang.sinaapp.com/" target="_blank" rel="external">插件</a></li>
+</ol>
+<h2 id="粗体与斜体"><a href="#粗体与斜体" class="headerlink" title="粗体与斜体"></a>粗体与斜体</h2><p>用<strong>（要粗体显示的部分）</strong></p>
+<p>例如： <strong>我是粗体</strong><br> <em>我是斜体</em> </p>
+<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><table>
+<thead>
+<tr>
+<th style="text-align:left">Tables</th>
+<th style="text-align:center">clown1</th>
+<th style="text-align:right">clown2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:right">5</td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:right">6</td>
+</tr>
+</tbody>
+</table>
+<p>tips：其中：表示对齐方式。“：—-”为左对齐，“：—-：”为居中，“—：”为右对齐。</p>
+<h2 id="代码框"><a href="#代码框" class="headerlink" title="代码框"></a>代码框</h2><p>使用两个``把代码包裹起来。</p>
+<p>例如： </p>
+<p><code>public static void main(String[] args)</code>{</p>
+<pre><code>System.out.println(&quot;Hello World!&quot;);
+</code></pre><p>}</p>
+<h2 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h2><p>使用三个*显示分割线</p>
+<p>例如：  </p>
+<hr>
+<p>基本的语法介绍完毕。</p>
+<p>##推荐工具：</p>
+<p>在线md编辑器：<a href="https://maxiang.io/" target="_blank" rel="external">飞象</a></p>
+<p>windows： <a href="http://www.markdownpad.com/" target="_blank" rel="external">MardDownPad2</a></p>
+<p>我的Github： <a href="https://github.com/rainyandsunny/" target="_blank" rel="external">Github主页</a></p>
 
-<section id="statement">
-    <div class="container text-center wow fadeInUp" data-wow-delay="0.5s">
-        <div class="row">
-            <p>虽然还没想好写点什么，但是总觉得这里放句话比较和谐。</p>
+            <div class="clearfix"></div>
+            <hr class="nogutter">
         </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2016/10/09/hello-world/">
+        Hello World →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2016/11/03/Md使用/" data-title="Md语法" data-url="http://yoursite.com/2016/11/03/Md使用/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"duoshuo_name"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
     </div>
 </section>
+
+
       
 <!-- ============================ Footer =========================== -->
 
