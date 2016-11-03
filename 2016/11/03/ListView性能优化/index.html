@@ -206,11 +206,13 @@
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		<h1 id="ListView性能优化"><a href="#ListView性能优化" class="headerlink" title="ListView性能优化"></a>ListView性能优化</h1><p> ListView是Android中一个很重要的控件，好多信息的展示都是通过ListView。在我们使用listView的时候，需要注意的也很多。特别是在数据特别多的时候，就要求我们更加注重对ListView的优化，以提高性能。下面我将自己使用ListView的三个阶段分享给大家。希望给大家借鉴。</p>
+      		<p>#ListView性能优化</p>
+<p> ListView是Android中一个很重要的控件，好多信息的展示都是通过ListView。在我们使用listView的时候，需要注意的也很多。特别是在数据特别多的时候，就要求我们更加注重对ListView的优化，以提高性能。下面我将自己使用ListView的三个阶段分享给大家。希望给大家借鉴。</p>
 <p>  为了简单说明问题，我在这将listview显示的内容简单化。</p>
 <p>如下图所示：<br><img src="http://og1qqf1es.bkt.clouddn.com/capture.png" alt="listview"></p>
 <p>我们来看下adapter的代码.</p>
-<h3 id="阶段一"><a href="#阶段一" class="headerlink" title="阶段一"></a>阶段一</h3><p><code>class MyAdapter extends BaseAdapter</code>{</p>
+<p>###阶段一</p>
+<p><code>class MyAdapter extends BaseAdapter</code>{</p>
 <pre><code>    @Override
     public int getCount() {
         return mData.size();
@@ -239,7 +241,8 @@
 
 }
 </code></pre><p>第一种这样写过一段时间，但是后来当ListView条目增多的时候，就会出现明显地卡顿，于是意识到需要对listview进行优化。</p>
-<h3 id="阶段二"><a href="#阶段二" class="headerlink" title="阶段二"></a>阶段二</h3><p><code>class MyAdapter extends BaseAdapter</code>{</p>
+<p>###阶段二</p>
+<p><code>class MyAdapter extends BaseAdapter</code>{</p>
 <pre><code>    @Override
     public int getCount() {
         return mData.size();
@@ -274,7 +277,8 @@
 }
 </code></pre><p>基于阶段一，对Listview进行了简单的研究，每当我滑动出现新的条目的时候就会调用getView方法，这样做会导致每次都会重新加载布局。加载布局是个比较耗时的操作，特别是条目较多或者频繁滑动的时候。</p>
 <p>于是观察了下getView中存在三个参数，其中有一个convertView参数，通过查资料知道了，这个参数用来对条目的View进行缓存，当我第一次使用的时候convertView==null，当第二次或者多次调用的时候，convertView！= null。这个时候我们就可以将缓存的view利用起来，避免了重复加载布局引起的性能问题。</p>
-<h3 id="阶段三"><a href="#阶段三" class="headerlink" title="阶段三"></a>阶段三</h3><p><code>class MyAdapter extends BaseAdapter</code>{</p>
+<p>###阶段三</p>
+<p><code>class MyAdapter extends BaseAdapter</code>{</p>
 <pre><code>    @Override
     public int getCount() {
         return mData.size();
