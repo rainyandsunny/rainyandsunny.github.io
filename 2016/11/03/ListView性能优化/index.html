@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>Archives: 2016 | 小小黄金屋</title>
+  <title>ListView性能优化 | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -84,7 +84,7 @@
 </head>
 
 <!--
-<body class="home-template">
+<body class="post-template">
 -->
 <body id="index" class="lightnav animsition">
 
@@ -191,96 +191,165 @@
         <!-- ============================ Header & Logo bar =========================== -->
 
 
-      <!-- ============================ Hero Image =========================== -->
-
-<section id="hero" class="scrollme">
-    <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
-        <div class="row">
-            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
-                <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
-                    <div>
-                        
-                        <h2>YOU'VE MADE A <span>BRAVE</span> DECISION, WELCOME.</h2>
-                        <p></p>
-                        
-                        <h2></h2>
-                        <p><span><h3>码中自有颜如玉</h3></span></p>
-                        
-
-                    </div>
-                </div>
-            </div>
-            <!-- // .col-md-12 -->
-        </div>
-        <div class="herofade beige-dk"></div>
-    </div>
-</section>
-
-<!-- Height spacing helper -->
-<div class="heightblock"></div>
-<!-- // End height spacing helper -->
-
-<!-- ============================ END Hero Image =========================== -->
-
-
-
-
-<section id="services">
+      
+<section id="intro">
     <div class="container">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="row boxes">
-                    
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2016/11/03/ListView性能优化/">ListView性能优化</a></h4>
-                            
-                            <p><time datetime="2016-11-03T02:50:13.000Z"><a href="/2016/11/03/ListView性能优化/">2016-11-03</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2016/11/03/Android内存泄漏相关/">Android内存泄漏相关</a></h4>
-                            
-                            <p><time datetime="2016-11-03T02:47:48.000Z"><a href="/2016/11/03/Android内存泄漏相关/">2016-11-03</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2016/11/03/Md使用/">Md语法</a></h4>
-                            
-                            <p><time datetime="2016-11-03T01:24:06.000Z"><a href="/2016/11/03/Md使用/">2016-11-03</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2016/10/09/hello-world/">Hello World</a></h4>
-                            
-                            <p><time datetime="2016-10-09T00:32:04.962Z"><a href="/2016/10/09/hello-world/">2016-10-09</a></time></p>
-                        </div>
-                    
-                </div>
-            </div>    
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2016-11-03T02:50:13.000Z" itemprop="datePublished">
+          2016-11-03
+      </time>
+    
+</span>
+                <h1>ListView性能优化</h1>
+            </div>
         </div>
-    </div>
-</section> 
+        <div class="col-md-8 col-md-offset-2">
+      		<p>#ListView性能优化</p>
+<p> ListView是Android中一个很重要的控件，好多信息的展示都是通过ListView。在我们使用listView的时候，需要注意的也很多。特别是在数据特别多的时候，就要求我们更加注重对ListView的优化，以提高性能。下面我将自己使用ListView的三个阶段分享给大家。希望给大家借鉴。</p>
+<p>  为了简单说明问题，我在这将listview显示的内容简单化。</p>
+<p>如下图所示：<br><img src="http://og1qqf1es.bkt.clouddn.com/capture.png" alt="listview"></p>
+<p>我们来看下adapter的代码.</p>
+<p>###阶段一</p>
+<p><code>class MyAdapter extends BaseAdapter</code>{</p>
+<pre><code>    @Override
+    public int getCount() {
+        return mData.size();
+    }
 
-<section id="statement">
-    <div class="container text-center wow fadeInUp" data-wow-delay="0.5s">
-        <div class="row">
-            <p>虽然还没想好写点什么，但是总觉得这里放句话比较和谐。</p>
+    @Override
+    public Object getItem(int position) {
+        return mData.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+
+       View view = mLayoutInflater.inflate(R.layout.viewholder_item,null);
+       TextView mTextView = (TextView) view.findViewById(R.id.textview);
+        //下面给TextView设置内容
+        mTextView.setText(mData.get(position));
+       return view;
+    }
+
+}
+</code></pre><p>第一种这样写过一段时间，但是后来当ListView条目增多的时候，就会出现明显地卡顿，于是意识到需要对listview进行优化。</p>
+<p>###阶段二<br><code>class MyAdapter extends BaseAdapter</code>{</p>
+<pre><code>    @Override
+    public int getCount() {
+        return mData.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mData.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+
+        if(null == convertView){
+
+
+            convertView = mLayoutInflater.inflate(R.layout.viewholder_item,null);
+
+        }
+         TextView mTextView = (TextView)convertView.findViewById(R.id.textview);
+        //下面给TextView设置内容
+        mTextView.setText(mData.get(position));
+        return convertView;
+    }
+
+}
+</code></pre><p>基于阶段一，对Listview进行了简单的研究，每当我滑动出现新的条目的时候就会调用getView方法，这样做会导致每次都会重新加载布局。加载布局是个比较耗时的操作，特别是条目较多或者频繁滑动的时候。</p>
+<p>于是观察了下getView中存在三个参数，其中有一个convertView参数，通过查资料知道了，这个参数用来对条目的View进行缓存，当我第一次使用的时候convertView==null，当第二次或者多次调用的时候，convertView！= null。这个时候我们就可以将缓存的view利用起来，避免了重复加载布局引起的性能问题。</p>
+<p>###阶段三</p>
+<p><code>class MyAdapter extends BaseAdapter</code>{</p>
+<pre><code>    @Override
+    public int getCount() {
+        return mData.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mData.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        ViewHolder holder = null;
+        if(null == convertView){
+
+            holder = new ViewHolder();
+            convertView = mLayoutInflater.inflate(R.layout.viewholder_item,null);
+            holder.mTextView = (TextView) convertView.findViewById(R.id.textview);
+            convertView.setTag(holder);
+        }else{
+
+            holder = (ViewHolder) convertView.getTag();
+        }
+        //下面给TextView设置内容
+        holder.mTextView.setText(mData.get(position));
+        return convertView;
+    }
+
+
+    private final class ViewHolder{
+
+        private TextView mTextView;
+    }
+}
+</code></pre><p>有了第二个阶段，自以为listview使用不过如此，优化也很简单啊。但是细心的就会发现，我们这样做虽然对缓存的convertView进行了重复利用，但是会反复的findViewbyId查找我们需要操作的控件。这个操作也是比较耗时的，特别是在条目比较多的时候。所以第三种方式诞生，通过这种方式我们避免了重复查找条目中的控件，达到性能的进一步提升。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
         </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2016/11/03/Android内存泄漏相关/">
+        Android内存泄漏相关 →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2016/11/03/ListView性能优化/" data-title="ListView性能优化" data-url="http://yoursite.com/2016/11/03/ListView性能优化/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"duoshuo_name"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
     </div>
 </section>
+
+
       
 <!-- ============================ Footer =========================== -->
 
