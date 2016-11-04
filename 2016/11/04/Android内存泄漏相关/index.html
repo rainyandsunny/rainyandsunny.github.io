@@ -208,7 +208,7 @@
         <div class="col-md-8 col-md-offset-2">
       		<h1 id="Android内存泄漏相关"><a href="#Android内存泄漏相关" class="headerlink" title="Android内存泄漏相关"></a>Android内存泄漏相关</h1><p>我打算分两部分来进行说明。第一部分介绍下Android内存泄漏的几种可能，第二部分介绍遇到内存泄漏情况如何进行排查。</p>
 <p>一直在说内存泄漏，包括实际项目中或者面试的时候，到底内存泄漏会引起什么呢？首先就是程序运行越来越卡，程序响应慢甚至无响应。第二就是当我的程序切到后台的时候回经常性被杀死，因为我们App占用内存过多，会极大可能地被干掉。最严重的就是直接OutOfMemory。</p>
-<h2 id="内存泄漏的几种场景"><a href="#内存泄漏的几种场景" class="headerlink" title="内存泄漏的几种场景"></a>内存泄漏的几种场景</h2><h3 id="Bitmap的使用"><a href="#Bitmap的使用" class="headerlink" title="Bitmap的使用"></a>Bitmap的使用</h3><p>####图片Size<br>在使用Bitmap的时候，我们直接从美工那拿到切好的图直接使用，很容易造成内存泄漏。所以我们就必须对Bitmap进行处理，尽量从源头上减少内存的开销。特别是要展示一些缩略图或者对图片质量要求不怎么高的时候，就更应该进行设置。还记得大三暑假的时候参加的一个比赛，当时做的Android项目，在做引导界面的时候，直接使用美工提供的高清无码大图，结果直接滑到第三张的时候直接OOM，当时还很郁闷，找不到原因。</p>
+<h2 id="内存泄漏的几种场景"><a href="#内存泄漏的几种场景" class="headerlink" title="内存泄漏的几种场景"></a>内存泄漏的几种场景</h2><h3 id="Bitmap的使用"><a href="#Bitmap的使用" class="headerlink" title="Bitmap的使用"></a>Bitmap的使用</h3><h4 id="图片Size"><a href="#图片Size" class="headerlink" title="图片Size"></a>图片Size</h4><p>在使用Bitmap的时候，我们直接从美工那拿到切好的图直接使用，很容易造成内存泄漏。所以我们就必须对Bitmap进行处理，尽量从源头上减少内存的开销。特别是要展示一些缩略图或者对图片质量要求不怎么高的时候，就更应该进行设置。还记得大三暑假的时候参加的一个比赛，当时做的Android项目，在做引导界面的时候，直接使用美工提供的高清无码大图，结果直接滑到第三张的时候直接OOM，当时还很郁闷，找不到原因。</p>
 <p>我们可以使用BItmapFactory.Options设置inSampleSize。该参数可以设置显示图的宽高分别为原始图片大小的几分之一。<br>相关代码如下：</p>
 <p><code>BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
 bitmapFactoryOptions.inJustDecodeBounds = true;
@@ -226,8 +226,9 @@ Bitmap bmp = BitmapFactory.decodeFile(sourceBitmap,bitmapFactoryOptions);</code>
 <p><code>if(null != bitmap &amp;&amp; !bitmap.isRecycled()){
     bitmap.recyle();
     bitmap = null;
-}
-System.gc();（只是建议进行垃圾回收，实际会不会回收无法预知）</code><br>以上步骤都做了，还是会出现异常的话，我们对使用Bitmap的地方进行OutOfMemory异常捕获，从来进行其他的处理，比如返回一张低分辨率的默认的图片。</p>
+    System.gc();（只是建议进行垃圾回收，实际会不会回收无法预知）
+}</code></p>
+<p>以上步骤都做了，还是会出现异常的话，我们对使用Bitmap的地方进行OutOfMemory异常捕获，从来进行其他的处理，比如返回一张低分辨率的默认的图片。</p>
 <h3 id="对象引用方式不当"><a href="#对象引用方式不当" class="headerlink" title="对象引用方式不当"></a>对象引用方式不当</h3><p>对象的引用方式分别有几下几种：</p>
 <ol>
 <li>强引用（StrongReference）</li>
@@ -256,11 +257,9 @@ System.gc();（只是建议进行垃圾回收，实际会不会回收无法预�
 <li>View中设置缓存属性.setDrawingCache为true。</li>
 <li><p>Android提供给我们的两个工具procstats，meminfo。他们一个侧重于后台的内存使用，另一个是运行时的内存使用。<br>使用方法：adb shell dumpsys procstats –hours 3（数字自己指定）<br>adb shell dumpsys meminfo</p>
 </li>
-<li><p>循环中条件中尽量不要进行相关计算，比如：</p>
+<li><p>循环中条件中尽量不要进行相关计算，比如：<br> <code>for(int i=0;i&lt;arr.lenth;i++)</code>{}</p>
 </li>
 </ol>
-<p>`for(int i=0;i&lt;arr.lenth;i++){</p>
-<p>}`</p>
 <p>类似于这种的，用个变量保存没多大坏处。</p>
 <ol>
 <li>我感觉自己有强迫症，老是调用别人的东西就感觉不爽，就喜欢自己实现。但是有些东西，java本身给我们提供了的，就不要自己用java语言再去实现了，因为这样会降低效率，java自己的实现本身有优化。这一点上特别是java对String的处理上。Formatter，DateFormat，TextUtils，MemoryFile等等。这不是拿来主义，我们的目的是提高效率，降低内存的使用。如果有兴趣可以看看别人的实现。</li>
