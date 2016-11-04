@@ -206,7 +206,65 @@
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		<p>#Android内存泄漏相关</p>
+      		<h1 id="Android内存泄漏相关"><a href="#Android内存泄漏相关" class="headerlink" title="Android内存泄漏相关"></a>Android内存泄漏相关</h1><p>我打算分两部分来进行说明。第一部分介绍下Android内存泄漏的几种可能，第二部分介绍遇到内存泄漏情况如何进行排查。</p>
+<p>一直在说内存泄漏，包括实际项目中或者面试的时候，到底内存泄漏会引起什么呢？首先就是程序运行越来越卡，程序响应慢甚至无响应。第二就是当我的程序切到后台的时候回经常性被杀死，因为我们App占用内存过多，会极大可能地被干掉。最严重的就是直接OutOfMemory。</p>
+<h2 id="内存泄漏的几种场景"><a href="#内存泄漏的几种场景" class="headerlink" title="内存泄漏的几种场景"></a>内存泄漏的几种场景</h2><h3 id="Bitmap的使用"><a href="#Bitmap的使用" class="headerlink" title="Bitmap的使用"></a>Bitmap的使用</h3><p>####图片Size<br>在使用Bitmap的时候，我们直接从美工那拿到切好的图直接使用，很容易造成内存泄漏。所以我们就必须对Bitmap进行处理，尽量从源头上减少内存的开销。特别是要展示一些缩略图或者对图片质量要求不怎么高的时候，就更应该进行设置。还记得大三暑假的时候参加的一个比赛，当时做的Android项目，在做引导界面的时候，直接使用美工提供的高清无码大图，结果直接滑到第三张的时候直接OOM，当时还很郁闷，找不到原因。</p>
+<p>我们可以使用BItmapFactory.Options设置inSampleSize。该参数可以设置显示图的宽高分别为原始图片大小的几分之一。<br>相关代码如下：</p>
+<p><code>BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
+bitmapFactoryOptions.inJustDecodeBounds = true;
+bitmapFactoryOptions.inSampleSize = 3;
+options.inJustDecodeBounds = false;
+Bitmap bmp = BitmapFactory.decodeFile(sourceBitmap,bitmapFactoryOptions);</code></p>
+<h4 id="图片像素"><a href="#图片像素" class="headerlink" title="图片像素"></a>图片像素</h4><p>除了图片的大小外，图片的像素也对内存的消耗有影响：</p>
+<ul>
+<li>ALPHA_8:每个像素占用1byte内存</li>
+<li>ARGB_4444:每个像素占用2byte内存</li>
+<li>ARGB_8888:每个像素占用4byte内存（默认）</li>
+<li>RGB_565:每个像素占用2byte内存<br>所以如果需求对图片的质量要求不是特别高就可以改下默认值，从而减少开销。</li>
+</ul>
+<h4 id="图片回收"><a href="#图片回收" class="headerlink" title="图片回收"></a>图片回收</h4><p>在图片使用完之后，我们需要对图片进行回收，而不是等系统进行回收。</p>
+<p><code>if(null != bitmap &amp;&amp; !bitmap.isRecycled()){
+    bitmap.recyle();
+    bitmap = null;
+}
+System.gc();（只是建议进行垃圾回收，实际会不会回收无法预知）</code><br>以上步骤都做了，还是会出现异常的话，我们对使用Bitmap的地方进行OutOfMemory异常捕获，从来进行其他的处理，比如返回一张低分辨率的默认的图片。</p>
+<h3 id="对象引用方式不当"><a href="#对象引用方式不当" class="headerlink" title="对象引用方式不当"></a>对象引用方式不当</h3><p>对象的引用方式分别有几下几种：</p>
+<ol>
+<li>强引用（StrongReference）</li>
+<li>软引用（SoftReference）</li>
+<li>弱引用（WeakReference）</li>
+<li>虚引用（PhantomReference）</li>
+</ol>
+<p>下面来介绍下几种引用的区别。<br>强引用：Object obj = new Object();这个就是强引用，JVM哪怕发生OOM错误也不会回收该对象。</p>
+<p>软引用：当内存不够使用时才回收。</p>
+<p>弱引用：不管内存是否够用都会回收。</p>
+<p>虚引用：和没有任何引用一样，随时都可能被回收。</p>
+<h3 id="浮点数的使用过多"><a href="#浮点数的使用过多" class="headerlink" title="浮点数的使用过多"></a>浮点数的使用过多</h3><p>使用浮点数会降低效率，增大开销。所以应避免大量浮点数的使用。</p>
+<h3 id="ListView使用不当"><a href="#ListView使用不当" class="headerlink" title="ListView使用不当"></a>ListView使用不当</h3><p>使用ListView的时候一定要注意是否存在内存泄漏，特别是对于Item条目过多的时候。具体可以参考我上一篇博客：<a href="https://rainyandsunny.github.io/2016/11/03/ListView%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" target="_blank" rel="external">ListView使用技巧</a></p>
+<h3 id="Cursor回收"><a href="#Cursor回收" class="headerlink" title="Cursor回收"></a>Cursor回收</h3><p>一般情况下我们都会对cursor进行回收，使用完直接关闭，这是个好习惯。<br>不管我们是做后台或者是做Android开发，这一点大家都很熟悉。但是在使用CursorAdapter的时候就不能关闭啊，关闭了拿不到数据。这就要求我们在ListView所在的Activity的onDestory()中对cursor进行关闭。</p>
+<p>类似的还有：广播一定要unregisterReceiver。I/O流等都要记得使用完及时关闭。</p>
+<h3 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h3><h3 id="UI"><a href="#UI" class="headerlink" title="UI"></a>UI</h3><ol>
+<li>在XML中写布局的时候，都很爽，闭着眼睛都能写，一点码农的感觉，记着我们是工程师，改变世界的那种。但是对写出来的UI一定要记得进行检查，看布局是否合理，是否存在多余节点。幸好Google给我们开发者提供了一款工具用来检查UI视图层级：hierarchyviewer，在SDK tools目录下，至于工具的使用就不介绍了，总之大家一定要有这个意识，写一部分就检查一部分，不要到最后越积越多，哭都来不及。一定要记得！！！！</li>
+<li><p>ViewStub标签的使用<br>我记得Android高级编程中是这么介绍的，懒加载。就是在使用的时候再进行设置，显式地调用inflater或者置为可见的时候才会被填充。</p>
+</li>
+<li><p>merge标签<br>当含有merge标签的布局被添加到另一个布局文件的时候，该merge标签会被删除，直接将子view进行添加。</p>
+</li>
+<li><p>include标签<br>一个app里面肯定会有相同的布局，特别是在多人合作的时候，不要你写一个，我写一个。写一份，然后include到需要的父布局中即可。</p>
+</li>
+</ol>
+<h3 id="其他小的Tips"><a href="#其他小的Tips" class="headerlink" title="其他小的Tips"></a>其他小的Tips</h3><ol>
+<li>View中设置缓存属性.setDrawingCache为true。</li>
+<li><p>Android提供给我们的两个工具procstats，meminfo。他们一个侧重于后台的内存使用，另一个是运行时的内存使用。<br>使用方法：adb shell dumpsys procstats –hours 3（数字自己指定）<br>adb shell dumpsys meminfo</p>
+</li>
+<li><p>循环中条件中尽量不要进行相关计算，比如：</p>
+</li>
+</ol>
+<p>`for(int i=0;i&lt;arr.lenth;i++){</p>
+<p>}`</p>
+<p>类似于这种的，用个变量保存没多大坏处。</p>
+<p>我感觉自己有强迫症，老是调用别人的东西就感觉不爽，就喜欢自己实现。但是有些东西，java本身给我们提供了的，就不要自己用java语言再去实现了，因为这样会降低效率，java自己的实现本身有优化。这一点上特别是java对String的处理上。Formatter，DateFormat，TextUtils，MemoryFile等等。这不是拿来主义，我们的目的是提高效率，降低内存的使用。如果有兴趣可以看看别人的实现。</p>
+<h2 id="如何分析定位内存泄漏"><a href="#如何分析定位内存泄漏" class="headerlink" title="如何分析定位内存泄漏"></a>如何分析定位内存泄漏</h2><p>俗话说，常在河边走，哪有不湿鞋。即便是再仔细，都会有疏忽的时候。所以出了问题我们要进行分析，或者在完成某一个模块后我们要学会用工具去分析，而不是对照着以上几点去一一检查，更何况我总结的还不全。</p>
+<p>算了，明天写吧。累了</p>
 
             <div class="clearfix"></div>
             <hr class="nogutter">
