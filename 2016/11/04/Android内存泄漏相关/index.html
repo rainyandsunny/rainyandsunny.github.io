@@ -244,6 +244,7 @@ Bitmap bmp = BitmapFactory.decodeFile(sourceBitmap,bitmapFactoryOptions);</code>
 <h3 id="ListView使用不当"><a href="#ListView使用不当" class="headerlink" title="ListView使用不当"></a>ListView使用不当</h3><p>使用ListView的时候一定要注意是否存在内存泄漏，特别是对于Item条目过多的时候。具体可以参考我上一篇博客：<a href="https://rainyandsunny.github.io/2016/11/03/ListView%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" target="_blank" rel="external">ListView使用技巧</a></p>
 <h3 id="Cursor回收"><a href="#Cursor回收" class="headerlink" title="Cursor回收"></a>Cursor回收</h3><p>一般情况下我们都会对cursor进行回收，使用完直接关闭，这是个好习惯。<br>不管我们是做后台或者是做Android开发，这一点大家都很熟悉。但是在使用CursorAdapter的时候就不能关闭啊，关闭了拿不到数据。这就要求我们在ListView所在的Activity的onDestory()中对cursor进行关闭。</p>
 <p>类似的还有：广播一定要unregisterReceiver。I/O流等都要记得使用完及时关闭。</p>
+<h3 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h3><p>尽量使用ApplicationContext而不是Activity，因为引用的实例的生命周期很有可能超出Activity的生命周期，从而造成Activity无法回收，导致内存泄漏。</p>
 <h3 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h3><h3 id="UI"><a href="#UI" class="headerlink" title="UI"></a>UI</h3><ol>
 <li>在XML中写布局的时候，都很爽，闭着眼睛都能写，一点码农的感觉，记着我们是工程师，改变世界的那种。但是对写出来的UI一定要记得进行检查，看布局是否合理，是否存在多余节点。幸好Google给我们开发者提供了一款工具用来检查UI视图层级：hierarchyviewer，在SDK tools目录下，至于工具的使用就不介绍了，总之大家一定要有这个意识，写一部分就检查一部分，不要到最后越积越多，哭都来不及。一定要记得！！！！</li>
 <li><p>ViewStub标签的使用<br>我记得Android高级编程中是这么介绍的，懒加载。就是在使用的时候再进行设置，显式地调用inflater或者置为可见的时候才会被填充。</p>
