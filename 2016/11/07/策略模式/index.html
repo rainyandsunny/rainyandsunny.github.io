@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!--<![endif]-->
+
+<head>
+  <title>策略模式（新手推荐） | 小小黄金屋</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="小小黄金屋">
+    <meta name="author" content="Twist Fate">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="小小黄金屋" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+	
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+    
+
+    <!-- Custom stylesheet, (add custom styles here, always load last) -->
+    <!-- Load our stylesheet for IE8 -->
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- Google Webfonts (Monserrat 400/700, Open Sans 400/600) -->
+    <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- Load our fonts individually if IE8+, to avoid faux bold & italic rendering -->
+    <!--[if IE]>
+    <link href='http://fonts.useso.com/css?family=Montserrat:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+  
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Android</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">架构</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="http://go.kieran.top/" class="animsition-link">Kieran</a></li>
+                    
+                    <li><a href="http://domain.com/" class="animsition-link">Name</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">小小黄金屋</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/rainyandsunny/" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a></li>
+                            
+                            
+                            <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a></li>
+                            
+                            
+                            <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a></li>
+                            
+                            
+                            <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2016-11-07T02:11:00.000Z" itemprop="datePublished">
+          2016-11-07
+      </time>
+    
+</span>
+                <h1>策略模式（新手推荐）</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>设计模式是个神奇的东西，用得好的话可以让你的代码结构清晰简洁，用得不好则会让结构更加复杂难懂，包括使用过度。下面我打算分好几部分介绍下自己所理解的设计模式。</p>
+<p>最近在看一本关于设计模式的书《深入浅出设计模式》，觉得书中讲的很生动形象。我打算用自己的理解结合书中的例子，给大家简单解释一下，适合和我一样的新手，同时欢迎大神批评指正。首先从策略模式开始。下面大家来看一个例子：</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/%E5%8E%9F%E5%A7%8B.png" alt="原始"></p>
+<p>现在有抽象父类People，里面有eat()和sleep()等共有的方法以及抽象方法show()。下面有三个子类man，woman以及child,在子类中我们实现对应的show()方法。似乎并没有什么问题，大家都很好。具体代码如下：</p>
+<h3 id="People"><a href="#People" class="headerlink" title="People"></a>People</h3><pre><code>public abstract class People {
+
+public void eat(){
+    System.out.println(&quot;all people eat&quot;);
+}
+
+public void sleep(){
+    System.out.println(&quot;all people sleep&quot;);
+}
+
+public abstract void show();
+}
+</code></pre><h3 id="Man"><a href="#Man" class="headerlink" title="Man"></a>Man</h3><pre><code>public class Man extends People{
+
+@Override
+public void show() {
+
+    System.out.println(&quot;I have short hair&quot;);
+}
+}
+</code></pre><h3 id="Woman"><a href="#Woman" class="headerlink" title="Woman"></a>Woman</h3><pre><code>public class Woman extends People {
+
+@Override
+public void show() {
+
+    System.out.println(&quot;I have long hair&quot;);
+}
+}
+</code></pre><h3 id="Child"><a href="#Child" class="headerlink" title="Child"></a>Child</h3><pre><code>public class Child extends People {
+
+@Override
+public void show() {
+    System.out.println(&quot;I have less hair&quot;);
+}
+}
+</code></pre><p>分析以上代码，我们将公有部分（eat和sleep）在抽象类People实现，show在具体子类中实现。（不要说我吃米饭，婴儿吃奶嘴，eat应该不同的，大家安静安静别吵，现在不是纠结这个的时候）只能说我这个例子举的不太恰当，因为实际需求中总有一部分是固定不变的，我们这一步的任务就是将固定不变的抽取出来父类中实现而已。</p>
+<p><strong>这个地方有个很重要的思想，就是面对一个系统或者说一个模块，我们将固定不变的部分与经常变化的部分区分开来，分别对待，小心产品经理。</strong></p>
+<p>假设我现在需求要变，要所有的人都有move()方法。你会怎么做？你肯定会说我们都是面向对象编程，很简单啊，直接在People中增加move()方法并实现，这种上课时老师一直讲的东西，继承。</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/people.png" alt="people"></p>
+<p><strong>可是你想过没有，这样做会不会有什么问题？</strong></p>
+<hr>
+<p>child婴儿是不会移动的（不要纠结说婴儿会爬之类的，我眼睛会干）。这时候你会发现如果我们在父类中实现，那么将影响整个子类，这对于子类较多的类来说，是灾难性的。你肯定就会说，我们在People中设计一个抽象方法move()，然后在子类中实现不可以吗？</p>
+<p><strong>当然可以</strong>，代码如下：</p>
+<h3 id="People-1"><a href="#People-1" class="headerlink" title="People"></a>People</h3><pre><code>public abstract class People {
+
+public void eat(){
+    System.out.println(&quot;all people eat&quot;);
+}
+
+public void sleep(){
+    System.out.println(&quot;all people sleep&quot;);
+}
+
+public abstract void show();
+public abstract void move();
+}
+</code></pre><h3 id="Man-1"><a href="#Man-1" class="headerlink" title="Man"></a>Man</h3><pre><code>public class Man extends People{
+
+@Override
+public void show() {
+
+    System.out.println(&quot;I have short hair&quot;);
+}
+
+@Override
+public void move() {
+    System.out.println(&quot;on foot&quot;);
+}
+}
+</code></pre><h3 id="Woman-1"><a href="#Woman-1" class="headerlink" title="Woman"></a>Woman</h3><pre><code>public class Woman extends People {
+
+@Override
+public void show() {
+
+    System.out.println(&quot;I have long hair&quot;);
+}
+
+@Override
+public void move() {
+    System.out.println(&quot;on foot&quot;);
+}
+}
+</code></pre><h3 id="Child-1"><a href="#Child-1" class="headerlink" title="Child"></a>Child</h3><pre><code>public class Child extends People {
+
+@Override
+public void show() {
+    System.out.println(&quot;I have less hair&quot;);
+}
+
+@Override
+public void move() {
+}
+}
+</code></pre><p>好了，实现完成。在child类中，move()中我们什么也不做。现在需求来了，我们有一类人懒人。虽然是个大老爷们，但是我不想动，我被床封印了。你会怎么做？重新创建一个LazyMan类继承People，然后实现move(),在move中什么也不做？</p>
+<p><strong>你会说怎么不可以？？？</strong></p>
+<p>child和LazyMan中代码代码重复，做到代码重用了吗？什么，实现为空也叫代码重复？</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/%E5%95%AA%E5%95%AA%E5%95%AA.jpg" alt="啪啪啪"></p>
+<p>住口。在Man和Woman中move不是已经代码重复了吗？还敢嘴硬。少年还有什么可说的？？<br>你会说，看来不行啊，我们必须求助于其他办法了。对的，我们试试其他办法。</p>
+<h4 id="能不能用接口？然后创建多个接口的子类分别实现？"><a href="#能不能用接口？然后创建多个接口的子类分别实现？" class="headerlink" title="能不能用接口？然后创建多个接口的子类分别实现？"></a>能不能用接口？然后创建多个接口的子类分别实现？</h4><p><img src="http://og1qqf1es.bkt.clouddn.com/%E7%AD%96%E7%95%A52.0.png" alt="策略3.0"></p>
+<p>具体实现如下：</p>
+<h3 id="IMoveBehavior"><a href="#IMoveBehavior" class="headerlink" title="IMoveBehavior"></a>IMoveBehavior</h3><pre><code>public interface IMoveBehavior {
+
+public void move();
+}
+</code></pre><h3 id="MoveWithFoot"><a href="#MoveWithFoot" class="headerlink" title="MoveWithFoot"></a>MoveWithFoot</h3><pre><code>public class MoveWithFoot implements IMoveBehavior {
+
+@Override
+public void move() {
+
+    System.out.println(&quot;on foot&quot;);
+}
+}
+</code></pre><h3 id="MoveNothing"><a href="#MoveNothing" class="headerlink" title="MoveNothing"></a>MoveNothing</h3><pre><code>public class MoveNothing implements IMoveBehavior{
+
+@Override
+public void move() {
+
+    System.out.println(&quot;move? no&quot;);
+}
+}
+</code></pre><h3 id="来看看我们的People"><a href="#来看看我们的People" class="headerlink" title="来看看我们的People"></a>来看看我们的People</h3><pre><code>public abstract class People {
+
+IMoveBehavior moveBehavior;
+
+public void eat(){
+    System.out.println(&quot;all people eat&quot;);
+}
+public void sleep(){
+    System.out.println(&quot;all people sleep&quot;);
+}
+public abstract void show();
+
+public void moveBehave(){
+    moveBehavior.move();
+}
+}
+</code></pre><p>我们在创建IMoveBehavior对象的时候需要知道IMoveBehavior具体指向的是什么，所以我们在People子类的构造函数中来指定。代码如下：</p>
+<h3 id="Man-2"><a href="#Man-2" class="headerlink" title="Man"></a>Man</h3><pre><code>public class Man extends People implements IMoveBehavior{
+
+public Man(IMoveBehavior moveBehavior){
+    this.moveBehavior = moveBehavior;
+} 
+@Override
+public void show() {
+
+    System.out.println(&quot;I have short hair&quot;);
+}
+
+@Override
+public void move() {
+    System.out.println(&quot;on foot&quot;);
+}
+}
+</code></pre><p>Woman和Child类似，不贴了。我们写个测试类StrategyTest，看我们的代码复用是否成功？</p>
+<h3 id="StrategyTest"><a href="#StrategyTest" class="headerlink" title="StrategyTest"></a>StrategyTest</h3><pre><code>public class StrategyTest {
+
+public static void main(String[] args) {
+
+    Man niceMan = new Man(new MoveNothing());
+    niceMan.moveBehave();
+}
+}
+</code></pre><p>运行结果如下：<br><img src="http://og1qqf1es.bkt.clouddn.com/moveno.png" alt="move no"></p>
+<p>如果是勤劳的人，那就 Man niceMan = new Man(new MoveWithFoot());</p>
+<p><strong>问题解决，那还有没有什么不妥的地方呢？</strong></p>
+<p>我们moveBehavior是在创建的时候进行绑定的，如果我想动态地更改moveBehavior呢？是不是就傻眼了？</p>
+<p>于是我们有个接下来的方法：</p>
+<h3 id="People-2"><a href="#People-2" class="headerlink" title="People"></a>People</h3><pre><code>public abstract class People {
+
+IMoveBehavior moveBehavior;
+public void setMoveBehavior(IMoveBehavior moveBehavior){
+    this.moveBehavior = moveBehavior;
+}
+public void eat(){
+    System.out.println(&quot;all people eat&quot;);
+}
+public void sleep(){
+    System.out.println(&quot;all people sleep&quot;);
+}
+public abstract void show();
+
+public void moveBehave(){
+    moveBehavior.move();
+}
+}
+</code></pre><p>其他类不变。我们将moveBehavior的设置方法暴露出去，可以进行动态设定。来验证一下：<br>    public class StrategyTest {</p>
+<pre><code>public static void main(String[] args) {
+
+    Man niceMan = new Man();
+    //给我走
+    niceMan.setMoveBehavior(new MoveWithFoot());
+    niceMan.moveBehave();
+    //不许动
+    niceMan.setMoveBehavior(new MoveNothing());
+    niceMan.moveBehave();
+}
+}
+</code></pre><p>验证结果如下：<br><img src="http://og1qqf1es.bkt.clouddn.com/%E7%AD%96%E7%95%A5final.png" alt="策略final"></p>
+<p>几经波折，终于搞好了。这就是策略模式，下面我们来看下较为正式的定义（严肃点，不许笑）。</p>
+<p>##策略模式：</p>
+<p>###定义了算法族，分别封装起来，让它们之间可以互相替换， 此模式让算法的变化独立于使用算法的客户。</p>
+<p>最后说一个重要的点：我们之前那种做法都是通过继承，面向实现做的，虽然可以得到要求，但是代码复用性不高，如果子类多，那将是灾难。我们要面向接口编程。</p>
+<h3 id="原则：少用继承，多用组合。"><a href="#原则：少用继承，多用组合。" class="headerlink" title="原则：少用继承，多用组合。"></a>原则：少用继承，多用组合。</h3><p>拓展：</p>
+<ol>
+<li>假设需求又变了，需要给所有人加上wear(穿衣的方法)，但是每种人的穿衣风格不同。男的穿西装，女的穿裙子，小孩穿肚兜，甚至超人内裤外穿。好解决吗？</li>
+<li>需求又变了，要求move增加骑自行实现。创造出喜欢骑自行车穿裙子的女生，好解决吗？嘿嘿嘿<br><img src="http://og1qqf1es.bkt.clouddn.com/%E6%99%BA%E9%9A%9C%E5%87%9D%E8%A7%86.jpg" alt="凝视"></li>
+</ol>
+<p>最后有必要说一下，我文中出现猥琐的语句只是为了提起大家的兴趣，给大家将知识留下深刻的印象，我本人很正直，不信看我眼睛说话。</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/%E6%AD%A3%E7%9B%B4.png" alt="正直"></p>
+<p>大家下期见，拜拜！</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2016/11/04/自定义广告轮播图/">
+        自定义广告轮播图 →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2016/11/07/策略模式/" data-title="策略模式（新手推荐）" data-url="http://yoursite.com/2016/11/07/策略模式/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"duoshuo_name"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By Twist Fate. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/rainyandsunny/" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+        
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+    
+    resizeHero();
+    
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/jquery.flexslider-min.js"></script><!-- Flexslider plugin -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+<!-- Initiate flexslider plugin -->
+<script type="text/javascript">
+    $(document).ready(function($) {
+      $('.flexslider').flexslider({
+        animation: "fade",
+        prevText: "",
+        nextText: "",
+        directionNav: true
+      });
+    });
+</script>
+
+</body>
+</html>
