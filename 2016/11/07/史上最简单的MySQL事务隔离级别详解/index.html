@@ -211,7 +211,7 @@
 <p><img src="http://og1qqf1es.bkt.clouddn.com/%E8%A1%A8.png" alt="表结构"></p>
 <p>然后往表中插入两条数据，插入后结果如下：</p>
 <p><img src="http://og1qqf1es.bkt.clouddn.com/%E8%A1%A8%E6%95%B0%E6%8D%AE.png" alt="数据"></p>
-<p>为了说明问题，我们打开两个控制台来模拟两个用户（暂且成为用户A和用户B吧），并设置当前MySQL会话的事务隔离级别。</p>
+<p>为了说明问题，我们打开两个控制台分别进行登录来模拟两个用户（暂且成为用户A和用户B吧），并设置当前MySQL会话的事务隔离级别。</p>
 <h2 id="一-read-uncommitted（读取未提交数据）"><a href="#一-read-uncommitted（读取未提交数据）" class="headerlink" title="一. read uncommitted（读取未提交数据）"></a>一. read uncommitted（读取未提交数据）</h2><p>具体用户A的操作如下：</p>
 <pre><code>set session transaction isolation level read uncommitted；
 start transaction;
@@ -227,7 +227,7 @@ update account set account=account+200 where id = 1;
 <h3 id="结论一："><a href="#结论一：" class="headerlink" title="结论一："></a>结论一：</h3><h3 id="我们将事务隔离级别设置为read-uncommitted，即便是事务没有commit，但是我们仍然能读到未提交的数据，这是所有隔离级别中最低的一种。"><a href="#我们将事务隔离级别设置为read-uncommitted，即便是事务没有commit，但是我们仍然能读到未提交的数据，这是所有隔离级别中最低的一种。" class="headerlink" title="我们将事务隔离级别设置为read uncommitted，即便是事务没有commit，但是我们仍然能读到未提交的数据，这是所有隔离级别中最低的一种。"></a>我们将事务隔离级别设置为read uncommitted，即便是事务没有commit，但是我们仍然能读到未提交的数据，这是所有隔离级别中最低的一种。</h3><h4 id="那么这么做有什么问题吗？"><a href="#那么这么做有什么问题吗？" class="headerlink" title="那么这么做有什么问题吗？"></a><em>那么这么做有什么问题吗？</em></h4><p>那就是我们在一个事务中可以随随便便读取到其他事务未提交的数据，这还是比较麻烦的，我们叫<strong>脏读</strong>。我不知道这个名字是怎么起的，为了增强大家的印象，可以这么想，这个事务好轻浮啊，饥渴到连别人没提交的东西都等不及，真脏，呸！</p>
 <p>实际上我们的数据改变了吗？</p>
 <p><em>答案是否定的，因为只有事务commit后才会更新到数据库。</em></p>
-<h2 id="二-read-committed（可以读取其他事务提交的数据）"><a href="#二-read-committed（可以读取其他事务提交的数据）" class="headerlink" title="二. read committed（可以读取其他事务提交的数据）"></a>二. read committed（可以读取其他事务提交的数据）</h2><p>同样的办法，我们将用户B所在的会话当前事务隔离级别设置为read commited。</p>
+<h2 id="二-read-committed（可以读取其他事务提交的数据）—大多数数据库默认的隔离级别"><a href="#二-read-committed（可以读取其他事务提交的数据）—大多数数据库默认的隔离级别" class="headerlink" title="二. read committed（可以读取其他事务提交的数据）—大多数数据库默认的隔离级别"></a>二. read committed（可以读取其他事务提交的数据）—大多数数据库默认的隔离级别</h2><p>同样的办法，我们将用户B所在的会话当前事务隔离级别设置为read commited。</p>
 <p>在用户A所在的会话中我们执行下面操作：</p>
 <pre><code>update account set account=account-200 where id=1;
 </code></pre><p><img src="http://og1qqf1es.bkt.clouddn.com/readcommittedA.png" alt="read committed"></p>
@@ -242,7 +242,7 @@ update account set account=account+200 where id = 1;
 </code></pre><p>在会话B中查询结果如下：</p>
 <p><img src="http://og1qqf1es.bkt.clouddn.com/readcommittedB1.png" alt="read committedB1"></p>
 <h3 id="结论二："><a href="#结论二：" class="headerlink" title="结论二："></a>结论二：</h3><h3 id="当我们将当前会话的隔离级别设置为read-committed的时候，当前会话只能读取到其他事务提交的数据，未提交的数据读不到。"><a href="#当我们将当前会话的隔离级别设置为read-committed的时候，当前会话只能读取到其他事务提交的数据，未提交的数据读不到。" class="headerlink" title="当我们将当前会话的隔离级别设置为read committed的时候，当前会话只能读取到其他事务提交的数据，未提交的数据读不到。"></a>当我们将当前会话的隔离级别设置为read committed的时候，当前会话只能读取到其他事务提交的数据，未提交的数据读不到。</h3><h4 id="那么这么做有什么问题吗？-1"><a href="#那么这么做有什么问题吗？-1" class="headerlink" title="那么这么做有什么问题吗？"></a><em>那么这么做有什么问题吗？</em></h4><p>那就是我们在会话B同一个事务中，读取到两次不同的结果。这就造成了不可重复读，就是两次读取的结果不同。这种现象叫<strong>不可重复读</strong>。</p>
-<h2 id="repeatable-read（可重读）"><a href="#repeatable-read（可重读）" class="headerlink" title="repeatable read（可重读）"></a>repeatable read（可重读）</h2><p>现在有个需求，就是老板说在同一个事务中查询结果必须保持一致，如果你是数据库，你会怎么做？数据库是这么做的。</p>
+<h2 id="三-repeatable-read（可重读）—MySQL默认的隔离级别"><a href="#三-repeatable-read（可重读）—MySQL默认的隔离级别" class="headerlink" title="三. repeatable read（可重读）—MySQL默认的隔离级别"></a>三. repeatable read（可重读）—MySQL默认的隔离级别</h2><p>现在有个需求，就是老板说在同一个事务中查询结果必须保持一致，如果你是数据库，你会怎么做？数据库是这么做的。</p>
 <p>在会话B中我们当前事务隔离级别为repeatable read。具体操作如下：</p>
 <pre><code>set session transaction isolation level repeatable read;
 start transaction;
@@ -262,7 +262,7 @@ commit;
 <p><img src="http://og1qqf1es.bkt.clouddn.com/repeatablereadB2.png" alt="repeatablereadB2"></p>
 <p>试想一下，在实际中用户A和用户B肯定是相互隔离的，彼此不知道操作什么。用户B碰到这种现象，肯定会炸毛的啊，明明不存在的数据，插入却说主键id=3数据重复了。</p>
 <h3 id="结论三："><a href="#结论三：" class="headerlink" title="结论三："></a>结论三：</h3><h3 id="当我们将当前会话的隔离级别设置为repeatable-read的时候，当前会话可以重复读，就是每次读取的结果集都相同，而不管其他事务有没有提交。"><a href="#当我们将当前会话的隔离级别设置为repeatable-read的时候，当前会话可以重复读，就是每次读取的结果集都相同，而不管其他事务有没有提交。" class="headerlink" title="当我们将当前会话的隔离级别设置为repeatable read的时候，当前会话可以重复读，就是每次读取的结果集都相同，而不管其他事务有没有提交。"></a>当我们将当前会话的隔离级别设置为repeatable read的时候，当前会话可以重复读，就是每次读取的结果集都相同，而不管其他事务有没有提交。</h3><h3 id="有什么问题吗？"><a href="#有什么问题吗？" class="headerlink" title="有什么问题吗？"></a><em>有什么问题吗？</em></h3><p>管他呢，老板的要求满足了。要一个事务中读取的数据一致（可重复读）。我只能这么做啊，打肿脸装胖子。数据已经发生改变，但是我还是要保持一致。但是，出现了用户B面对的问题，这种现象叫<strong>幻读</strong>（记得当时就在这个地方纠结好久，到底什么是幻读啊）。</p>
-<h2 id="serializable（串行化）"><a href="#serializable（串行化）" class="headerlink" title="serializable（串行化）"></a>serializable（串行化）</h2><p>同样，我们将用户B所在的会话的事务隔离级别设置为serializable并开启事务。</p>
+<h2 id="四-serializable（串行化）"><a href="#四-serializable（串行化）" class="headerlink" title="四. serializable（串行化）"></a>四. serializable（串行化）</h2><p>同样，我们将用户B所在的会话的事务隔离级别设置为serializable并开启事务。</p>
 <pre><code>set session transaction isolation level serializable;
 start transaction;
 </code></pre><p>在用户A所在的会话中我们执行下面操作：</p>
