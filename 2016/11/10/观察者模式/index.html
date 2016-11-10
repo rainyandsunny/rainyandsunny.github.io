@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!--<![endif]-->
+
+<head>
+  <title>观察者模式（新手推荐） | 小小黄金屋</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="小小黄金屋">
+    <meta name="author" content="Twist Fate">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="小小黄金屋" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+	
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+    
+
+    <!-- Custom stylesheet, (add custom styles here, always load last) -->
+    <!-- Load our stylesheet for IE8 -->
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- Google Webfonts (Monserrat 400/700, Open Sans 400/600) -->
+    <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- Load our fonts individually if IE8+, to avoid faux bold & italic rendering -->
+    <!--[if IE]>
+    <link href='http://fonts.useso.com/css?family=Montserrat:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+  
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Android</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">架构</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="http://go.kieran.top/" class="animsition-link">Kieran</a></li>
+                    
+                    <li><a href="http://domain.com/" class="animsition-link">Name</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">小小黄金屋</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/rainyandsunny/" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a></li>
+                            
+                            
+                            <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a></li>
+                            
+                            
+                            <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a></li>
+                            
+                            
+                            <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2016-11-10T04:04:35.000Z" itemprop="datePublished">
+          2016-11-10
+      </time>
+    
+</span>
+                <h1>观察者模式（新手推荐）</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>今天给大家带来一个较为简单的模式，观察者模式。如果觉得我写得还不错，记得关注下，我好有勇气给大家以浅显的语言介绍完这几种设计模式。</p>
+<h3 id="为什么要使用观察者模式？"><a href="#为什么要使用观察者模式？" class="headerlink" title="为什么要使用观察者模式？"></a>为什么要使用观察者模式？</h3><p>举个简单的例子，在一所工科学校里（我们都知道，工科院校女生都比较少），有一个很有教养，漂亮，温柔的女生大家都很喜欢，自然有很多人追。女生的一举一动，大家都很关注。比如女生半夜发了个状态，说“我饿了”。</p>
+<p>。。。。。。</p>
+<p>接下来，不得了了，众男们（假设现在有A,B,C三个男生同时喜欢上了改女生）着急了，都想用自己的方法让女生填饱肚子（A：走，带你吃KFC。B：别动，我给你买了送到你楼下。C：自己画个饼，看看就行了）。当然以C的这种方式，肯定没戏，咳咳，扯远了。那么用伪代码如何表示呢？</p>
+<pre><code>abstract class Boy{
+
+//照顾自己身边的人是每个男生义不容辞的责任
+pulbic void careDarling();
+
+}
+
+// A 照顾人的方式
+class BoyA extends Boy{
+
+pulbic void careDarling(){
+
+    System.out.println(&quot;走，带你吃KFC&quot;);
+}
+
+}
+
+//B 照顾人的方式
+
+class BoyB extends Boy{
+
+pulbic void careDarling(){
+
+    System.out.println(&quot;别动，我给你买了送到你楼下&quot;);
+}
+
+}
+
+//C 照顾人的方式
+
+class BoyC extends Boy{
+
+pulbic void careDarling(){
+
+    System.out.println(&quot;自己画个饼，看看就行了&quot;);
+}
+
+}
+
+//下面这个是女孩类
+class Girl{
+
+
+public void hungrey(){
+
+    //饿了，我们要通知A，B，C 是时候行动了    
+    BoyA.careDarling();
+    BoyB.careDarling();
+    BoyC.careDarling();
+
+}
+
+}
+</code></pre><h4 id="当然，我们尊重每个人爱人的方式。现在不是纠结这个的时候，我们看上面伪代码的表示有什么问题吗？"><a href="#当然，我们尊重每个人爱人的方式。现在不是纠结这个的时候，我们看上面伪代码的表示有什么问题吗？" class="headerlink" title="当然，我们尊重每个人爱人的方式。现在不是纠结这个的时候，我们看上面伪代码的表示有什么问题吗？"></a>当然，我们尊重每个人爱人的方式。现在不是纠结这个的时候，我们看上面伪代码的表示有什么问题吗？</h4><p>就在下看，有发现几个问题：</p>
+<ol>
+<li>作为女孩，首先我要知道谁喜欢我啊，不然通知错人了怎么办？（实际情况是，尽管你知道有人喜欢你，但是这个人是谁你知道吗？）</li>
+<li>又有人喜欢女孩了，也想照顾她。但是不想让女孩知道，只想默默地付出。按照我们现在这种写法，只有女孩知道谁喜欢她才会通知到，不知道的就不通知了。</li>
+<li>其他</li>
+</ol>
+<h3 id="使用观察者模式有什么好处"><a href="#使用观察者模式有什么好处" class="headerlink" title="使用观察者模式有什么好处"></a>使用观察者模式有什么好处</h3><p>看了我们上面的写法，发现这种写法是不合适的。我们有没有解决办法呢？<br>答案当然是有啊。但是首先我们应明确自己的需求。</p>
+<ol>
+<li>我只要主动关注女孩就行了，不用等通知，自己要主动，毕竟幸福靠自己争取。</li>
+<li>女孩魅力大，我们要允许其他人也喜欢（不限于A,B,C）,毕竟每个人都有爱与被爱的权利。</li>
+</ol>
+<h4 id="所以，观察者模式来救场。"><a href="#所以，观察者模式来救场。" class="headerlink" title="所以，观察者模式来救场。"></a>所以，观察者模式来救场。</h4><p><img src="http://og1qqf1es.bkt.clouddn.com/observer.png" alt="观察者模式结构"></p>
+<p>（声明下，我有空了就去学UML。这个画的不够标准，希望能说明问题。）</p>
+<p>那么对应于我们这个例子，之间关系又是怎样的呢？</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/newObserver.png" alt="新的结构"></p>
+<p><em>那我们为何不用代码实现下呢？</em></p>
+<h3 id="Observer"><a href="#Observer" class="headerlink" title="Observer"></a>Observer</h3><pre><code>public interface Observer {
+
+public void update();
+}
+</code></pre><h3 id="Boy"><a href="#Boy" class="headerlink" title="Boy"></a>Boy</h3><pre><code>public abstract class Boy {
+
+public abstract void careDarling();
+}
+</code></pre><h3 id="BoyA"><a href="#BoyA" class="headerlink" title="BoyA"></a>BoyA</h3><pre><code>public class BoyA extends Boy implements Observer {
+
+private Subject subject;
+public BoyA(Subject subject){
+    subject.addObserver(this);
+}
+
+@Override
+public void update() {
+    careDarling();
+}
+
+@Override
+public void careDarling() {
+    System.out.println(&quot;走，带你吃KFC&quot;);
+}
+}
+</code></pre><h3 id="BoyB"><a href="#BoyB" class="headerlink" title="BoyB"></a>BoyB</h3><pre><code>public class BoyB extends Boy implements Observer {
+
+private Subject subject;
+public BoyB(Subject subject){
+    subject.addObserver(this);
+}
+@Override
+public void update() {
+    careDarling();
+}
+
+@Override
+public void careDarling() {
+    System.out.println(&quot;别动，我给你买了送到你楼下&quot;);
+}
+}
+</code></pre><h3 id="BoyC"><a href="#BoyC" class="headerlink" title="BoyC"></a>BoyC</h3><pre><code>public class BoyC extends Boy implements Observer {
+
+private Subject subject;
+public BoyC(Subject subject){
+    subject.addObserver(this);
+}
+
+@Override
+public void update() {
+    careDarling();
+}
+
+@Override
+public void careDarling() {
+    System.out.println(&quot;自己画个饼，看看就行了&quot;);
+}
+
+}
+</code></pre><h3 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h3><pre><code>public interface Subject {
+
+public void addObserver(Observer boy);
+public void removeObserver(Observer boy);
+public void notifyObservers();    
+}
+</code></pre><h3 id="Girl"><a href="#Girl" class="headerlink" title="Girl"></a>Girl</h3><pre><code>public class Girl implements Subject {
+
+private List&lt;Observer&gt; boys;
+
+public Girl(){
+    boys = new ArrayList&lt;Observer&gt;();
+}
+
+@Override
+public void addObserver(Observer boy) {
+
+    boys.add(boy);
+
+}
+
+@Override
+public void removeObserver(Observer boy) {
+    boys.remove(boy);
+}
+
+@Override
+public void notifyObservers() {
+
+    for(int i=0;i&lt;boys.size();i++){
+        boys.get(i).update();
+    }
+}
+
+public void hungrey(){
+    notifyObservers();
+}
+
+}
+</code></pre><h3 id="测试类ObserverTest"><a href="#测试类ObserverTest" class="headerlink" title="测试类ObserverTest"></a>测试类ObserverTest</h3><pre><code>public class ObserverTest {
+
+public static void main(String[] args) {
+
+    //小天使来到世界上
+    Girl girl = new Girl();
+    //护花使者A
+    BoyA boyA = new BoyA(girl);
+    //护花使者B
+    BoyB boyB = new BoyB(girl);
+    //护花使者C
+    BoyC boyC = new BoyC(girl);
+    //出大事了，小可爱饿了
+    girl.hungrey();
+}
+}
+</code></pre><h3 id="结果："><a href="#结果：" class="headerlink" title="结果："></a>结果：</h3><p><img src="http://og1qqf1es.bkt.clouddn.com/observerresult.png" alt="result"></p>
+<p>好了，到此我们观察者模式就简单地描述完了。回到开篇前我们的两个问题，我们现在这种模式有没有解决问题呢？</p>
+<ol>
+<li>作为女孩，首先我要知道谁喜欢我啊，不然通知错人了怎么办？（实际情况是，尽管你知道有人喜欢你，但是这个人是谁你知道吗？）</li>
+</ol>
+<p>我们现在在Girl（Subject实现类）中维护一个数组或者队列，用来保存观察者。并不需要知道观察者是谁。我们在创建Girl的时候将队列初始化（换句话说，我知道肯定有人喜欢我，但是具体是谁，我并不需要知道）。</p>
+<ol>
+<li>又有人喜欢女孩了，也想照顾她。但是不想让女孩知道，只想默默地付出。按照我们现在这种写法，只有女孩知道谁喜欢她才会通知到，不知道的就不通知了。</li>
+</ol>
+<p>现在即便是有BoyC，BoyD出现，在创建的时候就自己偷偷关注了女孩，当女孩饿了的时候，并不需要改变原有的代码就可实现通知所有的。（多好，我们的这种实现方式。毕竟暗恋也是美好的）。</p>
+<p>然而在实际中，主题Subject在通知观察者Observer的时候会携带一些数据，这就不得不提一下观察者模式的两种模式：<strong>推（push）模式和拉(pull)模式</strong>。</p>
+<h4 id="推模型：顾名思义，就是我不管你Observer想要什么，我给你什么你接收什么就是了。这种模式的使用场景就是需求较简单，且Subject和Observer类协商好返回数据的类型。弊端当然也很明显就是众Observer口难调，我不知道你想要什么，大家返回都一样。可以想象成任性的女孩，我给你什么你要也得接受，不要也得接受。"><a href="#推模型：顾名思义，就是我不管你Observer想要什么，我给你什么你接收什么就是了。这种模式的使用场景就是需求较简单，且Subject和Observer类协商好返回数据的类型。弊端当然也很明显就是众Observer口难调，我不知道你想要什么，大家返回都一样。可以想象成任性的女孩，我给你什么你要也得接受，不要也得接受。" class="headerlink" title="推模型：顾名思义，就是我不管你Observer想要什么，我给你什么你接收什么就是了。这种模式的使用场景就是需求较简单，且Subject和Observer类协商好返回数据的类型。弊端当然也很明显就是众Observer口难调，我不知道你想要什么，大家返回都一样。可以想象成任性的女孩，我给你什么你要也得接受，不要也得接受。"></a>推模型：顾名思义，就是我不管你Observer想要什么，我给你什么你接收什么就是了。这种模式的使用场景就是需求较简单，且Subject和Observer类协商好返回数据的类型。弊端当然也很明显就是众Observer口难调，我不知道你想要什么，大家返回都一样。可以想象成任性的女孩，我给你什么你要也得接受，不要也得接受。</h4><p>全写的话量有点大，所以只贴部分代码：</p>
+<pre><code>public interface Subject {
+public void addObserver(Observer boy);
+public void removeObserver(Observer boy);
+public void notifyObservers(int state)；
+}
+</code></pre><p>可以看出，这个地方我们将state作为参数传出去，然后在Observer中被动接收。</p>
+<pre><code>public interface Observer {
+
+public void update(int state);
+//举个例子，这时候我们就可以在BoyA，BoyB...等中针对具体状态作出相应动作。比如饿了怎么样，困了怎么样......
+}
+</code></pre><h4 id="拉模型：就是观察者（Observer）自己站起来了，想要什么就给什么。一般我们把主题类该类对象作为参数传递出去，然后观察者可以利用反射等方式拿到自己想要的，推模型的问题解决了，大家-众多观察者-可以各取所需。可以这么理解，付出这么多，女孩追到手了，把自己都交给你了。"><a href="#拉模型：就是观察者（Observer）自己站起来了，想要什么就给什么。一般我们把主题类该类对象作为参数传递出去，然后观察者可以利用反射等方式拿到自己想要的，推模型的问题解决了，大家-众多观察者-可以各取所需。可以这么理解，付出这么多，女孩追到手了，把自己都交给你了。" class="headerlink" title="拉模型：就是观察者（Observer）自己站起来了，想要什么就给什么。一般我们把主题类该类对象作为参数传递出去，然后观察者可以利用反射等方式拿到自己想要的，推模型的问题解决了，大家(众多观察者)可以各取所需。可以这么理解，付出这么多，女孩追到手了，把自己都交给你了。"></a>拉模型：就是观察者（Observer）自己站起来了，想要什么就给什么。一般我们把主题类该类对象作为参数传递出去，然后观察者可以利用反射等方式拿到自己想要的，推模型的问题解决了，大家(众多观察者)可以各取所需。可以这么理解，付出这么多，女孩追到手了，把自己都交给你了。</h4><pre><code>public interface Subject {
+public void addObserver(Observer boy);
+public void removeObserver(Observer boy);
+public void notifyObservers(Subject subject)；
+}
+</code></pre><h3 id="Girl-1"><a href="#Girl-1" class="headerlink" title="Girl"></a>Girl</h3><pre><code>...
+
+@Override
+public void notifyObservers(Subject subject) {
+
+    for(int i=0;i&lt;boys.size();i++){
+        boys.get(i).update(subject);
+    }
+}
+
+public void hungrey(){
+
+    notifyObservers(this);//将自己传出去
+}
+...
+</code></pre><h3 id="Observer-1"><a href="#Observer-1" class="headerlink" title="Observer"></a>Observer</h3><pre><code>public interface Observer {
+
+public void update(Subject subject);//人都得到了，想知道什么还难吗？
+
+}
+</code></pre><p>好了，观察者模式到此介绍完毕，大家有什么问题可以与我讨论。当然文中错误在所难免，恳请批评指正。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2016/11/07/史上最简单的MySQL事务隔离级别详解/">
+        史上最简单的MySQL事务隔离级别详解 →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2016/11/10/观察者模式/" data-title="观察者模式（新手推荐）" data-url="http://yoursite.com/2016/11/10/观察者模式/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"duoshuo_name"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By Twist Fate. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/rainyandsunny/" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+        
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+    
+    resizeHero();
+    
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/jquery.flexslider-min.js"></script><!-- Flexslider plugin -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+<!-- Initiate flexslider plugin -->
+<script type="text/javascript">
+    $(document).ready(function($) {
+      $('.flexslider').flexslider({
+        animation: "fade",
+        prevText: "",
+        nextText: "",
+        directionNav: true
+      });
+    });
+</script>
+
+</body>
+</html>
