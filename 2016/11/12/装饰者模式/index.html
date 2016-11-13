@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>装饰者模式(新手推荐) | 小小黄金屋</title>
+  <title>装饰者模式（新手推荐） | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -202,12 +202,12 @@
       </time>
     
 </span>
-                <h1>装饰者模式(新手推荐)</h1>
+                <h1>装饰者模式（新手推荐）</h1>
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
       		<p>好久没跟大家更新了，今天给大家带来的是一个新的设计模式——装饰者模式。说到这个模式，刚开始接触设计模式这个神秘东西的时候，我感觉这个模式是最简单的，简单到没必要专门说明。本着不误导大家的原则，我重新翻了翻书，发现并不是这样，和原本的理解还是有所出入。（由于一些原因，想换工作了，坐标杭州，现在做的是Android，之前做过Javaweb，研究过MySQL，如果有合适的，希望大家推荐下。）好了进入正题，发车了。</p>
-<p><img src="http://og1qqf1es.bkt.clouddn.com/fache.jpg" alt="发车"></p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/fache1.jpg" alt="发车"></p>
 <p>首先我们不说什么是装饰设计模式，因为太枯燥了。我希望大家能跟着我的思路一部一部走，让设计模式的学习变得简单，生动。</p>
 <p>装饰？字面就是装修，美化之类的吧。比如我们要对房子进行装修，首先我们要有一个房子（啊，对我来说好遥远啊，先不管那么多），总之就是我们首先要有被装饰的对象。</p>
 <p>我们来看个简单的例子：直播相信大家都看过吧，现在直播平台这么多，当然直播种类也是数不胜数。今天我们就以人物直播为例子，给大家讲解下装饰设计模式。</p>
@@ -299,7 +299,7 @@ public static void main(String[] args) {
 <p>好了，装饰设计模式介绍完了。我先撤了。<br>细心的朋友就会说，装完逼就想走，不行。你文章开头的问题解决了吗？想走？</p>
 <p><img src="http://og1qqf1es.bkt.clouddn.com/dawo.jpg" alt="dawo"></p>
 <p>我们言归正传，回到问题上来。</p>
-<h3 id="为什么负责装饰的类（BeautiftyShow）要继承OnLineShow？"><a href="#为什么负责装饰的类（BeautiftyShow）要继承OnLineShow？" class="headerlink" title="为什么负责装饰的类（BeautiftyShow）要继承OnLineShow？"></a>为什么负责装饰的类（BeautiftyShow）要继承OnLineShow？</h3><p>按道理，不继承也行啊。<strong>因为装饰设计模式的精髓就是，装饰者持有一个被装饰者，然后进行扩展就行了啊</strong>。你故弄玄虚什么啊。</p>
+<h3 id="为什么负责装饰的类（BeautiftyShow）要继承被装饰者-OnLineShow-？"><a href="#为什么负责装饰的类（BeautiftyShow）要继承被装饰者-OnLineShow-？" class="headerlink" title="为什么负责装饰的类（BeautiftyShow）要继承被装饰者(OnLineShow)？"></a>为什么负责装饰的类（BeautiftyShow）要继承被装饰者(OnLineShow)？</h3><p>按道理，不继承也行啊。<strong>因为装饰设计模式的精髓就是，装饰者持有一个被装饰者，然后进行扩展就行了啊</strong>。你故弄玄虚什么啊。</p>
 <p>我： 行行行，你好看说什么都对。但是我很难看，而且很要面子。我想直播了，我丑，需要美颜，然后，我还要面子，所以我还需要场景美化与交互美化，不然说半天，没点掌声多尴尬。</p>
 <p>你： 这可如何是好？？？？</p>
 <p>我：没话说了吧。下面按照我的这种设计，就很容易实现，看：</p>
@@ -330,7 +330,7 @@ figureShow.display();
 </nav>
 
         <div class="duoshuo">
-<div class="ds-thread" data-thread-key="2016/11/12/装饰者模式/" data-title="装饰者模式(新手推荐)" data-url="http://yoursite.com/2016/11/12/装饰者模式/"></div>
+<div class="ds-thread" data-thread-key="2016/11/12/装饰者模式/" data-title="装饰者模式（新手推荐）" data-url="http://yoursite.com/2016/11/12/装饰者模式/"></div>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"duoshuo_name"};
 (function() {
