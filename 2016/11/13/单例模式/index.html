@@ -207,7 +207,7 @@
         </div>
         <div class="col-md-8 col-md-offset-2">
       		<p>平时上班比较忙，我就周末给大家更新下。今天给大家带来的是——单例模式。这个模式相对来说比较简单一点，但是有几个点还是得说一下，我们可以将这些细节用到我们自己的程序中。本来不想讲的，但是我想把23种设计模式做成一个专题，以后大家不管是复习还是面试等，都可以有个参考。虽然写得并不好。</p>
-<p>单例模式，听名字就能感觉出来，就是只能有一个实例存在。的确如此，你的感觉很正确。既然只能存在一个实例，那么这个实例在什么时候创建呢？问得好，我们看一下单例模式的两种分类。</p>
+<p>单例模式，听名字就能感觉出来，就是只能有一个实例存在。的确如此，你的感觉很正确。既然只能存在一个实例，那么这个实例在什么时候创建呢？问得好，我们看一下单例模式最常用的两种分类。</p>
 <h3 id="一-懒汉式"><a href="#一-懒汉式" class="headerlink" title="一 懒汉式"></a>一 懒汉式</h3><p><img src="http://og1qqf1es.bkt.clouddn.com/lanhan.jpg" alt="lanhan"></p>
 <p>用什么能表达我对你的心？唯有代码，看下来。</p>
 <pre><code>public class SingleTask {
@@ -328,6 +328,42 @@ public static void main(String[] args){
     return mSingleTask;
 }
 </code></pre><p>可以看到，我们加了双重判空。这样，只有在mSingleTask = null的情况下才会加锁，然后苦苦等待对象创建完成。好了吧，当mSingleTask被赋予了新的生命后就不需要再次加锁。</p>
+<h3 id="三-静态内部类"><a href="#三-静态内部类" class="headerlink" title="三 静态内部类"></a>三 静态内部类</h3><pre><code>public class SingleTask2 {
+
+private static SingleTask2 mSingleTask2;
+private SingleTask2(){
+    //System.out.println(&quot;new instance&quot;);
+}
+
+public static SingleTask2 getSingleInstance() {
+
+    return SingleTaskHolder.instance;
+}
+
+
+static class SingleTaskHolder {
+
+    // 内部类初始化单例实例
+    private static SingleTask2 instance = new SingleTask2();
+
+}
+
+// 验证下
+public static void main(String[] args){
+
+    for(int i=0;i&lt;100;i++){
+        new Thread(){
+
+            @Override
+            public void run(){
+                SingleTask2.getSingleInstance();
+            }
+        }.start();
+
+    }    
+}
+}
+</code></pre><p>通过这种方式我们也能实现单例模式，那么这么做的原理是什么呢？<br>因为静态内部类只会被加载一次，所以这么做也是线程安全的。</p>
 <p>好了，听你吹了这么长时间。这个模式有用吗？使用场景举个例子。<br><img src="http://og1qqf1es.bkt.clouddn.com/lizi.jpg" alt="lizi"></p>
 <p>其他的不说，就说一个Android中的Application<br>……</p>
 <p>最后我们看一下较为正式的定义。</p>
