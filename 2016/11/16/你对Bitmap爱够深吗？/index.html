@@ -206,7 +206,7 @@
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		<h2 id="更加有效地使用Bitmap"><a href="#更加有效地使用Bitmap" class="headerlink" title="更加有效地使用Bitmap"></a>更加有效地使用Bitmap</h2><h3 id="读取图片尺寸和类型"><a href="#读取图片尺寸和类型" class="headerlink" title="读取图片尺寸和类型"></a>读取图片尺寸和类型</h3><p>BitmapFactory类提供了几种解码方法（decodeByteArray(),decodeFile(),decodeResource()等等）用于从不同的源创建一个Bitmap。依赖于你图片的数据源，选择最合适的解码方法。这些方法会为创建Bitmap尝试分配内存，因此很容易造成OutOfMemory的异常。每种类型的解码方法都有额外的参数，让你通过BitmapFactory.Options类指定你的解码属性。解码时设置<em>inJustDecodeBounds</em>属性为true会避免内存分配，返回一个空的bitmap对象，但是你可以设置outWidth,outHeight以及outMineType。这项很科技允许你在构造这个Bitmap（内存分配）之前读取图片数据的尺寸以及类型。</p>
+      		<h2 id="更加有效地使用Bitmap"><a href="#更加有效地使用Bitmap" class="headerlink" title="更加有效地使用Bitmap"></a>更加有效地使用Bitmap</h2><h3 id="读取图片尺寸和类型"><a href="#读取图片尺寸和类型" class="headerlink" title="读取图片尺寸和类型"></a>读取图片尺寸和类型</h3><p>BitmapFactory类提供了几种解码方法（decodeByteArray(),decodeFile(),decodeResource()等等）用于从不同的源创建一个Bitmap。依赖于你图片的数据源，选择最合适的解码方法。这些方法会为创建Bitmap尝试分配内存，因此很容易造成OutOfMemory的异常。每种类型的解码方法都有额外的参数，让你通过BitmapFactory.Options类指定你的解码属性。解码时设置<em>inJustDecodeBounds</em>属性为true会避免内存分配，不用返回一个bitmap对象，但是你可以设置outWidth,outHeight以及outMineType。这项很科技允许你在构造这个Bitmap（内存分配）之前读取图片数据的尺寸以及类型。</p>
 <pre><code>BitmapFactory.Optionsoptions=newBitmapFactory.Options();
 options.inJustDecodeBounds=true;
 BitmapFactory.decodeResource(getResources(),R.id.myimage,options);
@@ -221,7 +221,7 @@ StringimageType=options.outMimeType;
 <li>将使用待加载图片的目标UI组件或者ImageView的尺寸信息；</li>
 <li>当前设备的屏幕尺寸以及像素密度。</li>
 </ol>
-<p>举个例子，使用一个1024<em>768像素的图片进内存，但是实际上却在一个128</em>96像素大小的ImageView上展示缩略图。这是不明智的。<br>告诉解码器对图片采样，加载一个小一点的版本进内存，可以在你的BitmapFactory.Options中设置inSampleSize=true。举个例子，一个2048<em>1536大小的Bitmap，设置inSampleSize=4会产生一个大小接近512</em>384的Bitmap。加载进内存只用了0.75M而不是12M（假设图片的颜色格式为ARGB_8888）。下面这个方法可以</p>
+<p>举个例子，使用一个1024<em>768像素的图片进内存，但是实际上却在一个128</em>96像素大小的ImageView上展示缩略图。这是不明智的。<br>告诉解码器对图片采样，加载一个小一点的图片版本进内存，可以在你的BitmapFactory.Options中设置inSampleSize=true。举个例子，一个2048<em>1536大小的Bitmap，设置inSampleSize=4会产生一个大小接近512</em>384的Bitmap。加载进内存只用了0.75M而不是12M（假设图片的颜色格式为ARGB_8888）。下面这个方法可以</p>
 <pre><code>public static int calculateInSampleSize(
 BitmapFactory.Optionsoptions,intreqWidth,intreqHeight){
 // Raw height and width of image
@@ -245,10 +245,8 @@ inSampleSize *= 2;
 return inSampleSize;
 }
 </code></pre><p>Note:A power of two value is calculated because the decoder usesa final value by rounding down to the nearest power of two, as per theinSampleSizedocumentation.</p>
-<pre><code>public static Bitmap decodeSampledBitmapFromResource(Resourcesres,intresId,
-intreqWidth,intreqHeight){
-
-// First decode with inJustDecodeBounds = true to check dimensions
+<p>为了使用这一个方法，我们首先设置inJustDecodeBounds=true，通过options这个参数以及inSampleSize，设置inJustDecodeBounds=false来重新解码。<br>    public static Bitmap decodeSampledBitmapFromResource(Resourcesres,intresId,<br>    intreqWidth,intreqHeight){</p>
+<pre><code>// First decode with inJustDecodeBounds = true to check dimensions
 finalBitmapFactory.Optionsoptions = newBitmapFactory.Options();
 options.inJustDecodeBounds=true;
 BitmapFactory.decodeResource(res,resId,options);
@@ -260,7 +258,11 @@ options.inSampleSize = calculateInSampleSize(options,reqWidth,reqHeight);
 options.inJustDecodeBounds = false;
 return BitmapFactory.decodeResource(res,resId,options);
 }
-</code></pre><h3 id="有效地使用大图"><a href="#有效地使用大图" class="headerlink" title="有效地使用大图"></a>有效地使用大图</h3><h3 id="不要在UI线程处理Bitmap"><a href="#不要在UI线程处理Bitmap" class="headerlink" title="不要在UI线程处理Bitmap"></a>不要在UI线程处理Bitmap</h3><h3 id="对图片缓存"><a href="#对图片缓存" class="headerlink" title="对图片缓存"></a>对图片缓存</h3><h3 id="管理Bitmap内存"><a href="#管理Bitmap内存" class="headerlink" title="管理Bitmap内存"></a>管理Bitmap内存</h3><h3 id="在UI中展示Bitmap"><a href="#在UI中展示Bitmap" class="headerlink" title="在UI中展示Bitmap"></a>在UI中展示Bitmap</h3>
+</code></pre><p>这个方法可以让我们更容易地加载大尺寸的图片。比如我们想在一个ImageView上展示一个100*100像素缩略图，我们可以这么做：</p>
+<pre><code>mImageView.setImageBitmap(
+decodeSampledBitmapFromResource(getResources(),R.id.myimage,100,100));
+</code></pre><p>当然你也可以从不同的数据源上来处理图片的解码，通过替换比较合适的<br>BitmapFactory.decode*来实现。</p>
+<h3 id="有效地使用大图"><a href="#有效地使用大图" class="headerlink" title="有效地使用大图"></a>有效地使用大图</h3><h3 id="不要在UI线程处理Bitmap"><a href="#不要在UI线程处理Bitmap" class="headerlink" title="不要在UI线程处理Bitmap"></a>不要在UI线程处理Bitmap</h3><h3 id="对图片缓存"><a href="#对图片缓存" class="headerlink" title="对图片缓存"></a>对图片缓存</h3><h3 id="管理Bitmap内存"><a href="#管理Bitmap内存" class="headerlink" title="管理Bitmap内存"></a>管理Bitmap内存</h3><h3 id="在UI中展示Bitmap"><a href="#在UI中展示Bitmap" class="headerlink" title="在UI中展示Bitmap"></a>在UI中展示Bitmap</h3>
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
