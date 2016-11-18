@@ -208,11 +208,11 @@
         <div class="col-md-8 col-md-offset-2">
       		<h2 id="有效加载大型位图"><a href="#有效加载大型位图" class="headerlink" title="有效加载大型位图"></a>有效加载大型位图</h2><h3 id="读取图片尺寸和类型"><a href="#读取图片尺寸和类型" class="headerlink" title="读取图片尺寸和类型"></a>读取图片尺寸和类型</h3><p>BitmapFactory类提供了几种解码方法（decodeByteArray(),decodeFile(),decodeResource()等等）用于从不同的源创建一个Bitmap。依赖于你图片的数据源，选择最合适的解码方法。这些方法会为创建Bitmap尝试分配内存，因此很容易造成OutOfMemory的异常。每种类型的解码方法都有额外的参数，让你通过BitmapFactory.Options类指定你的解码属性。解码时设置<em>inJustDecodeBounds</em>属性为true会避免内存分配，不用返回一个bitmap对象，但是你可以设置outWidth,outHeight以及outMineType。这项很科技允许你在构造这个Bitmap（内存分配）之前读取图片数据的尺寸以及类型。</p>
 <pre><code>BitmapFactory.Optionsoptions=newBitmapFactory.Options();
-options.inJustDecodeBounds=true;
+options.inJustDecodeBounds = true;
 BitmapFactory.decodeResource(getResources(),R.id.myimage,options);
-intimageHeight=options.outHeight;
-intimageWidth=options.outWidth;
-StringimageType=options.outMimeType;
+intimageHeight = options.outHeight;
+intimageWidth = options.outWidth;
+StringimageType = options.outMimeType;
 </code></pre><p>为了避免OutOfMemory异常，我们在解码bitmap之前先检查该bitmap的尺寸，除非你绝对地相信提供给你的源图片是可以预见的尺寸，并且能游刃有余地适应有限的内存。</p>
 <h3 id="加载缩小后的图片进内存"><a href="#加载缩小后的图片进内存" class="headerlink" title="加载缩小后的图片进内存"></a>加载缩小后的图片进内存</h3><p>既然我们知道了图片的尺寸，这些尺寸信息能帮我们决定是否将完整的图片加载进内存还是经过缩小后的图片。一下几个因素需要考虑：</p>
 <ol>
@@ -224,42 +224,42 @@ StringimageType=options.outMimeType;
 <p>举个例子，使用一个1024<em>768像素的图片进内存，但是实际上却在一个128</em>96像素大小的ImageView上展示缩略图。这是不明智的。<br>告诉解码器对图片采样，加载一个小一点的图片版本进内存，可以在你的BitmapFactory.Options中设置inSampleSize=true。举个例子，一个2048<em>1536大小的Bitmap，设置inSampleSize=4会产生一个大小接近512</em>384的Bitmap。加载进内存只用了0.75M而不是12M（假设图片的颜色格式为ARGB_8888）。下面这个方法可以</p>
 <pre><code>public static int calculateInSampleSize(
 BitmapFactory.Optionsoptions,intreqWidth,intreqHeight){
-// Raw height and width of image
-final int height = options.outHeight;
-final int width = options.outWidth;
-int inSampleSize = 1;
+    // Raw height and width of image
+    final int height = options.outHeight;
+    final int width = options.outWidth;
+    int inSampleSize = 1;
 
-if(height &gt; reqHeight || width &gt; reqWidth){
+    if(height &gt; reqHeight || width &gt; reqWidth){
 
-final int halfHeight = height/2;
-final int halfWidth = width/2;
+        final int halfHeight = height/2;
+        final int halfWidth = width/2;
 
-// Calculate the largest inSampleSize value that is a power of 2 and keeps both
-// height and width larger than the requested height and width.
-while((halfHeight/inSampleSize) &gt;= reqHeight
-&amp;&amp;(halfWidth/inSampleSize) &gt;= reqWidth){
-inSampleSize *= 2;
-}
-}    
+        // Calculate the largest inSampleSize value that is a power of 2 and keeps     both
+        // height and width larger than the requested height and width.
+        while((halfHeight/inSampleSize) &gt;= reqHeight
+        &amp;&amp;(halfWidth/inSampleSize) &gt;= reqWidth){
+            inSampleSize *= 2;
+        }
+    }    
 
-return inSampleSize;
+    return inSampleSize;
 }
 </code></pre><p>Note:A power of two value is calculated because the decoder usesa final value by rounding down to the nearest power of two, as per theinSampleSizedocumentation.</p>
 <p>为了使用这一个方法，我们首先设置inJustDecodeBounds=true，通过options这个参数以及inSampleSize，设置inJustDecodeBounds=false来重新解码。</p>
 <pre><code>public static Bitmap decodeSampledBitmapFromResource(Resources res,int resId,
 int reqWidth,int reqHeight){
 
-//首先设置inJustDecodeBounds = true来解码用来检查尺寸
-finalBitmapFactory.Optionsoptions = newBitmapFactory.Options();
-options.inJustDecodeBounds=true;
-BitmapFactory.decodeResource(res,resId,options);
+    //首先设置inJustDecodeBounds = true来解码用来检查尺寸
+    final BitmapFactory.Optionsoptions = newBitmapFactory.Options();
+    options.inJustDecodeBounds = true;
+    BitmapFactory.decodeResource(res,resId,options);
 
-// Calculate inSampleSize
-options.inSampleSize = calculateInSampleSize(options,reqWidth,reqHeight);
+    // Calculate inSampleSize
+    options.inSampleSize = calculateInSampleSize(options,reqWidth,reqHeight);
 
-// Decode bitmap with inSampleSize set
-options.inJustDecodeBounds = false;
-return BitmapFactory.decodeResource(res,resId,options);
+    // Decode bitmap with inSampleSize set
+    options.inJustDecodeBounds = false;
+    return BitmapFactory.decodeResource(res,resId,options);
 }
 </code></pre><p>这个方法可以让我们更容易地加载大尺寸的图片。比如我们想在一个ImageView上展示一个100*100像素缩略图，我们可以这么做：</p>
 <pre><code>mImageView.setImageBitmap(
@@ -268,31 +268,76 @@ decodeSampledBitmapFromResource(getResources(),R.id.myimage,100,100));
 <h2 id="不要在UI线程处理Bitmap"><a href="#不要在UI线程处理Bitmap" class="headerlink" title="不要在UI线程处理Bitmap"></a>不要在UI线程处理Bitmap</h2><p>BitmapFactory.decode* 相关的方法，我们在上一部分《有效加载大型位图》已经讨论过了。如果位图资源位于存储卡或者网络上（或者其他不同于内存的源），我们都不应该在主线程对其进行处理。因为这些数据被加载所需要的时间依赖于一系列的因素（存储卡的读取速度，网络情况，图片大小，CPU的能力等等），是不可预测的。如果这些任务中的某一项在UI线程中阻塞，系统会认为你的应用程序无响应，会弹出ANR（Applicatin No Response），用户可以选择关闭应用程序。<br>这一部分会带你了解使用AsyncTask在后台处理Bitmap，并且展示如何处理并发问题。</p>
 <h3 id="使用AsyncTask"><a href="#使用AsyncTask" class="headerlink" title="使用AsyncTask"></a>使用AsyncTask</h3><p>AsyncTask类提供了一个简单的途径用来在后台处理一些任务，并将结果返回给UI线程。为了使用它，创建一个AsyncTask子类并且重写一个方法。下面是一个使用AsyncTask，decodeSampledBitmapFromResource()在ImageView上加载大型位图的例子。</p>
 <pre><code>class BitmapWorkerTask extends AsyncTask&lt;Integer,Void,Bitmap&gt;{
-private final WeakReference&lt;ImageView&gt; imageViewReference;
-private int data = 0;
 
-public BitmapWorkerTask(ImageView imageView){
-// Use a WeakReference to ensure the ImageView can be garbage collected
-imageViewReference = new WeakReference&lt;ImageView&gt;(imageView);
-}
+    private final WeakReference&lt;ImageView&gt; imageViewReference;
+    private int data = 0;
 
-// Decode image in background.
-@Override
-protected Bitmap doInBackground(Integer...params){
-data = params[0];
-return decodeSampledBitmapFromResource(getResources(),data,100,100));
-}
+    public BitmapWorkerTask(ImageView imageView){
 
-// Once complete, see if ImageView is still around and set bitmap.
-@Override
-protected void onPostExecute(Bitmap bitmap){
-    if(imageViewReference != null &amp;&amp; bitmap != null){
-        final ImageView imageView = imageViewReference.get();
-        if(imageView!=null){
-            imageView.setImageBitmap(bitmap);
+        // Use a WeakReference to ensure the ImageView can be garbage collected
+        imageViewReference = new WeakReference&lt;ImageView&gt;(imageView);
+
+    }
+
+    // Decode image in background.
+    @Override
+    protected Bitmap doInBackground(Integer...params){
+
+        data = params[0];
+        return decodeSampledBitmapFromResource(getResources(),data,100,100));
+
+    }
+
+    // Once complete, see if ImageView is still around and set bitmap.
+    @Override
+    protected void onPostExecute(Bitmap bitmap){
+
+        if(imageViewReference != null &amp;&amp; bitmap != null){
+            final ImageView imageView = imageViewReference.get();
+            if(imageView!=null){
+                imageView.setImageBitmap(bitmap);
+            }
+
         }
     }
 }
+</code></pre><p>对ImageView的弱引用（WeakReference）会确保AsyncTask不会阻止垃圾回收器回收ImageView以及其他一些相关的对象。我们并不能保证当task执行完成后这个ImageView 还存在，所以我们必须在onPostExecute()方法中对ImageView的引用进行检查。这个ImageView可能会不存在，比如，用户通过返回键退出了当前的activity，又或者在任务结束前一些配置发生了变化。</p>
+<p>为了开始异步加载bitmap，下面的例子会创建一个新的task并执行它。</p>
+<pre><code>public void loadBitmap(intresId,ImageView imageView){
+
+    BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+    task.execute(resId);
+
+}
+</code></pre><h3 id="并发处理"><a href="#并发处理" class="headerlink" title="并发处理"></a>并发处理</h3><p>在上一节中我们介绍了，一些常用的view组件，比如ListView和GridView。当我们结合AsynTask使用的时候我产生一些新的问题。<br>为了高效地利用内存，这些组件的子view会在用户滚动的时候被循环利用。如果每一个子view触发一个AsynTask，这不能保证当该AsynTask完成时，关联的view没有被其他的子view回收利用。此外，不能保证的是这些task<br>完成的顺序和他们开始的顺序一致。<br>这个博客Multithreadingfor Performance章节深入讨论了处理并发，并提供了ImageView存储最近AsyncTask</p>
+<pre><code>static class AsyncDrawable extends BitmapDrawable{
+
+    private final WeakReference&lt;BitmapWorkerTask&gt; bitmapWorkerTaskReference;
+
+    public AsyncDrawable(Resourcesres,Bitmapbitmap,
+        BitmapWorkerTask bitmapWorkerTask){
+
+        super(res,bitmap);
+        bitmapWorkerTaskReference =
+        new WeakReference&lt;BitmapWorkerTask&gt; (bitmapWorkerTask);
+
+    }
+
+    public BitmapWorkerTask getBitmapWorkerTask(){
+
+        return    bitmapWorkerTaskReference.get();
+
+    }
+}
+</code></pre><p>在执行theImageViewensures之前，你可以创建一个AsyncDrawable并绑定到ImageView。</p>
+<pre><code>public void loadBitmap(intresId,ImageView imageView){
+    if(cancelPotentialWork(resId,imageView)){
+        final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        final AsyncDrawable asyncDrawable =
+        new AsyncDrawable(getResources(),mPlaceHolderBitmap,task);
+        imageView.setImageDrawable(asyncDrawable);
+        task.execute(resId);
+    }
 }
 </code></pre><h2 id="对图片缓存"><a href="#对图片缓存" class="headerlink" title="对图片缓存"></a>对图片缓存</h2><h2 id="管理Bitmap内存"><a href="#管理Bitmap内存" class="headerlink" title="管理Bitmap内存"></a>管理Bitmap内存</h2><h2 id="在UI中展示Bitmap"><a href="#在UI中展示Bitmap" class="headerlink" title="在UI中展示Bitmap"></a>在UI中展示Bitmap</h2>
             <div class="clearfix"></div>
