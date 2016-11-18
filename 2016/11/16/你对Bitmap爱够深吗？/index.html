@@ -206,7 +206,7 @@
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		<h2 id="更加有效地使用Bitmap"><a href="#更加有效地使用Bitmap" class="headerlink" title="更加有效地使用Bitmap"></a>更加有效地使用Bitmap</h2><h3 id="读取图片尺寸和类型"><a href="#读取图片尺寸和类型" class="headerlink" title="读取图片尺寸和类型"></a>读取图片尺寸和类型</h3><p>BitmapFactory类提供了几种解码方法（decodeByteArray(),decodeFile(),decodeResource()等等）用于从不同的源创建一个Bitmap。依赖于你图片的数据源，选择最合适的解码方法。这些方法会为创建Bitmap尝试分配内存，因此很容易造成OutOfMemory的异常。每种类型的解码方法都有额外的参数，让你通过BitmapFactory.Options类指定你的解码属性。解码时设置<em>inJustDecodeBounds</em>属性为true会避免内存分配，不用返回一个bitmap对象，但是你可以设置outWidth,outHeight以及outMineType。这项很科技允许你在构造这个Bitmap（内存分配）之前读取图片数据的尺寸以及类型。</p>
+      		<h2 id="有效加载大型位图"><a href="#有效加载大型位图" class="headerlink" title="有效加载大型位图"></a>有效加载大型位图</h2><h3 id="读取图片尺寸和类型"><a href="#读取图片尺寸和类型" class="headerlink" title="读取图片尺寸和类型"></a>读取图片尺寸和类型</h3><p>BitmapFactory类提供了几种解码方法（decodeByteArray(),decodeFile(),decodeResource()等等）用于从不同的源创建一个Bitmap。依赖于你图片的数据源，选择最合适的解码方法。这些方法会为创建Bitmap尝试分配内存，因此很容易造成OutOfMemory的异常。每种类型的解码方法都有额外的参数，让你通过BitmapFactory.Options类指定你的解码属性。解码时设置<em>inJustDecodeBounds</em>属性为true会避免内存分配，不用返回一个bitmap对象，但是你可以设置outWidth,outHeight以及outMineType。这项很科技允许你在构造这个Bitmap（内存分配）之前读取图片数据的尺寸以及类型。</p>
 <pre><code>BitmapFactory.Optionsoptions=newBitmapFactory.Options();
 options.inJustDecodeBounds=true;
 BitmapFactory.decodeResource(getResources(),R.id.myimage,options);
@@ -245,8 +245,11 @@ inSampleSize *= 2;
 return inSampleSize;
 }
 </code></pre><p>Note:A power of two value is calculated because the decoder usesa final value by rounding down to the nearest power of two, as per theinSampleSizedocumentation.</p>
-<p>为了使用这一个方法，我们首先设置inJustDecodeBounds=true，通过options这个参数以及inSampleSize，设置inJustDecodeBounds=false来重新解码。<br>    public static Bitmap decodeSampledBitmapFromResource(Resourcesres,intresId,<br>    intreqWidth,intreqHeight){</p>
-<pre><code>// First decode with inJustDecodeBounds = true to check dimensions
+<p>为了使用这一个方法，我们首先设置inJustDecodeBounds=true，通过options这个参数以及inSampleSize，设置inJustDecodeBounds=false来重新解码。</p>
+<pre><code>public static Bitmap decodeSampledBitmapFromResource(Resources res,int resId,
+int reqWidth,int reqHeight){
+
+//首先设置inJustDecodeBounds = true来解码用来检查尺寸
 finalBitmapFactory.Optionsoptions = newBitmapFactory.Options();
 options.inJustDecodeBounds=true;
 BitmapFactory.decodeResource(res,resId,options);
@@ -262,7 +265,36 @@ return BitmapFactory.decodeResource(res,resId,options);
 <pre><code>mImageView.setImageBitmap(
 decodeSampledBitmapFromResource(getResources(),R.id.myimage,100,100));
 </code></pre><p>当然你也可以从不同的数据源上来处理图片的解码，通过替换比较合适的<br>BitmapFactory.decode*来实现。</p>
-<h3 id="有效地使用大图"><a href="#有效地使用大图" class="headerlink" title="有效地使用大图"></a>有效地使用大图</h3><h3 id="不要在UI线程处理Bitmap"><a href="#不要在UI线程处理Bitmap" class="headerlink" title="不要在UI线程处理Bitmap"></a>不要在UI线程处理Bitmap</h3><h3 id="对图片缓存"><a href="#对图片缓存" class="headerlink" title="对图片缓存"></a>对图片缓存</h3><h3 id="管理Bitmap内存"><a href="#管理Bitmap内存" class="headerlink" title="管理Bitmap内存"></a>管理Bitmap内存</h3><h3 id="在UI中展示Bitmap"><a href="#在UI中展示Bitmap" class="headerlink" title="在UI中展示Bitmap"></a>在UI中展示Bitmap</h3>
+<h2 id="不要在UI线程处理Bitmap"><a href="#不要在UI线程处理Bitmap" class="headerlink" title="不要在UI线程处理Bitmap"></a>不要在UI线程处理Bitmap</h2><p>BitmapFactory.decode* 相关的方法，我们在上一部分《有效加载大型位图》已经讨论过了。如果位图资源位于存储卡或者网络上（或者其他不同于内存的源），我们都不应该在主线程对其进行处理。因为这些数据被加载所需要的时间依赖于一系列的因素（存储卡的读取速度，网络情况，图片大小，CPU的能力等等），是不可预测的。如果这些任务中的某一项在UI线程中阻塞，系统会认为你的应用程序无响应，会弹出ANR（Applicatin No Response），用户可以选择关闭应用程序。<br>这一部分会带你了解使用AsyncTask在后台处理Bitmap，并且展示如何处理并发问题。</p>
+<h3 id="使用AsyncTask"><a href="#使用AsyncTask" class="headerlink" title="使用AsyncTask"></a>使用AsyncTask</h3><p>AsyncTask类提供了一个简单的途径用来在后台处理一些任务，并将结果返回给UI线程。为了使用它，创建一个AsyncTask子类并且重写一个方法。下面是一个使用AsyncTask，decodeSampledBitmapFromResource()在ImageView上加载大型位图的例子。</p>
+<pre><code>class BitmapWorkerTask extends AsyncTask&lt;Integer,Void,Bitmap&gt;{
+private final WeakReference&lt;ImageView&gt; imageViewReference;
+private int data = 0;
+
+public BitmapWorkerTask(ImageView imageView){
+// Use a WeakReference to ensure the ImageView can be garbage collected
+imageViewReference = new WeakReference&lt;ImageView&gt;(imageView);
+}
+
+// Decode image in background.
+@Override
+protected Bitmap doInBackground(Integer...params){
+data = params[0];
+return decodeSampledBitmapFromResource(getResources(),data,100,100));
+}
+
+// Once complete, see if ImageView is still around and set bitmap.
+@Override
+protected void onPostExecute(Bitmap bitmap){
+    if(imageViewReference != null &amp;&amp; bitmap != null){
+        final ImageView imageView = imageViewReference.get();
+        if(imageView!=null){
+            imageView.setImageBitmap(bitmap);
+        }
+    }
+}
+}
+</code></pre><h2 id="对图片缓存"><a href="#对图片缓存" class="headerlink" title="对图片缓存"></a>对图片缓存</h2><h2 id="管理Bitmap内存"><a href="#管理Bitmap内存" class="headerlink" title="管理Bitmap内存"></a>管理Bitmap内存</h2><h2 id="在UI中展示Bitmap"><a href="#在UI中展示Bitmap" class="headerlink" title="在UI中展示Bitmap"></a>在UI中展示Bitmap</h2>
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
