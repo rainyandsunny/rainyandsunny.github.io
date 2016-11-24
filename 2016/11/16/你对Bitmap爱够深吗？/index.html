@@ -309,7 +309,8 @@ decodeSampledBitmapFromResource(getResources(),R.id.myimage,100,100));
     task.execute(resId);
 
 }
-</code></pre><h3 id="并发处理"><a href="#并发处理" class="headerlink" title="并发处理"></a>并发处理</h3><p>在上一节中我们介绍了，一些常用的view组件，比如ListView和GridView。当我们结合AsynTask使用的时候我产生一些新的问题。<br>为了高效地利用内存，这些组件的子view会在用户滚动的时候被循环利用。如果每一个子view触发一个AsynTask，这不能保证当该AsynTask完成时，关联的view没有被其他的子view回收利用。此外，不能保证的是这些task<br>完成的顺序和他们开始的顺序一致。<br>这个博客Multithreadingfor Performance章节深入讨论了处理并发，并提供了ImageView存储最近AsyncTask</p>
+</code></pre><h3 id="并发处理"><a href="#并发处理" class="headerlink" title="并发处理"></a>并发处理</h3><p>在上一节中我们介绍了，一些常用的view组件，比如ListView和GridView。当我们结合AsynTask使用的时候我产生一些新的问题。<br>为了高效地利用内存，这些组件的子view会在用户滚动的时候被循环利用。如果每一个子view触发一个AsynTask，这不能保证当该AsynTask完成时，关联的view没有被其他的子view回收利用。此外，不能保证的是这些task<br>完成的顺序和他们开始的顺序一致。<br>这个博客<a href="http://android-developers.blogspot.com/2010/07/multithreading-for-performance.html" target="_blank" rel="external">Multithreadingfor Performance</a>章节深入讨论了处理并发，并提供了一种解决办法。ImageView保存了最近的AsyncTask引用，在该task完成时该ImageView会被检查。使用相似的方法，继承上一节的AsynTask用来实现相同的模式。</p>
+<p>创建一个Drawable的父类用来存储一个task的引用。在这种情况下，使用BitmapDrawable以便当该Task完成的时候，该image会被显示在ImageView上。</p>
 <pre><code>static class AsyncDrawable extends BitmapDrawable{
 
     private final WeakReference&lt;BitmapWorkerTask&gt; bitmapWorkerTaskReference;
@@ -339,7 +340,67 @@ decodeSampledBitmapFromResource(getResources(),R.id.myimage,100,100));
         task.execute(resId);
     }
 }
-</code></pre><h2 id="对图片缓存"><a href="#对图片缓存" class="headerlink" title="对图片缓存"></a>对图片缓存</h2><h2 id="管理Bitmap内存"><a href="#管理Bitmap内存" class="headerlink" title="管理Bitmap内存"></a>管理Bitmap内存</h2><h2 id="在UI中展示Bitmap"><a href="#在UI中展示Bitmap" class="headerlink" title="在UI中展示Bitmap"></a>在UI中展示Bitmap</h2>
+</code></pre><p>在执行BitmapWorkerTask之前，你创建一个AsyncDrawable并将它绑定给目标ImageView。</p>
+<pre><code>public void loadBitmap(int resId,ImageView imageView){
+if(cancelPotentialWork(resId,imageView)){
+final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+final AsyncDrawable asyncDrawable = 
+new AsyncDrawable(getResources(),mPlaceHolderBitmap,task);
+imageView.setImageDrawable(asyncDrawable);
+task.execute(resId);
+}
+}
+</code></pre><p>cancelPotentialWork方法代码如下，目的是检查是否另外一个运行的task已经被关联到该ImageView。如果已经被绑定，那么它会通过调用cancel()方法试图取消上一个Task。在极少数情况下，新的task的数据与已经存在的task相匹配，所以不需要深入发生什么。下面是cancelPotentialWork的一种实现。</p>
+<pre><code>public static boolean cancelPotentialWork(intdata,ImageViewimageView){
+final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+if(bitmapWorkerTask != null){
+final int bitmapData = bitmapWorkerTask.data;
+// If bitmapData is not yet set or it differs from the new data
+if(bitmapData == 0 || bitmapData != data){
+// Cancel previous task
+bitmapWorkerTask.cancel(true);
+}else{
+// The same work is already in progress
+returnfalse;
+}
+}
+// No task associated with the ImageView, or an existing task was cancelled
+return true;
+}
+
+private    static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView){
+    if(imageView!=null){
+        final Drawable drawable = imageView.getDrawable();
+        if(drawableinstanceofAsyncDrawable){
+            final AsyncDrawable asyncDrawable = (AsyncDrawable)drawable;
+            return asyncDrawable.getBitmapWorkerTask();
+        }
+    }
+    return null;
+}
+</code></pre><p>最后一步就是在BitmapWorkerTask的onPostExecute()方法中去更新显示，所以要检查该task是否被取消，还要检查当前task是否匹配与ImageView关联的task。</p>
+<pre><code>class BitmapWorkerTask extends AsyncTask&lt;Integer,Void,Bitmap&gt;{
+...
+
+    @Override
+    protectedvoidonPostExecute(Bitmapbitmap){
+        if(isCancelled()){
+            bitmap=null;
+        }
+
+        if(imageViewReference!=null&amp;&amp;bitmap!=null){
+            final ImageView imageView=imageViewReference.get();
+            final BitmapWorkerTask bitmapWorkerTask =
+            getBitmapWorkerTask(imageView);
+            if(this==bitmapWorkerTask&amp;&amp;imageView!=null){
+                imageView.setImageBitmap(bitmap);
+            }
+        }
+    }
+}
+</code></pre><p>现在的实现方式对于ListView和GridView组件以及其他一些可以回收子view的组件同样适用。只需要简简单单地调用loadBitmap就可以将Imageview显示到ImageView控件上。举个例子，在GridView的实现方式为：在adapter的getView()方法中使用该方法。</p>
+<h2 id="对图片缓存"><a href="#对图片缓存" class="headerlink" title="对图片缓存"></a>对图片缓存</h2><h2 id="管理Bitmap内存"><a href="#管理Bitmap内存" class="headerlink" title="管理Bitmap内存"></a>管理Bitmap内存</h2><h2 id="在UI中展示Bitmap"><a href="#在UI中展示Bitmap" class="headerlink" title="在UI中展示Bitmap"></a>在UI中展示Bitmap</h2>
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
