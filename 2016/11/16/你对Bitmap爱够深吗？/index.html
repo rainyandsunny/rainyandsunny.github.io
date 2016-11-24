@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>给你100万离开我的Bitmap，除非你比我更了解她 | 小小黄金屋</title>
+  <title>给你100万离开我的Bitmap，除非你比我更了解她（译） | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -202,11 +202,11 @@
       </time>
     
 </span>
-                <h1>给你100万离开我的Bitmap，除非你比我更了解她</h1>
+                <h1>给你100万离开我的Bitmap，除非你比我更了解她（译）</h1>
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		<h2 id="有效加载大型位图"><a href="#有效加载大型位图" class="headerlink" title="有效加载大型位图"></a>有效加载大型位图</h2><h3 id="读取图片尺寸和类型"><a href="#读取图片尺寸和类型" class="headerlink" title="读取图片尺寸和类型"></a>读取图片尺寸和类型</h3><p>BitmapFactory类提供了几种解码方法（decodeByteArray(),decodeFile(),decodeResource()等等）用于从不同的源创建一个Bitmap。依赖于你图片的数据源，选择最合适的解码方法。这些方法会为创建Bitmap尝试分配内存，因此很容易造成OutOfMemory的异常。每种类型的解码方法都有额外的参数，让你通过BitmapFactory.Options类指定你的解码属性。解码时设置<em>inJustDecodeBounds</em>属性为true会避免内存分配，不用返回一个bitmap对象，但是你可以设置outWidth,outHeight以及outMineType。这项很科技允许你在构造这个Bitmap（内存分配）之前读取图片数据的尺寸以及类型。</p>
+      		<h2 id="有效加载大型位图"><a href="#有效加载大型位图" class="headerlink" title="有效加载大型位图"></a>有效加载大型位图</h2><h3 id="读取图片尺寸和类型"><a href="#读取图片尺寸和类型" class="headerlink" title="读取图片尺寸和类型"></a>读取图片尺寸和类型</h3><p>BitmapFactory类提供了几种解码方法（decodeByteArray(),decodeFile(),decodeResource()等等）用于从不同的源创建一个Bitmap。依赖于你图片的数据源，选择最合适的解码方法。这些方法会为创建Bitmap尝试分配内存，因此很容易造成OutOfMemory的异常。每种类型的解码方法都有额外的参数，让你通过BitmapFactory.Options类指定你的解码属性。解码时设置<em>inJustDecodeBounds</em>属性为true会避免内存分配，不用返回一个bitmap对象，但是你可以读取outWidth,outHeight以及outMineType。这项黑科技允许你在构造这个Bitmap（内存分配）之前读取图片数据的尺寸以及类型。</p>
 <pre><code>BitmapFactory.Optionsoptions=newBitmapFactory.Options();
 options.inJustDecodeBounds = true;
 BitmapFactory.decodeResource(getResources(),R.id.myimage,options);
@@ -217,7 +217,7 @@ StringimageType = options.outMimeType;
 <h3 id="加载缩小后的图片进内存"><a href="#加载缩小后的图片进内存" class="headerlink" title="加载缩小后的图片进内存"></a>加载缩小后的图片进内存</h3><p>既然我们知道了图片的尺寸，这些尺寸信息能帮我们决定是否将完整的图片加载进内存还是经过缩小后的图片。一下几个因素需要考虑：</p>
 <ol>
 <li>估计加载完整图片进内存所使用的内存大小；</li>
-<li>；</li>
+<li>你使用内存加载图像的时候考虑你的应用任何其他的内存要求；</li>
 <li>将使用待加载图片的目标UI组件或者ImageView的尺寸信息；</li>
 <li>当前设备的屏幕尺寸以及像素密度。</li>
 </ol>
@@ -414,7 +414,7 @@ private    static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView){
 </nav>
 
         <div class="duoshuo">
-<div class="ds-thread" data-thread-key="2016/11/16/你对Bitmap爱够深吗？/" data-title="给你100万离开我的Bitmap，除非你比我更了解她" data-url="http://yoursite.com/2016/11/16/你对Bitmap爱够深吗？/"></div>
+<div class="ds-thread" data-thread-key="2016/11/16/你对Bitmap爱够深吗？/" data-title="给你100万离开我的Bitmap，除非你比我更了解她（译）" data-url="http://yoursite.com/2016/11/16/你对Bitmap爱够深吗？/"></div>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"duoshuo_name"};
 (function() {
