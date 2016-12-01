@@ -229,8 +229,130 @@
 </code></pre><h4 id="3-from"><a href="#3-from" class="headerlink" title="3. from"></a>3. from</h4><pre><code> String[] hello = {&quot;hello world1&quot;,
 &quot;hello world2&quot;,&quot;hello world3&quot;};
 Observable.from(hello).subscribe(subscriber);
-</code></pre><h3 id="常用操作符"><a href="#常用操作符" class="headerlink" title="常用操作符"></a>常用操作符</h3><p>map：</p>
-<p>flatMap：<br>filter：</p>
+</code></pre><h3 id="常用操作符（介绍几个常用的，入门后其他的可以自己去看）"><a href="#常用操作符（介绍几个常用的，入门后其他的可以自己去看）" class="headerlink" title="常用操作符（介绍几个常用的，入门后其他的可以自己去看）"></a>常用操作符（介绍几个常用的，入门后其他的可以自己去看）</h3><h4 id="map："><a href="#map：" class="headerlink" title="map："></a>map：</h4><p>在发出事件后，对Observable发出的进行处理，是一对一处理，进去一个，然后经过处理，得到一个对应的结果。</p>
+<pre><code>String[] hello = {&quot;hello world1&quot;,&quot;hello world2&quot;,&quot;hello world3&quot;};
+Observable.from(hello).map(new Func1&lt;String, String&gt;() {
+    @Override
+    public String call(String s) {
+        return s+&quot; myscrate&quot;;
+    }
+}).subscribe(subscriber);
+</code></pre><h4 id="filter："><a href="#filter：" class="headerlink" title="filter："></a>filter：</h4><p>顾名思义，就是过滤器的意思。我们不能将所有传出的事件一股脑给SubScriber，而是将满足条件的传出去即可。多说无益，看例子：</p>
+<p>假设现在有个Student类：</p>
+<pre><code>class Student {
+
+        private int age;
+        private String name;
+
+        public Student(){}
+        public Student(int age,String name){
+            this.name = name;
+            this.age = age;
+        }
+    }
+</code></pre><p>里面有姓名和年龄字段。我们的需求是挑出其中年龄大于20的学生，假设就是女生吧，岂不美哉。那么我们怎么做呢？</p>
+<p>先准备三个学生：</p>
+<pre><code> Student stu1 = new Student(18,&quot;nana&quot;);
+Student stu2 = new Student(21,&quot;xiaoli&quot;);
+Student stu3 = new Student(25,&quot;lixinyu&quot;);
+</code></pre><p>指定Subscribe的动作（先展示出来供翻牌）：</p>
+<pre><code>Action1&lt;Student&gt; studentNextAction1 = new Action1&lt;Student&gt;() {
+        @Override
+        public void call(Student student) {
+
+            System.out.println(student.name+&quot; &gt; 20岁 &quot;);
+        }
+    };
+</code></pre><p>最后一步，创建Observable并订阅studentNextAction1。</p>
+<pre><code>Observable.just(stu1,stu2,stu3).filter(new Func1&lt;Student, Boolean&gt;() {
+        @Override
+        public Boolean call(Student student) {
+            return student.age &gt; 20 ? true : false;
+        }
+    }).subscribe(studentNextAction1);
+</code></pre><p>仔细看中间的处理过程，我们在filter中将年龄大于20岁的返回true，可以传出到subscribe（观察者）中。<br>那么结果如何呢？</p>
+<p>//Output</p>
+<hr>
+<p>I/System.out: xiaoli &gt; 20岁 </p>
+<p>I/System.out: lixinyu &gt; 20岁 </p>
+<hr>
+<p>目的达到。</p>
+<h4 id="flatMap："><a href="#flatMap：" class="headerlink" title="flatMap："></a>flatMap：</h4><p>先不说这个操作符有什么用，来看个例子就懂了。每个学生有好多门课，每门课都有对应的成绩和课程名称。</p>
+<pre><code>class Course{
+
+        private String courseName; //课程名称
+        private int grade; // 成绩
+
+        public Course(){}
+        public Course(String courseName,int grade){
+            this.courseName = courseName;
+            this.grade = grade;
+        }
+    }
+</code></pre><p>那么我们的学生类对应就变成如下的：</p>
+<pre><code>class Student {
+
+     private int age;
+     private String name;
+     private Course[] courses;
+
+     public Student(){}
+     public Student(int age,String name,Course[] courses){
+         this.name = name;
+         this.age = age;
+         this.courses = courses;
+     }
+ }
+</code></pre><p>现在需求来了，将所有学生考试不及格的科目列出来。<br>是你你会怎么做？</p>
+<p><em>你可能会这么做</em></p>
+<pre><code> Course[] stu1Courses = {new Course(&quot;算法导论&quot;,78),new Course(&quot;计算机网络&quot;,59),new Course(&quot;操作系统&quot;,89)};
+Course[] stu2Courses = {new Course(&quot;算法导论&quot;,21),new Course(&quot;计算机网络&quot;,76),new Course(&quot;操作系统&quot;,87)};
+Course[] stu3Courses = {new Course(&quot;算法导论&quot;,78),new Course(&quot;计算机网络&quot;,54),new Course(&quot;操作系统&quot;,62)};
+Student stu1 = new Student(18,&quot;nana&quot;,stu1Courses);
+Student stu2 = new Student(21,&quot;xiaoli&quot;,stu2Courses);
+Student stu3 = new Student(25,&quot;lixinyu&quot;,stu3Courses);
+Student[] students = {stu1,stu2,stu3};
+
+Action1&lt;Student&gt; courseNextAction1 = new Action1&lt;Student&gt;() {
+    @Override
+    public void call(Student stu) {
+        Course[] courses = stu.courses;
+        for(int i=0;i&lt;courses.length;i++){
+
+            if(courses[i].grade &lt; 60){
+                System.out.println(stu.name+courses[i].courseName+courses[i].grade);
+            }
+        }
+
+    }
+};
+</code></pre><p>最后一步，完成订阅。</p>
+<pre><code>Observable.from(students).subscribe(courseNextAction1);
+</code></pre><p>这么写会不会有什么问题？我们可以看到在courseNextAction1做了太多工作，没传出来一个Student都会执行一遍循环。那么有没有简单点的写法呢？</p>
+<pre><code>    //(1)准备订阅者
+   Action1&lt;Course&gt; courseNextAction = new Action1&lt;Course&gt;() {
+       @Override
+       public void call(Course course) {
+
+           if(course.grade &lt; 60){
+               System.out.println(course.courseName+&quot;:&quot;+course.grade);
+           }
+       }
+   };
+
+//(2)创建Observable并订阅
+ Observable.from(students).flatMap(new Func1&lt;Student, Observable&lt;? extends Course&gt;&gt;() {
+        @Override
+        public Observable&lt;? extends Course&gt; call(Student student) {
+            return Observable.from(student.courses);
+        }
+    }).subscribe(courseNextAction);
+</code></pre><p>Output</p>
+<hr>
+<p>计算机网络:59</p>
+<p>算法导论:21</p>
+<p>计算机网络:54</p>
+<hr>
 <p>….</p>
 
             <div class="clearfix"></div>
