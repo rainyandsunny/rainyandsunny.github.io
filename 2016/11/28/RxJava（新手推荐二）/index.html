@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>RxJava（新手推荐二）(译) | 小小黄金屋</title>
+  <title>RxJava（新手推荐二） | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -202,11 +202,37 @@
       </time>
     
 </span>
-                <h1>RxJava（新手推荐二）(译)</h1>
+                <h1>RxJava（新手推荐二）</h1>
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		
+      		<p>在上一部分<a href="https://rainyandsunny.github.io/2016/11/27/RxJava%EF%BC%88%E6%96%B0%E6%89%8B%E6%8E%A8%E8%8D%90%EF%BC%89/" target="_blank" rel="external">RxJava（新手推荐一）</a>，我带大家了解了RxJava的基本结构以及介绍了map()操作符。第二部分，我打算给大家介绍Observable的几种创建方式以及其他一些操作符。在这一部分，我打算去掉Lamads表达式，虽然简洁但是可读性感觉并不好（其实我自己不会，不要拆穿啊）。</p>
+<h3 id="Observable（被观察者）的创建方式"><a href="#Observable（被观察者）的创建方式" class="headerlink" title="Observable（被观察者）的创建方式"></a>Observable（被观察者）的创建方式</h3><h4 id="1-create"><a href="#1-create" class="headerlink" title="1. create"></a>1. create</h4><pre><code>Observable.create(new Observable.OnSubscribe&lt;String&gt;() {
+       @Override
+       public void call(Subscriber&lt;? super String&gt; subscriber) {
+           subscriber.onNext(&quot;hello world1&quot;);
+           subscriber.onCompleted();
+       }
+   });
+</code></pre><h4 id="2-just"><a href="#2-just" class="headerlink" title="2. just"></a>2. just</h4><p>假如没有just的创建方式，我们现在要发出多个事件，我们该怎么写呢？</p>
+<pre><code>Observable.create(new Observable.OnSubscribe&lt;String&gt;() {
+       @Override
+       public void call(Subscriber&lt;? super String&gt; subscriber) {
+           subscriber.onNext(&quot;hello world1&quot;);
+           subscriber.onNext(&quot;hello world2&quot;);
+           subscriber.onNext(&quot;hello world3&quot;);
+           subscriber.onCompleted();
+       }
+   }).subscribe(subscriber);
+</code></pre><p>而有了Just的方式后，我们就可以这么做：</p>
+<pre><code>Observable.just(&quot;hello world1&quot;,&quot;hello world2&quot;,&quot;hello world3&quot;).subscribe(subscriber);
+</code></pre><h4 id="3-from"><a href="#3-from" class="headerlink" title="3. from"></a>3. from</h4><pre><code> String[] hello = {&quot;hello world1&quot;,
+&quot;hello world2&quot;,&quot;hello world3&quot;};
+Observable.from(hello).subscribe(subscriber);
+</code></pre><h3 id="常用操作符"><a href="#常用操作符" class="headerlink" title="常用操作符"></a>常用操作符</h3><p>map：</p>
+<p>flatMap：<br>filter：</p>
+<p>….</p>
+
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
@@ -220,7 +246,7 @@
 </nav>
 
         <div class="duoshuo">
-<div class="ds-thread" data-thread-key="2016/11/28/RxJava（新手推荐二）/" data-title="RxJava（新手推荐二）(译)" data-url="http://yoursite.com/2016/11/28/RxJava（新手推荐二）/"></div>
+<div class="ds-thread" data-thread-key="2016/11/28/RxJava（新手推荐二）/" data-title="RxJava（新手推荐二）" data-url="http://yoursite.com/2016/11/28/RxJava（新手推荐二）/"></div>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"duoshuo_name"};
 (function() {
