@@ -229,7 +229,7 @@
 </code></pre><h4 id="3-from"><a href="#3-from" class="headerlink" title="3. from"></a>3. from</h4><pre><code> String[] hello = {&quot;hello world1&quot;,
 &quot;hello world2&quot;,&quot;hello world3&quot;};
 Observable.from(hello).subscribe(subscriber);
-</code></pre><h3 id="常用操作符（介绍几个常用的，入门后其他的可以自己去看）"><a href="#常用操作符（介绍几个常用的，入门后其他的可以自己去看）" class="headerlink" title="常用操作符（介绍几个常用的，入门后其他的可以自己去看）"></a>常用操作符（介绍几个常用的，入门后其他的可以自己去看）</h3><h4 id="map："><a href="#map：" class="headerlink" title="map："></a>map：</h4><p>在发出事件后，对Observable发出的进行处理，是一对一处理，进去一个，然后经过处理，得到一个对应的结果。</p>
+</code></pre><h4 id="…其他创建方式"><a href="#…其他创建方式" class="headerlink" title="…其他创建方式"></a>…其他创建方式</h4><h3 id="常用操作符（介绍几个常用的，入门后其他的可以自己去看）"><a href="#常用操作符（介绍几个常用的，入门后其他的可以自己去看）" class="headerlink" title="常用操作符（介绍几个常用的，入门后其他的可以自己去看）"></a>常用操作符（介绍几个常用的，入门后其他的可以自己去看）</h3><h4 id="map："><a href="#map：" class="headerlink" title="map："></a>map：</h4><p>在发出事件后，对Observable发出的进行处理，是一对一处理，进去一个，然后经过处理，得到一个对应的结果。</p>
 <pre><code>String[] hello = {&quot;hello world1&quot;,&quot;hello world2&quot;,&quot;hello world3&quot;};
 Observable.from(hello).map(new Func1&lt;String, String&gt;() {
     @Override
@@ -347,13 +347,18 @@ Action1&lt;Student&gt; courseNextAction1 = new Action1&lt;Student&gt;() {
             return Observable.from(student.courses);
         }
     }).subscribe(courseNextAction);
-</code></pre><p>Output</p>
+</code></pre><p>我们分析下上面的写法，我们首先创建Observable（被观察者），随后经过flatMap变换。过程如下</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/RxJava.png" alt="flatMap流程"></p>
+<p>Output</p>
 <hr>
 <p>计算机网络:59</p>
 <p>算法导论:21</p>
 <p>计算机网络:54</p>
 <hr>
 <p>….</p>
+<p>这一部分主要讲了一些常用的操作符以及Observable的几种不同的创建方式。在下一部分中我将将RxJava中的Schedule以及在使用RxJava的注意事项，包括如何避免内存泄漏等。</p>
+<p>参考文章：</p>
+<p><a href="http://gank.io/post/560e15be2dca930e00da1083#toc_10" target="_blank" rel="external">给 Android 开发者的 RxJava 详解</a></p>
 
             <div class="clearfix"></div>
             <hr class="nogutter">
