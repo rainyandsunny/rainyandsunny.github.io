@@ -329,13 +329,11 @@ public void inputErr() {
 }
 </code></pre><p>从代码可以看出来，在MotionEvent.ACTION_DOWN中，我们分别进行了处理，那是因为如果return true的话，之后的MotionEvent.ACTION_UP<br>与MotionEvent.ACTION_MOVE事件才会被捕获，如果返回false则不会被捕获。</p>
 <p>还有其他一些模块简单介绍下，属于不重要的部分。</p>
-<p>#####1. 采集用户的输入</p>
-<p>gatherInput()</p>
-<p>#####2. 判断输入是否正确</p>
-<p>isInputOK()</p>
-<p>#####3. circles初始化<br>init()</p>
-<p>#####4. 画笔的初始化与设置<br>initResources(Context context)</p>
-<p>#####3. circles反初始化（在MotionEvent.ACTION_UP时调用将circles的isClicked置为false，path清空，input数据清空）<br>uninit()。</p>
+<h5 id="1-采集用户的输入"><a href="#1-采集用户的输入" class="headerlink" title="1. 采集用户的输入"></a>1. 采集用户的输入</h5><p>gatherInput()</p>
+<h5 id="2-判断输入是否正确"><a href="#2-判断输入是否正确" class="headerlink" title="2. 判断输入是否正确"></a>2. 判断输入是否正确</h5><p>isInputOK()</p>
+<h5 id="3-circles初始化"><a href="#3-circles初始化" class="headerlink" title="3. circles初始化"></a>3. circles初始化</h5><p>init()</p>
+<h5 id="4-画笔的初始化与设置"><a href="#4-画笔的初始化与设置" class="headerlink" title="4. 画笔的初始化与设置"></a>4. 画笔的初始化与设置</h5><p>initResources(Context context)</p>
+<h5 id="3-circles反初始化（在MotionEvent-ACTION-UP时调用将circles的isClicked置为false，path清空，input数据清空）"><a href="#3-circles反初始化（在MotionEvent-ACTION-UP时调用将circles的isClicked置为false，path清空，input数据清空）" class="headerlink" title="3. circles反初始化（在MotionEvent.ACTION_UP时调用将circles的isClicked置为false，path清空，input数据清空）"></a>3. circles反初始化（在MotionEvent.ACTION_UP时调用将circles的isClicked置为false，path清空，input数据清空）</h5><p>uninit()。</p>
 <p>代码在<a href="git@github.com:rainyandsunny/GestureUnLock.git">git@github.com:rainyandsunny/GestureUnLock.git</a>，欢迎star与下载。</p>
 
             <div class="clearfix"></div>
