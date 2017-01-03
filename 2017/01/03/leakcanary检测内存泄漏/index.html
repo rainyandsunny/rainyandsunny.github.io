@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>RxJava（新手推荐） | 小小黄金屋</title>
+  <title>leakcanary检测内存泄漏 | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -197,147 +197,34 @@
         <div class="row col-md-offset-2">
             <div class="col-md-8">
     			<span class="post-meta">
-      <time datetime="2016-11-27T05:03:46.000Z" itemprop="datePublished">
-          2016-11-27
+      <time datetime="2017-01-03T03:00:52.000Z" itemprop="datePublished">
+          2017-01-03
       </time>
     
 </span>
-                <h1>RxJava（新手推荐）</h1>
+                <h1>leakcanary检测内存泄漏</h1>
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		<p>好久没更新了，这段时间一直在翻译一篇google官方关于Bitmap的文档，浪费了点时间。所以今天周末来公司给大家更新一篇关于RxJava的文章，希望对刚刚开始了解这块的朋友有点帮助。<br>关于RxJava的文章太多了，刚开始看的时候真的是各种不理解，这到底有啥用啊。RxJava？函数响应式编程？各种疑问？别急，让我以一个小弱鸡的视角给你讲解。<br>首先说到RxJava，就不得不说一种设计模式，观察者模式。关于观察者模式，如果你还不是很懂，那么我的这篇文章你说不定会喜欢<a href="http://www.jianshu.com/p/46f13e4adc32" target="_blank" rel="external">–&gt;观察者模式</a>。</p>
-<p>好了，现在假设你懂了。</p>
-<p>RxJava中主要包含两部分（Observer和Observable）。</p>
-<p>Observer： 观察者，通常我们使用比较多的是（Subscribe，可以看成就是Observer）。<br>Observable： 被观察者（也可以看做Subject）。<br>记得当时就因为employer（雇主），employee（职工）纠结了好久。不要在意这个，不要让一个本来很简单的问题被英文绕的晦涩难懂。</p>
-<p><strong>当Observable（Subject）的内容发生变化时，通知Observer执行相应的动作。</strong></p>
-<p>原理很简单，我们先来看看怎么用吧。</p>
-<h3 id="一-如何引入RxJava"><a href="#一-如何引入RxJava" class="headerlink" title="一.如何引入RxJava"></a>一.如何引入RxJava</h3><p><a href="https://github.com/ReactiveX/RxJava" target="_blank" rel="external">RxJava</a> </p>
-<p>Gradle引入方式如下（x,y,z为相应的版本）:</p>
-<pre><code>compile &apos;io.reactivex:rxjava:x.y.z&apos;
-</code></pre><p>Maven引入:</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;io.reactivex&lt;/groupId&gt;
-    &lt;artifactId&gt;rxjava&lt;/artifactId&gt;
-    &lt;version&gt;x.y.z&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre><p>在例子中，我用的开发环境是Android Studio，所以我选择第一种方式，我引入的是（io.reactivex:rxjava:1.0.14）。</p>
-<h3 id="二-基本使用"><a href="#二-基本使用" class="headerlink" title="二.基本使用"></a>二.基本使用</h3><h5 id="1-创建Observable（被观察者）"><a href="#1-创建Observable（被观察者）" class="headerlink" title="1.创建Observable（被观察者）"></a>1.创建Observable（被观察者）</h5><pre><code> Observable&lt;String&gt; observable = Observable.create(
-new Observable.OnSubscribe&lt;String&gt;() {
-        @Override
-        public void call(Subscriber&lt;? super String&gt; subscriber) {
-
-            subscriber.onNext(&quot;Hello world&quot;);
-        }
-    });
-</code></pre><h5 id="2-创建Subscribe（观察者）"><a href="#2-创建Subscribe（观察者）" class="headerlink" title="2.创建Subscribe（观察者）"></a>2.创建Subscribe（观察者）</h5><pre><code>Subscriber&lt;String&gt; subscriber = new Subscriber&lt;String&gt;() {
-        @Override
-        public void onCompleted() {
-
-        }
-
-        @Override
-        public void onError(Throwable e) {
-
-        }
-
-        @Override
-        public void onNext(String s) {
-            System.out.println(s);
-        }
-    };
-</code></pre><h5 id="3-完成订阅动作"><a href="#3-完成订阅动作" class="headerlink" title="3.完成订阅动作"></a>3.完成订阅动作</h5><pre><code>observable.subscribe(subscriber);（不要纠结为什么是observable订阅subscriber，按字面意思应该是subscriber订阅observable才对）。
-</code></pre><p>好了，一个最基本的RxJava的使用过程写完了。</p>
-<p>让我们看看运行结果：</p>
-<p><img src="http://og1qqf1es.bkt.clouddn.com/rxjava.png" alt="结果"></p>
-<p>仔细看上面的代码，我们的目的是在被观察者中传出一个字符串，然后在订阅者subscriber中将该字符串打印出来。</p>
-<h4 id="那我们的代码有没有什么问题？"><a href="#那我们的代码有没有什么问题？" class="headerlink" title="那我们的代码有没有什么问题？"></a>那我们的代码有没有什么问题？</h4><p>我们的需求是在订阅者中打印出该字符串而已，也就是我们只需要响应onNext就可以，但是按照现在这种写法，我们需要重写onNext，onCompleted以及onError，有点麻烦。可不可以只需要写一个方法？</p>
-<p>当然可以。于是就有了下面这种写法。</p>
-<pre><code>Action1&lt;String&gt; onNextAction = new Action1&lt;String&gt;() {
-       @Override
-       public void call(String s) {
-
-           System.out.println(s);
-       }
-   };
-</code></pre><p>随后，实现订阅动作。</p>
-<pre><code>observable.subscribe(onNextAction);
-</code></pre><p><em>有疑问吗？</em></p>
-<p>这个Action1又是什么鬼？和Subscriber又是什么关系？别急，待我慢慢道来。看图。</p>
-<p><img src="http://og1qqf1es.bkt.clouddn.com/rxJava_action1.png" alt="Action1"></p>
-<p>由图可以看出，Subscriber中的每一步可以分别对应一个Action1。我们只需要实现我们想要的动作，然后订阅就可以。</p>
-<p>如果我们想实现onNext，onError以及onCompleted。我们可以创建三个Action1对象，然后在完成订阅动作即可。</p>
-<pre><code>observable.subscribe(onNextAction,onErrAction,onCompleteAction)。
-</code></pre><p>订阅者是简化了，但是我们的被观察者Observable有没有简单的写法呢？</p>
-<p>当然有，我们可以雨露均沾的。</p>
-<pre><code>Observable&lt;String&gt; observable = Observable.just(&quot;Hello world&quot;);
-Action1&lt;String&gt; onNextAction = new Action1&lt;String&gt;() {
-        @Override
-        public void call(String s) {
-
-            System.out.println(s);
-        }
-    };
-observable.subscribe(onNextAction);
-</code></pre><p>那么，两种创建Observable的方式有什么区别吗？（先知道我们被观察者Obervable已知的有两种创建方式，区别我会在以后的文章中写。一篇写的话太长了，RxJava分为3，4部分写完）。</p>
-<p>现在与以前相比，写法上简单太多，那么有没有更简单的写法呢？</p>
-<pre><code>Observable.just(&quot;Hello world&quot;).subscribe(new Action1&lt;String&gt;() {
-        @Override
-        public void call(String s) {
-            System.out.println(s);
-        }
-    });
-</code></pre><p>这一步与以上相比，省去了好多临时变量的创建，比如observable，显得结构更为简洁。那么有没有更为简单的写法呢？毕竟知足很难。是时候Lambda表达式登场了，如果你还不会这个表达式的写法，那么完全可以跳过。这部分只是为了表现出函数响应式编程的魅力。</p>
-<pre><code>Observable.just(&quot;Hello world&quot;).subscribe(
-         s -&gt; System.out.println(s));
-</code></pre><p>如果需求要变，我们在Subscriber中要对传出的数据进行更改，那么怎么做呢？</p>
-<p>你可能会说，这还不简单。我眯着眼睛一看就知道有两种。</p>
-<p>（1）</p>
-<pre><code>Observable.just(&quot;Hello world str&quot;).subscribe(
-           s -&gt; System.out.println(s));
-</code></pre><p>（2）</p>
-<pre><code>Observable.just(&quot;Hello world&quot;).subscribe(
-           s -&gt; System.out.println(s + &quot;str&quot;));
-</code></pre><p>观察实现（1）与实现（2）。</p>
-<p>我们Observable将数据传出时并不知道要做什么自定义的东西，所以方案（1）并不好。那么方式（2）呢？<br>我们在订阅者（Subscriber）中对实现进行了更改，这是不合理的，因为Subscriber是被动响应的，为了结构上的简单，我们并不希望在订阅者（Subscriber）中做太多东西。要是能在Observable和Subscriber中间做一些处理就好了。可以吗？来看下RxJava中的Operators。</p>
-<h3 id="Operators使用"><a href="#Operators使用" class="headerlink" title="Operators使用"></a>Operators使用</h3><pre><code>Observable.just(&quot;Hello world&quot;).map(new Func1&lt;String, Object&gt;() {
-       @Override
-       public Object call(String s) {
-           return s+&quot;str&quot;;
-       }
-   }).subscribe(s -&gt; System.out.println(s));
-</code></pre><p>对Func1使用Lambda的写法如下：</p>
-<pre><code>Observable.just(&quot;Hello world&quot;)
-            .map(s -&gt; s+&quot;str&quot;)
-                .subscribe(s -&gt; System.out.println(s));
-</code></pre><p>可以看出我们在将事件传出（just）与订阅（subscribe）中间进行了一些处理。</p>
-<p><img src="http://og1qqf1es.bkt.clouddn.com/%E5%93%8E%E5%91%A6.png" alt="哎呦"></p>
-<p>处理又能怎么样？与之前的两种方式也没啥区别啊。这么想就是你的不对了，如果我们在中间的处理过程很多，类似于中间商层层剥皮呢？按照以前的写法是不是就比较混乱，在一个里面处理了太多事情。现在RxJava有了Operators，我们就可以这么干。</p>
-<pre><code>Observable.just(&quot;Hello world&quot;)
-            .map(s -&gt; s+&quot;str&quot;)
-            .map(s -&gt; s + &quot;i&quot;)
-            .map(s -&gt; s + &quot;love&quot;)
-            .map(s -&gt; s + &quot;you&quot;)
-            .subscribe(s -&gt; System.out.println(s));
-</code></pre><p>心动吗？当我看到还可以这么用的时候，就差起立了。真幸福。我在中间想处理多少步就处理多少步。</p>
-<p>RxJava的入门基本上完了，那么学这些到底有什么用？来开始画饼。</p>
-<p>到底我们实际项目中，或者具体Android开发情境中到底该怎么用？<br>Observable与Subscriber的使用可以让好多情况下的条理变得更加清晰直观，比如Observable获取网络数据，在Subscriber中我们可以将数据显示在UI上。原先我们用Thread+handler所做的一切，现在都可以用RxJava结合其他一些开源组件，比如retrofit。</p>
-<h4 id="参考文档："><a href="#参考文档：" class="headerlink" title="参考文档："></a>参考文档：</h4><p><a href="https://asce1885.gitbooks.io/android-rd-senior-advanced/content/che_di_le_jie_rxjava_ff08_yi_ff09_ji_chu_zhi_shi.html" target="_blank" rel="external">RxJava入门</a></p>
-
+      		
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
         <nav class="pagination" role="pagination">
     
+    <a class="pull-left" href="/2017/01/03/Battery-Historian环境搭建/" style="float: left;">
+        ← Battery Historian环境搭建[转]
+    </a>
     
-    <a class="pull-right" href="/2016/11/16/你对Bitmap爱够深吗？/">
-        给你100万离开我的Bitmap，除非你比我更了解她（译） →
+    
+    <a class="pull-right" href="/2016/12/28/自定义view——仿京东手势解锁/">
+        自定义view——仿京东手势解锁 →
     </a>
     
 </nav>
 
         <div class="duoshuo">
-<div class="ds-thread" data-thread-key="2016/11/27/RxJava（新手推荐）/" data-title="RxJava（新手推荐）" data-url="http://yoursite.com/2016/11/27/RxJava（新手推荐）/"></div>
+<div class="ds-thread" data-thread-key="2017/01/03/leakcanary检测内存泄漏/" data-title="leakcanary检测内存泄漏" data-url="http://yoursite.com/2017/01/03/leakcanary检测内存泄漏/"></div>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"duoshuo_name"};
 (function() {
