@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>Archives: 2017/2 | 小小黄金屋</title>
+  <title>读书笔记——《Java多线程编程核心技术》第三章 | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -84,7 +84,7 @@
 </head>
 
 <!--
-<body class="home-template">
+<body class="post-template">
 -->
 <body id="index" class="lightnav animsition">
 
@@ -191,78 +191,184 @@
         <!-- ============================ Header & Logo bar =========================== -->
 
 
-      <!-- ============================ Hero Image =========================== -->
-
-<section id="hero" class="scrollme">
-    <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
-        <div class="row">
-            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
-                <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
-                    <div>
-                        
-                        <h2>YOU'VE MADE A <span>BRAVE</span> DECISION, WELCOME.</h2>
-                        <p></p>
-                        
-                        <h2></h2>
-                        <p><span><h3>码中自有颜如玉</h3></span></p>
-                        
-
-                    </div>
-                </div>
-            </div>
-            <!-- // .col-md-12 -->
-        </div>
-        <div class="herofade beige-dk"></div>
-    </div>
-</section>
-
-<!-- Height spacing helper -->
-<div class="heightblock"></div>
-<!-- // End height spacing helper -->
-
-<!-- ============================ END Hero Image =========================== -->
-
-
-
-
-<section id="services">
+      
+<section id="intro">
     <div class="container">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="row boxes">
-                    
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/02/09/读书笔记——《Java多线程编程核心技术》第三章/">读书笔记——《Java多线程编程核心技术》第三章</a></h4>
-                            
-                            <p><time datetime="2017-02-09T06:56:22.000Z"><a href="/2017/02/09/读书笔记——《Java多线程编程核心技术》第三章/">2017-02-09</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/02/08/读书笔记——《Java多线程编程核心技术》第二章/">读书笔记——《Java多线程编程核心技术》第二章</a></h4>
-                            
-                            <p><time datetime="2017-02-08T08:01:04.000Z"><a href="/2017/02/08/读书笔记——《Java多线程编程核心技术》第二章/">2017-02-08</a></time></p>
-                        </div>
-                    
-                </div>
-            </div>    
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2017-02-09T06:56:22.000Z" itemprop="datePublished">
+          2017-02-09
+      </time>
+    
+</span>
+                <h1>读书笔记——《Java多线程编程核心技术》第三章</h1>
+            </div>
         </div>
-    </div>
-</section> 
+        <div class="col-md-8 col-md-offset-2">
+      		<h4 id="wait-notify与notifyAll"><a href="#wait-notify与notifyAll" class="headerlink" title="wait,notify与notifyAll()"></a>wait,notify与notifyAll()</h4><p>wait()方法可以使调用该方法的线程释放共享资源的锁，然后从运行状态退出，进入等待队列，直到被再次唤醒。<br>notify()方法可以随机唤醒等待队列中等待同一共享资源的“一个线程”，并使该线程退出等待队列，进入可运行状态，也就是notify()方法通知“一个”线程。<br>notifyAll()方法可以使所有正在等待队列中等待同一共享资源的“全部”线程从等待状态退出，进入可运行状态。</p>
+<h5 id="需要注意的是，wait-执行后会立即释放锁，notify-执行后并不会立即释放锁，而是等到执行notify-方法的线程退出synchronized代码块后才释放锁。"><a href="#需要注意的是，wait-执行后会立即释放锁，notify-执行后并不会立即释放锁，而是等到执行notify-方法的线程退出synchronized代码块后才释放锁。" class="headerlink" title="需要注意的是，wait()执行后会立即释放锁，notify()执行后并不会立即释放锁，而是等到执行notify()方法的线程退出synchronized代码块后才释放锁。"></a>需要注意的是，wait()执行后会立即释放锁，notify()执行后并不会立即释放锁，而是等到执行notify()方法的线程退出synchronized代码块后才释放锁。</h5><h4 id="wait-long-的使用"><a href="#wait-long-的使用" class="headerlink" title="wait(long)的使用"></a>wait(long)的使用</h4><p>带一个参数的wait(long)方法的功能是等待某一时间内是否有线程对锁进行唤醒。</p>
+<h4 id="生产者-消费者模型（注意线程假死）"><a href="#生产者-消费者模型（注意线程假死）" class="headerlink" title="生产者-消费者模型（注意线程假死）"></a>生产者-消费者模型（注意线程假死）</h4><h4 id="通过管道进行线程间通信：字节流-字符流"><a href="#通过管道进行线程间通信：字节流-字符流" class="headerlink" title="通过管道进行线程间通信：字节流/字符流"></a>通过管道进行线程间通信：字节流/字符流</h4><ol>
+<li>PipedInputStream和PipedOutputStream</li>
+<li>PipedReader和PipedWriter</li>
+</ol>
+<p>在使用管道的时候，要进行如下操作：<br>inputStream.connect(outputStream);<br>或<br>outputStream.connect(inputStream);</p>
+<h4 id="join-的使用"><a href="#join-的使用" class="headerlink" title="join()的使用"></a>join()的使用</h4><p>join的作用是等待线程对象销毁。主线程创建并启动子线程，如果子线程中要进行大量的耗时运算，主线程往往早于子线程结束之前结束。这时，如果主线程想等待子线程执行完成之后再结束，就用到了join。</p>
+<pre><code>public class MyThread extends Thread {
 
-<section id="statement">
-    <div class="container text-center wow fadeInUp" data-wow-delay="0.5s">
-        <div class="row">
-            <p>虽然还没想好写点什么，但是总觉得这里放句话比较和谐。</p>
+    @Override
+    public void run(){
+        try{
+            int secondValue = (int)(Math.random() * 10000);
+            System.out.println(secondValue);
+            Thread.sleep(secondValue);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+}
+主线程代码如下：
+public class Run17 {
+
+    public static void main(String[] args) {
+
+        try{
+            MyThread threadTest = new MyThread();
+            threadTest.start();
+            threadTest.join();
+            System.out.println(&quot;我想当threadTest对象执行完毕后我再执行&quot;);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+}
+
+//Output
+8196
+我想当threadTest对象执行完毕后我再执行
+</code></pre><h4 id="join-long-的使用"><a href="#join-long-的使用" class="headerlink" title="join(long)的使用"></a>join(long)的使用</h4><p>方法join(long)中的参数是设定等待的时间。在程序中，我们将join(long)改为sleep(long)，从运行结果来看是相同的，那么这两个方法有什么不同呢？</p>
+<p>方法join(long)的功能在内部是使用wait(long)方法来实现的，所以join(long)方法具有释放锁的特点。源码如下：</p>
+<pre><code>public final synchronized void join(long millis)
+    throws InterruptedException {
+        long base = System.currentTimeMillis();
+        long now = 0;
+
+        if (millis &lt; 0) {
+            throw new IllegalArgumentException(&quot;timeout value is negative&quot;);
+        }
+
+        if (millis == 0) {
+            while (isAlive()) {
+                wait(0);
+            }
+        } else {
+            while (isAlive()) {
+                long delay = millis - now;
+                if (delay &lt;= 0) {
+                    break;
+                }
+                wait(delay);
+                now = System.currentTimeMillis() - base;
+            }
+        }
+    }
+</code></pre><p>从源码可以看到，当执行wait(long)方法时，当前线程的锁被释放，那么其他线程就可以调用此线程中的同步方法了。而Thread.sleep(long)方法却不释放锁。</p>
+<h4 id="ThreadLocal的使用"><a href="#ThreadLocal的使用" class="headerlink" title="ThreadLocal的使用"></a>ThreadLocal的使用</h4><p>作用是每个线程绑定自己的值，可以理解为HashMap<thread,object>。要想ThreadLocal有初始值，那么实现initialValue()方法即可。</thread,object></p>
+<h4 id="类InheritableThreadLocal的使用"><a href="#类InheritableThreadLocal的使用" class="headerlink" title="类InheritableThreadLocal的使用"></a>类InheritableThreadLocal的使用</h4><p>使用类InheritableThreadLocal的使用可以让子线程从父线程中取得值。实例代码如下：</p>
+<pre><code>public class InheritableThreadLocalExt extends InheritableThreadLocal&lt;String&gt; {
+
+    @Override
+    protected String initialValue() {
+        return new Date().getTime()+&quot;&quot;;
+    }
+
+    @Override
+    protected String childValue(String parentValue) {
+        return parentValue + &quot; 我在子线程加的~!&quot;;
+    }
+
+}
+
+public class Tools1 {
+
+    public static InheritableThreadLocalExt tl = new InheritableThreadLocalExt();
+}
+
+子线程代码如下：
+public class ThreadA11 extends Thread {
+
+    @Override
+    public void run(){
+        try{
+            for(int i = 0; i &lt; 2; i++){
+                System.out.println(&quot;在ThreadA线程中取值=&quot; + Tools1.tl.get());
+                Thread.sleep(100);
+            }
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+}
+
+主线程代码如下：
+
+public class Run26 {
+
+    public static void main(String[] args) {
+
+        try{
+            for(int i = 0; i &lt; 2; i++){
+                System.out.println(&quot;在Main线程中取值=&quot; + Tools1.tl.get());
+                Thread.sleep(100);
+            }
+            Thread.sleep(5000);
+            ThreadA11 a = new ThreadA11();
+            a.start();
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+}
+
+ //Output
+ 在Main线程中取值=1486978985517
+在Main线程中取值=1486978985517
+在ThreadA线程中取值=1486978985517 我在子线程加的~!
+在ThreadA线程中取值=1486978985517 我在子线程加的~!
+</code></pre>
+            <div class="clearfix"></div>
+            <hr class="nogutter">
         </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2017/02/08/读书笔记——《Java多线程编程核心技术》第二章/">
+        读书笔记——《Java多线程编程核心技术》第二章 →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2017/02/09/读书笔记——《Java多线程编程核心技术》第三章/" data-title="读书笔记——《Java多线程编程核心技术》第三章" data-url="http://yoursite.com/2017/02/09/读书笔记——《Java多线程编程核心技术》第三章/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"rainyandsunny"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
     </div>
 </section>
+
+
       
 <!-- ============================ Footer =========================== -->
 
