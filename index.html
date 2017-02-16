@@ -229,6 +229,44 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2017/02/15/读书笔记——《Java多线程编程核心技术》第五章/">读书笔记——《Java多线程编程核心技术》第五章</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2017-02-15T07:21:32.000Z" itemprop="datePublished">
+          2017-02-15
+      </time>
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        本章主要讲的是Timer定时器的使用。
+schedule(TimerTask task,Date time)：在指定的日期执行一次某任务。
+执行时间晚于当前时间：在未来时间执行。
+ public class Run {
+private static Timer timer = new Timer();
+static public class MyTask extends TimerTask {
+
+    @Override
+    pu
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2017/02/15/读书笔记——《Java多线程编程核心技术》第五章/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2017/02/14/读书笔记——《Java多线程编程核心技术》第四章/">读书笔记——《Java多线程编程核心技术》第四章</a></h3>
                     <span>
                         <span class="post-meta">
@@ -274,8 +312,11 @@ Object类中的wait()方法相当于Condition类中的await()方法。Object类�
                 <div class="col-md-8">
                     <p>
                       
-                        wait,notify与notifyAll()wait()方法可以使调用该方法的线程释放共享资源的锁，然后从运行状态退出，进入等待队列，直到被再次唤醒。notify()方法可以随机唤醒等待队列中等待同一共享资源的“一个线程”，并使该线程退出等待队列，进入可运行状态，也就是notify()方法通知“一个”线程。notifyAll()方法可以使所有正在等待队列中等待同一共享资源的“全部”线程从等待状态退出，进入可运行状态。
-需要注意的是，w
+                        线程状态切换示意图：
+
+变量在内存中的工作过程如下：
+
+wait,notify与notifyAll()wait()方法可以使调用该方法的线程释放共享资源的锁，然后从运行状态退出，进入等待队列，直到被再次唤醒。notify()方法可以随机唤醒等待队列中等待同一共享资源的“一个线程”，并使该线程退出等待队列，进入可运行状态，也就是notify()方法通知“一个”线程。notifyAll()方法可以使所有正在等待队列中等待同一共享资源的“全部
                       
                     </p>
                     
@@ -534,42 +575,6 @@ C.最后配置一下环境变量，把Go的bin目录放到path环境变量中
                     
                     <p class="pull-right readMore">
                         <a href="/2017/01/03/leakcanary检测内存泄漏/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2016/12/28/自定义view——仿京东手势解锁/">自定义view——仿京东手势解锁</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2016-12-28T06:14:43.000Z" itemprop="datePublished">
-          2016-12-28
-      </time>
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        早上看个bug，忘了吃饭，最后定位到ROM厂商，反馈了。现在戴上耳机，写个清爽点的文章。虽然很简单，刷刷存在感也好啊，毕竟好久没写文章了。先直接上效果吧。
-
-如何使用呢？
-（1）对象的获取并设置正确的密码
-mUnLockView = (UnLockView) findViewById(R.id.unlockview);
-    mUnLockView.setmRightPsw(&quot;14789&quot;);
-（2）然后在当前Ac
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2016/12/28/自定义view——仿京东手势解锁/">Read More...</a>
                     </p>
                     
                 </div>
