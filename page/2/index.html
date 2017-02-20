@@ -229,6 +229,82 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2017/01/16/Android-Camera/">Android Camera</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2017-01-16T02:19:08.000Z" itemprop="datePublished">
+          2017-01-16
+      </time>
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        在API21之前，使用的是android.hardware.Camera，21之后推荐使用的是android.hardware.camera2。作为学习，我们先了解下Camera API1。
+使用android.hardware.Camera完成拍照，经历一下几步：
+
+通过调用open(int)来得到一个Camera实例；
+
+通过调用getParameters()来得到相机默认的设置；
+
+如果需要的话，改变相机的设置选项并调用setPa
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2017/01/16/Android-Camera/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2017/01/12/Android反编译/">Android反编译</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2017-01-12T07:19:54.000Z" itemprop="datePublished">
+          2017-01-12
+      </time>
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        工具：
+apktool：资源文件获取
+dex2jar：源码文件获取
+jd-gui：源码查看
+反编译过程：1. 得到资源文件解压apktool.rar
+apktool.bat d -f [apk文件] [输出文件夹]
+将反编译完的文件重新打包成apk
+apktool.bat b [反编译出的文件夹名字]
+2. 得到Java源代码(1).将要反编译的apk解压，得到classex.dex文件
+(2).dex2jar.bat classes.
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2017/01/12/Android反编译/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2017/01/12/Android-Studio技巧/">Android Studio技巧</a></h3>
                     <span>
                         <span class="post-meta">
@@ -479,66 +555,6 @@ Observable（被观察者）的创建方式1. createObservable.create(new Observ
                     
                     <p class="pull-right readMore">
                         <a href="/2016/11/27/Java-SE-8-Lambda/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2016/11/27/RxJava（新手推荐一）/">RxJava（新手推荐一）</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2016-11-27T05:03:46.000Z" itemprop="datePublished">
-          2016-11-27
-      </time>
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        好久没更新了，这段时间一直在翻译一篇google官方关于Bitmap的文档，浪费了点时间。所以今天周末来公司给大家更新一篇关于RxJava的文章，希望对刚刚开始了解这块的朋友有点帮助。关于RxJava的文章太多了，刚开始看的时候真的是各种不理解，这到底有啥用啊。RxJava？函数响应式编程？各种疑问？别急，让我以一个小弱鸡的视角给你讲解。首先说到RxJava，就不得不说一种设计模式，观察者模式。关于观察者模式，如果你还不是很懂，那么我的
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2016/11/27/RxJava（新手推荐一）/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2016/11/16/你对Bitmap爱够深吗？/">给你100万离开我的Bitmap，除非你比我更了解她（译）</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2016-11-16T07:20:23.000Z" itemprop="datePublished">
-          2016-11-16
-      </time>
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        有效加载大型位图读取图片尺寸和类型BitmapFactory类提供了几种解码方法（decodeByteArray(),decodeFile(),decodeResource()等等）用于从不同的源创建一个Bitmap。依赖于你图片的数据源，选择最合适的解码方法。这些方法会为创建Bitmap尝试分配内存，因此很容易造成OutOfMemory的异常。每种类型的解码方法都有额外的参数，让你通过BitmapFactory.Options类指定你
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2016/11/16/你对Bitmap爱够深吗？/">Read More...</a>
                     </p>
                     
                 </div>
