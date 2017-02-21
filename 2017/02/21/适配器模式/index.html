@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>读书笔记——《Android群英传》第四章 | 小小黄金屋</title>
+  <title>适配器模式（新手推荐） | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -197,163 +197,173 @@
         <div class="row col-md-offset-2">
             <div class="col-md-8">
     			<span class="post-meta">
-      <time datetime="2017-02-20T07:54:09.000Z" itemprop="datePublished">
-          2017-02-20
+      <time datetime="2017-02-21T06:27:30.000Z" itemprop="datePublished">
+          2017-02-21
       </time>
     
 </span>
-                <h1>读书笔记——《Android群英传》第四章</h1>
+                <h1>适配器模式（新手推荐）</h1>
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		<h3 id="ListView常用优化技巧"><a href="#ListView常用优化技巧" class="headerlink" title="ListView常用优化技巧"></a>ListView常用优化技巧</h3><h4 id="使用ViewHolder模式提高效率"><a href="#使用ViewHolder模式提高效率" class="headerlink" title="使用ViewHolder模式提高效率"></a>使用ViewHolder模式提高效率</h4><p>ViewHolder模式充分利用了ListView的视图缓存机制，避免了每次在调用getView()的时候都去通过findViewById()实例化控件。</p>
-<p>在自定义Adapter中定义一个内部类ViewHolder，并将布局中的控件作为成员变量。</p>
-<pre><code>public final class ViewHolder{
-
-    public ImageView img;
-    public TextView title;
-}
-</code></pre><p>在getView中这么写：</p>
-<pre><code>ViewHolder Holder = null;
-if(null == convertView){
-    holder = new ViewHolder();
-    convertView = inflate(R.layout.viewholder_item,null);
-    holder.img = convertView.findViewById(R.id.imageView);
-    holder.title = convertView.findViewById(R.id.textView);
-    convertView.setTag(holder);
-}else{
-
-    holder = (ViewHolder)convertView.getTag();
-
-}
-
-    holder.img.setBackgroundResource(R.drawable.ic_launcher);
-    holder.title.setText(sss);
-    return convertView;
-}
-</code></pre><h4 id="设置项目间分割线"><a href="#设置项目间分割线" class="headerlink" title="设置项目间分割线"></a>设置项目间分割线</h4><pre><code>android:divider=&quot;@android:color/darker_gray&quot;
-android:dividerHeight=&quot;10dp&quot;
-</code></pre><p>当想要设置分割线为透明时：<br>    android:divider=”@null”</p>
-<h4 id="隐藏ListView的滚动条"><a href="#隐藏ListView的滚动条" class="headerlink" title="隐藏ListView的滚动条"></a>隐藏ListView的滚动条</h4><pre><code>android:scrollbars=&quot;none&quot;
-</code></pre><h4 id="取消ListView的Item点击效果"><a href="#取消ListView的Item点击效果" class="headerlink" title="取消ListView的Item点击效果"></a>取消ListView的Item点击效果</h4><pre><code>android:listSelector=&quot;#00000000&quot;
-</code></pre><p>或者用Android自带的透明色来实现这个效果</p>
-<pre><code>android:listSelector=&quot;@android:color/transparent&quot;
-</code></pre><h4 id="设置ListView需要显示在第几项"><a href="#设置ListView需要显示在第几项" class="headerlink" title="设置ListView需要显示在第几项"></a>设置ListView需要显示在第几项</h4><p>ListView以Item为单位进行显示，默认显示在第一个Item，当需要指定具体的Item时，可以通过如下代码来实现</p>
-<pre><code>listView.setSelection(N);
-</code></pre><p>还可以通过如下代码来实现平滑移动：</p>
-<pre><code>mListView.smoothScrollBy(distance,duration);
-mListView.smoothScrollByOffset(offset);
-mListView.smoothScrollToPosition(index);
-</code></pre><h4 id="动态修改ListView"><a href="#动态修改ListView" class="headerlink" title="动态修改ListView"></a>动态修改ListView</h4><pre><code>mData.add(&quot;new&quot;);
-mAdapter.notifyDataSetChanged();
-</code></pre><h4 id="遍历ListView中的所有Item"><a href="#遍历ListView中的所有Item" class="headerlink" title="遍历ListView中的所有Item"></a>遍历ListView中的所有Item</h4><pre><code>for(int i = 0; i &lt; mListView.getChildCount; i++){
-    View view = mListView.getChildAt(i);
-}
-</code></pre><h4 id="处理空ListView"><a href="#处理空ListView" class="headerlink" title="处理空ListView"></a>处理空ListView</h4><p>在代码中，我们可以通过以下方式给ListView设置空数据时要显示的布局，代码如下所示。</p>
-<pre><code>ListView listView = (ListView)findViewById(R.id.listView);
-listview.setEmptyView(findViewById(R.id.empty_view));
-</code></pre><p>包含ListView的布局设置如下：</p>
-<pre><code>&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
-
-    &lt;ListView ..../&gt;
-
-    &lt;ImageVIew ...
-        android:id = &quot;@+id/empty_view&quot;
-    /&gt;
-
-&lt;/FrameLayout&gt;
-</code></pre><h4 id="ListView滑动监听"><a href="#ListView滑动监听" class="headerlink" title="ListView滑动监听"></a>ListView滑动监听</h4><ol>
-<li>OnTouchListener</li>
-</ol>
-<pre><code>mListView.setOnTouchListener(new View.onTouchListener(){
+      		<p>好久没更新了，今天给大家更新一篇设计模式文章——适配器模式。如果你做过Android开发，那么你肯定对适配这个词很熟悉。适配的作用就是让我们的应用程序能适用于各大主流的Android手机平台。</p>
+<p>适配，通俗地讲，就是将极具个性的人，加以合适的引导，让其发挥其最大的作用。这个极具个性的人，就是Adaptee（适配者），发挥作用就是Target（我们的目标），引导的这个人就是Adapter（适配器）。</p>
+<p>举个简单的例子，想必这个段子大家之前都听过。段子这么说，12306的老板说，我们开发个网上售票的系统。老板下达命令给经理，经理把这个项目外包给高校的老师来做，高校的老师说，同学们给你们个毕设题目，限什么时候完成。（当然这仅仅是个段子，实际肯定不是这样的，12306真的已经很不错了，为了引起大家学习的兴趣，就当哗众取宠吧）。</p>
+<p>我们简化下中间的层层关系，留下3个主要的角色，一个是老板，一个是经理，一个是学生。老板提出需求Target，老板不懂技术，所以实际干活的是学生Adaptee。</p>
+<p>你可能会问了，为什么需要经理呢？</p>
+<p>为什么不是老板直接和学生交流呢？当然不行，倒不是因为面子的问题，而是老板还有更重要的事情做，做整体的调度以及重大策略的决断，这个项目只是其中的一个决定而已，所以是不方便也没时间与学生直接沟通的，所以经理Adapter出现了，负责向上级汇报，以及与学生沟通。</p>
+<p>那么用关系图如何描述呢？</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/%E9%80%82%E9%85%8D%E5%99%A8%E5%85%B3%E7%B3%BB%E5%9B%BE.png" alt="类适配器结构图"></p>
+<p>由图可以看出，在Manager里面，我们实际调用的是Student的codingBuild()方法。那么如何用伪代码实现呢？</p>
+<pre><code>class Manager implements Boss extends Student{
 
     @Override
-    public boolean onTouch(View v,MotionEvent event){
+    public void buildWebSystem(){
 
-        switch(event.getAction()){
-
-            case MotionEvent.ACTION_DOWN:
-                //触摸时操作
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                //移动时操作
-                break;
-            case MotionEvent.ACTION_UP:
-                //离开时操作
-                break;
-        }
-        return false;
+        codingBuild();
     }
 
-});
-</code></pre><ol>
-<li><p>OnScrollListener</p>
-<p> mListView.setOnScrollListener(new OnScrollListener(){</p>
-<pre><code>@Override
-public void onScrollStateChanged(AbsListView view,int scrollState){
-
-    switch(scrollState){
-
-        case OnScrollListener.SCROLL_STATE_IDLE:
-            //滑动停止时
-            break;
-        case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-            //正在滚动
-            break;
-        case OnScrollListener.SCROLL_STATE_FLING:
-            //手指抛动时，即手指用力滑动
-            //在离开后ListView由于惯性继续滑动的状态
-            break;
-    }
 }
-
-@Override
-public void onScroll(AbsListView view,int firstVisibleItem,int visibleItemCount,int totalItemCount){
-    //滑动时一直调用
-}
-</code></pre><p> });</p>
-</li>
-</ol>
-<p>通过onScroll方法，我们可以得到好多有用的信息。比如：</p>
+</code></pre><p>上面就是类适配器的简单写法，那么这么写有没有什么问题呢？</p>
 <ol>
-<li><p>判断是不是滚动到最后一行</p>
-<p> if(firstVisibleItem + visibleItemCount == totalItemCount &amp;&amp; totalItemCount &gt; 0){</p>
-<p> }</p>
+<li><p><strong>我们默认Target是Interface，万一Target类是个抽象类呢？我们知道Java是不支持多继承的，所以这么写肯定是有问题的。</strong></p>
 </li>
-<li><p>可以判断是上滑还是下滑</p>
-<p> if(firstVisibleItem &gt; lastVisibleItemPosition){</p>
-<pre><code>//上滑
-</code></pre><p> }else if(firstVisibleItem &lt; lastVisibleItemPosition){</p>
-<pre><code>//下滑
-</code></pre><p> }<br> lastVisibleItemPosition = firstVisibleItem;</p>
+<li><p><strong>如果Adaptee是final类型，那么就不能被继承。</strong></p>
+</li>
+<li><p><strong>我们知道尽量少用继承，多用组合。</strong></p>
 </li>
 </ol>
-<p>ListView还给我们提供了一些封装的方法：</p>
-<pre><code>// 获取可见区域内最后一个Item的id
-listView.getLastVisiblePosition()
-//获取可见区域内第一个Item的id
-listView.getFirstVisiblePosition()
-</code></pre><h3 id="ListView的常用拓展"><a href="#ListView的常用拓展" class="headerlink" title="ListView的常用拓展"></a>ListView的常用拓展</h3><h4 id="具有弹性的ListView"><a href="#具有弹性的ListView" class="headerlink" title="具有弹性的ListView"></a>具有弹性的ListView</h4><p>重写overScrollBy方法，改变maxOverScrollY参数的值，该值默认为0。</p>
+<p>那么有没有其他写法呢？所以对象适配器出现了。</p>
+<pre><code>class Manager implements Boss{
+
+    private Student stu；//适配者
+
+    public void setStudent(Student stu){
+
+        this.stu = stu;
+    }
+
+    @Override
+    public void buildWebSystem(){
+
+        tu.codingBuild();
+    }
+
+}
+</code></pre><p>我们可以看到，在适配器（Adapter）类中持有一个适配者（Adaptee）对象，在适配器的方法中调用该适配者的方法。</p>
+<p>那么这样写有什么好处呢？</p>
+<ol>
+<li><p><strong>我们不用关心具体系统是如何实现的，所以对Adapter是透明的，将任务委托给Adaptee来实现，只要知道达到我们的任务要求就可以了，也不用改动现有的组织结构。</strong></p>
+</li>
+<li><p><strong>假如我们对该适配者所做的工作不满意，我们可以随时更换其他的适配者，而不用改动太多代码。</strong></p>
+</li>
+</ol>
+<p>那么适配者模式的使用场景呢？</p>
+<ol>
+<li><strong>不想了解具体的业务实现或者无法了解到具体的业务实现时可以使用该模式。因为对调用者是透明的，我只需要制定规范，将具体实现“外包”给Adaptee来做；</strong></li>
+<li><strong>如果需求更换较为频繁，需要将具体的实现灵活性提高的时候可以使用该模式。说得专业点就是更换算法更为方便；</strong></li>
+<li><strong>如果想使得具体实现（Adaptee）的复用性更好，可以使用该模式。</strong></li>
+</ol>
+<p>适配者模式基本上说完了，是不是很简单？</p>
+<p>稍微拓展一下，说一下双向适配器。双向适配器（Adapter）同时持有Target和Adaptee。简单的示例代码说下。</p>
+<pre><code>class Manager implements Boss extends Student{
+
+    private Boss boss; // Target
+
+    private Student stu; //Adaptee
+
+    public setBoss(Boss boss){
+        this.boss = boss;
+    }
+
+    public setStudent(Student stu){
+        this.stu = stu;
+    }
+
+    @Override
+    public void buildWebSystem(){
+
+        tu.codingBuild();
+    }
+
+    public void codingBuild(){
+
+        boss.buildWebSystem();
+    }
+
+}
+</code></pre><p>这种实现我见得不多，作为了解。</p>
+<p>还有一种缺省适配器有必要说一下。假设我们现在有接口类A里面有很多方法。</p>
+<pre><code>interface A{
+
+    public void methodA();
+    public void methodB();
+    public void methodC();
+    ...
+}
+</code></pre><p>我们现在有个类B要用到A接口里面的方法methodA(),怎么办呢？很简单啊，直接让B实现接口A不行吗？当然行。但是我们就必须为了这个methodB()而实现methodA()、methodC()…如果A里面的方法数目很多，那么将在我们的B类中出现大量的无用代码，因为除了methodA()都是空实现。有没有比较好的实现方式呢？</p>
+<pre><code>//适配者接口
+public interface A {
+
+    public void methodA();
+    public void methodB();
+    public void methodC();
+    public void methodD();
+}
+
+//缺省适配器类
+public abstract class B implements A {
+
+    @Override
+    public void methodA() {
+
+    }
+
+    @Override
+    public void methodB() {
+
+    }
+
+    @Override
+    public void methodC() {
+
+    }
+
+    @Override
+    public void methodD() {
+
+    }
+}
+
+//具体业务类
+public class C extends B {
+
+    @Override
+    public void methodA() {
+        //TODO
+    }
+}
+</code></pre><p>由代码可以看出，我们在中间引入了一个抽象类B，用于对接口A中的所有方法空实现。最后在C中具体实现我们想要的目标方法。</p>
+<p>这么做的好处呢？</p>
+<p><strong>虽然也出现了没用的代码，但是我们这么做只需要让这些代码出现一次，而不是没一个新的类中都要空实现一遍。</strong></p>
+<p>那么为什么B要是abstract的呢？ </p>
+<p>我是这么理解的，因为B中所有的方法都是空实现，所以这个类没实际意义，真正起作用的是具体的实现类C，这里面具体实现我们想要的功能。为了避免大家实例化这个没实际用处的类，所以声明为abstract类型。每个类都有自己的职责以及名字，A（适配者接口），B（缺省适配器类），C(具体业务类)。</p>
+<p>好了，适配器模式基本上说完了，希望可以给新手一点点帮助。</p>
 
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
         <nav class="pagination" role="pagination">
     
-    <a class="pull-left" href="/2017/02/21/适配器模式/" style="float: left;">
-        ← 适配器模式（新手推荐）
-    </a>
     
-    
-    <a class="pull-right" href="/2017/02/20/读书笔记——《Android群英传》第三章/">
-        读书笔记——《Android群英传》第三章 →
+    <a class="pull-right" href="/2017/02/20/读书笔记——《Android群英传》第四章/">
+        读书笔记——《Android群英传》第四章 →
     </a>
     
 </nav>
 
         <div class="duoshuo">
-<div class="ds-thread" data-thread-key="2017/02/20/读书笔记——《Android群英传》第四章/" data-title="读书笔记——《Android群英传》第四章" data-url="http://yoursite.com/2017/02/20/读书笔记——《Android群英传》第四章/"></div>
+<div class="ds-thread" data-thread-key="2017/02/21/适配器模式/" data-title="适配器模式（新手推荐）" data-url="http://yoursite.com/2017/02/21/适配器模式/"></div>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"rainyandsunny"};
 (function() {

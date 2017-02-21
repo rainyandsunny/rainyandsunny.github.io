@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>读书笔记——《Android群英传》第四章 | 小小黄金屋</title>
+  <title>Archives: 2017/2 | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -84,7 +84,7 @@
 </head>
 
 <!--
-<body class="post-template">
+<body class="home-template">
 -->
 <body id="index" class="lightnav animsition">
 
@@ -191,185 +191,69 @@
         <!-- ============================ Header & Logo bar =========================== -->
 
 
-      
-<section id="intro">
-    <div class="container">
-        <div class="row col-md-offset-2">
-            <div class="col-md-8">
-    			<span class="post-meta">
-      <time datetime="2017-02-20T07:54:09.000Z" itemprop="datePublished">
-          2017-02-20
-      </time>
-    
-</span>
-                <h1>读书笔记——《Android群英传》第四章</h1>
+      <!-- ============================ Hero Image =========================== -->
+
+<section id="hero" class="scrollme">
+    <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
+                <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
+                    <div>
+                        
+                        <h2>YOU'VE MADE A <span>BRAVE</span> DECISION, WELCOME.</h2>
+                        <p></p>
+                        
+                        <h2></h2>
+                        <p><span><h3>码中自有颜如玉</h3></span></p>
+                        
+
+                    </div>
+                </div>
             </div>
+            <!-- // .col-md-12 -->
         </div>
-        <div class="col-md-8 col-md-offset-2">
-      		<h3 id="ListView常用优化技巧"><a href="#ListView常用优化技巧" class="headerlink" title="ListView常用优化技巧"></a>ListView常用优化技巧</h3><h4 id="使用ViewHolder模式提高效率"><a href="#使用ViewHolder模式提高效率" class="headerlink" title="使用ViewHolder模式提高效率"></a>使用ViewHolder模式提高效率</h4><p>ViewHolder模式充分利用了ListView的视图缓存机制，避免了每次在调用getView()的时候都去通过findViewById()实例化控件。</p>
-<p>在自定义Adapter中定义一个内部类ViewHolder，并将布局中的控件作为成员变量。</p>
-<pre><code>public final class ViewHolder{
-
-    public ImageView img;
-    public TextView title;
-}
-</code></pre><p>在getView中这么写：</p>
-<pre><code>ViewHolder Holder = null;
-if(null == convertView){
-    holder = new ViewHolder();
-    convertView = inflate(R.layout.viewholder_item,null);
-    holder.img = convertView.findViewById(R.id.imageView);
-    holder.title = convertView.findViewById(R.id.textView);
-    convertView.setTag(holder);
-}else{
-
-    holder = (ViewHolder)convertView.getTag();
-
-}
-
-    holder.img.setBackgroundResource(R.drawable.ic_launcher);
-    holder.title.setText(sss);
-    return convertView;
-}
-</code></pre><h4 id="设置项目间分割线"><a href="#设置项目间分割线" class="headerlink" title="设置项目间分割线"></a>设置项目间分割线</h4><pre><code>android:divider=&quot;@android:color/darker_gray&quot;
-android:dividerHeight=&quot;10dp&quot;
-</code></pre><p>当想要设置分割线为透明时：<br>    android:divider=”@null”</p>
-<h4 id="隐藏ListView的滚动条"><a href="#隐藏ListView的滚动条" class="headerlink" title="隐藏ListView的滚动条"></a>隐藏ListView的滚动条</h4><pre><code>android:scrollbars=&quot;none&quot;
-</code></pre><h4 id="取消ListView的Item点击效果"><a href="#取消ListView的Item点击效果" class="headerlink" title="取消ListView的Item点击效果"></a>取消ListView的Item点击效果</h4><pre><code>android:listSelector=&quot;#00000000&quot;
-</code></pre><p>或者用Android自带的透明色来实现这个效果</p>
-<pre><code>android:listSelector=&quot;@android:color/transparent&quot;
-</code></pre><h4 id="设置ListView需要显示在第几项"><a href="#设置ListView需要显示在第几项" class="headerlink" title="设置ListView需要显示在第几项"></a>设置ListView需要显示在第几项</h4><p>ListView以Item为单位进行显示，默认显示在第一个Item，当需要指定具体的Item时，可以通过如下代码来实现</p>
-<pre><code>listView.setSelection(N);
-</code></pre><p>还可以通过如下代码来实现平滑移动：</p>
-<pre><code>mListView.smoothScrollBy(distance,duration);
-mListView.smoothScrollByOffset(offset);
-mListView.smoothScrollToPosition(index);
-</code></pre><h4 id="动态修改ListView"><a href="#动态修改ListView" class="headerlink" title="动态修改ListView"></a>动态修改ListView</h4><pre><code>mData.add(&quot;new&quot;);
-mAdapter.notifyDataSetChanged();
-</code></pre><h4 id="遍历ListView中的所有Item"><a href="#遍历ListView中的所有Item" class="headerlink" title="遍历ListView中的所有Item"></a>遍历ListView中的所有Item</h4><pre><code>for(int i = 0; i &lt; mListView.getChildCount; i++){
-    View view = mListView.getChildAt(i);
-}
-</code></pre><h4 id="处理空ListView"><a href="#处理空ListView" class="headerlink" title="处理空ListView"></a>处理空ListView</h4><p>在代码中，我们可以通过以下方式给ListView设置空数据时要显示的布局，代码如下所示。</p>
-<pre><code>ListView listView = (ListView)findViewById(R.id.listView);
-listview.setEmptyView(findViewById(R.id.empty_view));
-</code></pre><p>包含ListView的布局设置如下：</p>
-<pre><code>&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
-
-    &lt;ListView ..../&gt;
-
-    &lt;ImageVIew ...
-        android:id = &quot;@+id/empty_view&quot;
-    /&gt;
-
-&lt;/FrameLayout&gt;
-</code></pre><h4 id="ListView滑动监听"><a href="#ListView滑动监听" class="headerlink" title="ListView滑动监听"></a>ListView滑动监听</h4><ol>
-<li>OnTouchListener</li>
-</ol>
-<pre><code>mListView.setOnTouchListener(new View.onTouchListener(){
-
-    @Override
-    public boolean onTouch(View v,MotionEvent event){
-
-        switch(event.getAction()){
-
-            case MotionEvent.ACTION_DOWN:
-                //触摸时操作
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                //移动时操作
-                break;
-            case MotionEvent.ACTION_UP:
-                //离开时操作
-                break;
-        }
-        return false;
-    }
-
-});
-</code></pre><ol>
-<li><p>OnScrollListener</p>
-<p> mListView.setOnScrollListener(new OnScrollListener(){</p>
-<pre><code>@Override
-public void onScrollStateChanged(AbsListView view,int scrollState){
-
-    switch(scrollState){
-
-        case OnScrollListener.SCROLL_STATE_IDLE:
-            //滑动停止时
-            break;
-        case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-            //正在滚动
-            break;
-        case OnScrollListener.SCROLL_STATE_FLING:
-            //手指抛动时，即手指用力滑动
-            //在离开后ListView由于惯性继续滑动的状态
-            break;
-    }
-}
-
-@Override
-public void onScroll(AbsListView view,int firstVisibleItem,int visibleItemCount,int totalItemCount){
-    //滑动时一直调用
-}
-</code></pre><p> });</p>
-</li>
-</ol>
-<p>通过onScroll方法，我们可以得到好多有用的信息。比如：</p>
-<ol>
-<li><p>判断是不是滚动到最后一行</p>
-<p> if(firstVisibleItem + visibleItemCount == totalItemCount &amp;&amp; totalItemCount &gt; 0){</p>
-<p> }</p>
-</li>
-<li><p>可以判断是上滑还是下滑</p>
-<p> if(firstVisibleItem &gt; lastVisibleItemPosition){</p>
-<pre><code>//上滑
-</code></pre><p> }else if(firstVisibleItem &lt; lastVisibleItemPosition){</p>
-<pre><code>//下滑
-</code></pre><p> }<br> lastVisibleItemPosition = firstVisibleItem;</p>
-</li>
-</ol>
-<p>ListView还给我们提供了一些封装的方法：</p>
-<pre><code>// 获取可见区域内最后一个Item的id
-listView.getLastVisiblePosition()
-//获取可见区域内第一个Item的id
-listView.getFirstVisiblePosition()
-</code></pre><h3 id="ListView的常用拓展"><a href="#ListView的常用拓展" class="headerlink" title="ListView的常用拓展"></a>ListView的常用拓展</h3><h4 id="具有弹性的ListView"><a href="#具有弹性的ListView" class="headerlink" title="具有弹性的ListView"></a>具有弹性的ListView</h4><p>重写overScrollBy方法，改变maxOverScrollY参数的值，该值默认为0。</p>
-
-            <div class="clearfix"></div>
-            <hr class="nogutter">
-        </div>
-        <nav class="pagination" role="pagination">
-    
-    <a class="pull-left" href="/2017/02/21/适配器模式/" style="float: left;">
-        ← 适配器模式（新手推荐）
-    </a>
-    
-    
-    <a class="pull-right" href="/2017/02/20/读书笔记——《Android群英传》第三章/">
-        读书笔记——《Android群英传》第三章 →
-    </a>
-    
-</nav>
-
-        <div class="duoshuo">
-<div class="ds-thread" data-thread-key="2017/02/20/读书笔记——《Android群英传》第四章/" data-title="读书笔记——《Android群英传》第四章" data-url="http://yoursite.com/2017/02/20/读书笔记——《Android群英传》第四章/"></div>
-<script type="text/javascript">
-var duoshuoQuery = {short_name:"rainyandsunny"};
-(function() {
-	var ds = document.createElement('script');
-	ds.type = 'text/javascript';ds.async = true;
-	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-	ds.charset = 'UTF-8';
-	(document.getElementsByTagName('head')[0] 
-	 || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
-</script>
-</div>
+        <div class="herofade beige-dk"></div>
     </div>
 </section>
 
+<!-- Height spacing helper -->
+<div class="heightblock"></div>
+<!-- // End height spacing helper -->
 
+<!-- ============================ END Hero Image =========================== -->
+
+
+
+
+<section id="services">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="row boxes">
+                    
+                    
+                        
+                        
+                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
+                            
+                              <h4 class="title"><a href="/2017/02/08/读书笔记——《Java多线程编程核心技术》第二章/">读书笔记——《Java多线程编程核心技术》第二章</a></h4>
+                            
+                            <p><time datetime="2017-02-08T08:01:04.000Z"><a href="/2017/02/08/读书笔记——《Java多线程编程核心技术》第二章/">2017-02-08</a></time></p>
+                        </div>
+                    
+                </div>
+            </div>    
+        </div>
+    </div>
+</section> 
+
+<section id="statement">
+    <div class="container text-center wow fadeInUp" data-wow-delay="0.5s">
+        <div class="row">
+            <p>虽然还没想好写点什么，但是总觉得这里放句话比较和谐。</p>
+        </div>
+    </div>
+</section>
       
 <!-- ============================ Footer =========================== -->
 
