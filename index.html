@@ -229,6 +229,38 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2017/03/01/JVM垃圾回收（新手推荐）/">JVM垃圾回收（新手推荐）</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2017-03-01T07:34:29.000Z" itemprop="datePublished">
+          2017-03-01
+      </time>
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        提到JVM垃圾回收，总觉得离我们程序员有一定的距离。在JAVA中，那是系统自己干的事，我们关心那个干嘛？也就是说我们为什么要学习这个东西，大家开开心心地敲代码不好吗？
+还真的不好，一方面我觉得我们可以学习下JAVA语言设计上的一些思想，另一方面，在我们以后从事一些较为高级一点的开发，尤其是性能调优之类的，知道这些基础知识就显得很必要了。我打算从以下几个方面开始进行简单地说明。
+GC如何知道哪些对象是垃圾对象？GC不可能随便指派说哪个对象
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2017/03/01/JVM垃圾回收（新手推荐）/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2017/02/23/MVP-MVC/">MVP,MVC,MVVM(转)</a></h3>
                     <span>
                         <span class="post-meta">
@@ -574,38 +606,6 @@ static public class MyTask extends TimerTask {
                     
                     <p class="pull-right readMore">
                         <a href="/2017/02/15/读书笔记——《Java多线程编程核心技术》第五章/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2017/02/14/读书笔记——《Java多线程编程核心技术》第四章/">读书笔记——《Java多线程编程核心技术》第四章</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2017-02-14T01:14:42.000Z" itemprop="datePublished">
-          2017-02-14
-      </time>
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        第四章主要讲的是Lock的使用。
-ReentrantLock类使用ReentrantLock可以实现同步，Condition实现等待/通知。Condition对象可以创建多个，实现只通知部分线程，而不像notifyAll()那样通知所有线程然后交给线程调度器随机通知一个线程，从而提高了效率。
-Object类中的wait()方法相当于Condition类中的await()方法。Object类中的wait(long timeout)方法相当
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2017/02/14/读书笔记——《Java多线程编程核心技术》第四章/">Read More...</a>
                     </p>
                     
                 </div>
