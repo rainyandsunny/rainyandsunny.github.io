@@ -358,7 +358,50 @@ canvas.drawBitmap(bm,0,0,paint);
 <li><p>高饱和度<br>1.438F,-0.122F,-0.016F,0,-0.03F,<br>-0.062F,1.378F,-0.016F,0,0.05F,<br>-0.062F,-0.122F,1.483F,0,-0.02F,<br>0,0,0,1,0</p>
 </li>
 </ol>
-<h3 id="像素点分析"><a href="#像素点分析" class="headerlink" title="像素点分析"></a>像素点分析</h3><h2 id="SurfaceView的使用"><a href="#SurfaceView的使用" class="headerlink" title="SurfaceView的使用"></a>SurfaceView的使用</h2>
+<h3 id="像素点分析"><a href="#像素点分析" class="headerlink" title="像素点分析"></a>像素点分析</h3><p>作为更加精确的图像处理方式，可通过改变每个像素点的具体ARGB值，来达到处理一张图像效果的目的。这里要注意的是，传递进来的原始图片是不能修改的（mutable），一般根据原始图片生成一张新的图片来修改。</p>
+<p>在Android中，系统提供了Bitmap.getPixels()方法来帮助提取整个Bitmap的像素点，并保存到一个数组中，该方法如下所示：</p>
+<pre><code>bitmap.getPixels(pixels,offset,stride,x,y,width,height);
+</code></pre><p>参数的意思分别是：<br>pixels:接收位图颜色值的数组<br>offset:写入到pixels[]中的第一个像素索引值<br>stride:pixels[]的行间距<br>x：从位图中读取的第一个像素的x坐标值<br>y: 从位图中读取的第一个像素的y坐标值<br>width:从每一行读取的像素宽度<br>height:读取的行数</p>
+<p>通常这么使用：</p>
+<pre><code>bitmap.getPixels(oldPx,0,bm.getWidth(),0,0,width,height);
+</code></pre><p>接着，就可以获取到每个像素具体的ARGB值了</p>
+<pre><code>color = oldPx[i];
+r = Color.red(color);
+g = Color.green(color);
+b = Color.blue(color);
+a = Color.alpha(color);
+</code></pre><p>然后就可以对各个像素进行相应的处理了：</p>
+<pre><code>r1 = (int)(0.393*r + 0.769*g + 0.189*b);
+g1 = ...
+b1 = ...
+</code></pre><p>在通过如下所示代码将新的RGBA值合成像素点:</p>
+<pre><code>newPx[i] = Color.argb(a,r1,g1,b1);
+</code></pre><p>最后将新的处理之后的像素点数组重新set给我们的bitmap，达到像素处理的目的。</p>
+<pre><code>bmp.setPixels(newPx,0,width,0,0,width,height);
+</code></pre><h4 id="常用图像像素点处理效果"><a href="#常用图像像素点处理效果" class="headerlink" title="常用图像像素点处理效果"></a>常用图像像素点处理效果</h4><ol>
+<li>底片效果</li>
+</ol>
+<p>若存在B像素点，要求对B点对应的底片效果算法，代码如下：</p>
+<pre><code>B.r = 255 - B.r;
+B.g = 255 - B.g;
+B.b = 255 - B.b;
+</code></pre><ol>
+<li>老照片效果</li>
+</ol>
+<p>求某像素点的老照片效果算法，代码如下：</p>
+<pre><code>r1 = (int)(0.393*r + 0.769*g + 0.189*b);
+g1 = (int)(0.349*r + 0.686*g + 0.168*b);
+b1 = (int)(0.272*r + 0.534*g + 0.131*b);
+</code></pre><ol>
+<li>浮雕效果</li>
+</ol>
+<p>若存在ABC3个像素点，要求B点对应的浮雕效果算法。代码如下：</p>
+<pre><code>B.r = C.r - B.r + 127;
+B.g = C.g - B.g + 127;
+B.b = C.b - B.b + 127;
+</code></pre><h3 id="Android图像处理之图形特效处理"><a href="#Android图像处理之图形特效处理" class="headerlink" title="Android图像处理之图形特效处理"></a>Android图像处理之图形特效处理</h3><h4 id="Android变形矩阵——Matrix"><a href="#Android变形矩阵——Matrix" class="headerlink" title="Android变形矩阵——Matrix"></a>Android变形矩阵——Matrix</h4><p>Android的图形变换矩阵是一个3*3的矩阵：</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/%E5%9B%BE%E5%BD%A2%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5.png" alt="图形变换矩阵"></p>
+<h5 id="平移变换"><a href="#平移变换" class="headerlink" title="平移变换"></a>平移变换</h5><h5 id="旋转变换"><a href="#旋转变换" class="headerlink" title="旋转变换"></a>旋转变换</h5><h5 id="缩放变换"><a href="#缩放变换" class="headerlink" title="缩放变换"></a>缩放变换</h5><h5 id="错切变换"><a href="#错切变换" class="headerlink" title="错切变换"></a>错切变换</h5><h2 id="SurfaceView的使用"><a href="#SurfaceView的使用" class="headerlink" title="SurfaceView的使用"></a>SurfaceView的使用</h2>
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
