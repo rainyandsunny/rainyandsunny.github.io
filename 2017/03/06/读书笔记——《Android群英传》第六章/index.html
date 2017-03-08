@@ -401,7 +401,55 @@ B.g = C.g - B.g + 127;
 B.b = C.b - B.b + 127;
 </code></pre><h3 id="Android图像处理之图形特效处理"><a href="#Android图像处理之图形特效处理" class="headerlink" title="Android图像处理之图形特效处理"></a>Android图像处理之图形特效处理</h3><h4 id="Android变形矩阵——Matrix"><a href="#Android变形矩阵——Matrix" class="headerlink" title="Android变形矩阵——Matrix"></a>Android变形矩阵——Matrix</h4><p>Android的图形变换矩阵是一个3*3的矩阵：</p>
 <p><img src="http://og1qqf1es.bkt.clouddn.com/%E5%9B%BE%E5%BD%A2%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5.png" alt="图形变换矩阵"></p>
-<h5 id="平移变换"><a href="#平移变换" class="headerlink" title="平移变换"></a>平移变换</h5><h5 id="旋转变换"><a href="#旋转变换" class="headerlink" title="旋转变换"></a>旋转变换</h5><h5 id="缩放变换"><a href="#缩放变换" class="headerlink" title="缩放变换"></a>缩放变换</h5><h5 id="错切变换"><a href="#错切变换" class="headerlink" title="错切变换"></a>错切变换</h5><h2 id="SurfaceView的使用"><a href="#SurfaceView的使用" class="headerlink" title="SurfaceView的使用"></a>SurfaceView的使用</h2>
+<h5 id="平移变换"><a href="#平移变换" class="headerlink" title="平移变换"></a>平移变换</h5><p><img src="http://og1qqf1es.bkt.clouddn.com/%E5%B9%B3%E7%A7%BB%E5%8F%98%E6%8D%A2.png" alt="平移变换"></p>
+<h5 id="旋转变换"><a href="#旋转变换" class="headerlink" title="旋转变换"></a>旋转变换</h5><p>假设点P(x0,y0)，其与X轴正方向夹角为α，那么：</p>
+<pre><code>x0 = rcosα
+y0 = rsinα
+</code></pre><p>以坐标原点为旋转中心旋转到P(x,y)，则：</p>
+<pre><code>x = rcos(α+θ) = rcosαcosθ - rsinαsinθ = x0cosθ - y0sinθ
+y = rsin(α+θ) = rsinαcosθ + rcosαsinθ = y0cosθ + x0sinθ
+</code></pre><h5 id="缩放变换"><a href="#缩放变换" class="headerlink" title="缩放变换"></a>缩放变换</h5><pre><code>x = k1*x0
+y = k2+y0
+</code></pre><h5 id="错切变换"><a href="#错切变换" class="headerlink" title="错切变换"></a>错切变换</h5><p>水平错切：</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/%E6%B0%B4%E5%B9%B3%E9%94%99%E5%88%87.png" alt="水平错切"></p>
+<p>垂直错切：</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/%E5%9E%82%E7%9B%B4%E9%94%99%E5%88%87.png" alt="垂直错切"></p>
+<p>错切变换的计算公式为：</p>
+<pre><code>x = x0 + K1*y0;
+y = K2*x0 + y0;
+</code></pre><p>在图形变换矩阵中，同样是通过一个一维数组来模拟矩阵，并通过setValues()方法将一个一维数组转换为图形变换矩阵。</p>
+<pre><code>float[] mImageMatrix = new float[9];
+Matrix matrix = new Matrix();
+matrix.setValues(mImageMatrix);
+</code></pre><p>获得了变换矩阵后，就可以通过以下代码将一个图像以这个变换矩阵的形式绘制出来：</p>
+<pre><code>canvas.drawBitmap(mBitmap,matrix,null);
+</code></pre><p>Android中使用Matrix类来封装矩阵，并提供了以下几个方法来实现上面的几种变换方式：</p>
+<p>matrix.setRotate()——旋转变换<br>matrix.setTranslate()——平移变换<br>matrix.setScale()——缩放变换<br>matrix.setSkew()——错切变换<br>pre()和post()——提供矩阵的前乘和后乘运算</p>
+<p>Matrix类的set方法会重置矩阵中的所有值，而post和pre方法不会，这两个方法常用来。</p>
+<p>后乘运算： 当前矩阵乘上参数代表的矩阵。<br>前乘运算： 参数代表的矩阵乘上当前矩阵。</p>
+<h4 id="像素块分析"><a href="#像素块分析" class="headerlink" title="像素块分析"></a>像素块分析</h4><pre><code>drawBitmapMesh(Bitmap bitmap,int meshWidth,int meshHeight,float[] verts,int vertOffset,int[] colors,int colorOffset,Paint paint)
+</code></pre><p>关键的参数如下：</p>
+<p>bitmap：将要扭曲的图像；<br>meshWidth：需要的横向网格数目；<br>meshHeight：需要的纵向网格数目；<br>verts：网格交叉点的坐标数组；<br>vertOffset：verts数组中开始跳过的(x,y)坐标对的数目。</p>
+<p>这个方法将图片分割为若干个图像块，靠改变网格交叉点的坐标值改变来重新定位每一个图像块，从而达到图像效果处理的功能。但是使用起来也非常复杂，关键在于计算，确定新的交叉点的坐标。</p>
+<h3 id="Android图像处理之画笔特效处理"><a href="#Android图像处理之画笔特效处理" class="headerlink" title="Android图像处理之画笔特效处理"></a>Android图像处理之画笔特效处理</h3><h4 id="PorterDuffXfermode"><a href="#PorterDuffXfermode" class="headerlink" title="PorterDuffXfermode"></a>PorterDuffXfermode</h4><p>PorterDuffXfermode设置的是两个图层交集区的显示方式，dst是先画的图形，而src是后画的图形。</p>
+<p>SRC :只绘制源图像</p>
+<p>DST :只绘制目标图像 </p>
+<p>DST_OVER :在源图像的顶部绘制目标图像 </p>
+<p>DST_IN :只在源图像和目标图像相交的地方绘制目标图像 </p>
+<p>DST_OUT :只在源图像和目标图像不相交的地方绘制目标图像 </p>
+<p>DST_ATOP :在源图像和目标图像相交的地方绘制目标图像，在不相交的地方绘制源图像 </p>
+<p>SRC_OVER :在目标图像的顶部绘制源图像 </p>
+<p>SRC_IN :只在源图像和目标图像相交的地方绘制源图像</p>
+<p>SRC_OUT :只在源图像和目标图像不相交的地方绘制源图像 </p>
+<p>SRC_ATOP :在源图像和目标图像相交的地方绘制源图像，在不相交的地方绘制目标图像 </p>
+<p>XOR :在源图像和目标图像重叠之外的任何地方绘制他们，而在不重叠的地方不绘制任何内容 </p>
+<p>LIGHTEN :获得每个位置上两幅图像中最亮的像素并显示</p>
+<p>DARKEN :获得每个位置上两幅图像中最暗的像素并显示</p>
+<p>MULTIPLY :将每个位置的两个像素相乘，除以255，然后使用该值创建一个新的像素进行显示。结果颜色=顶部颜色*底部颜色/255 </p>
+<p>SCREEN :反转每个颜色，执行相同的操作（将他们相乘并除以255），然后再次反转。结果颜色=255-(((255-顶部颜色)*(255-底部颜色))/255) </p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/PorterDuff.Mode.png" alt="图示"></p>
+<p>圆角，圆形图片处理，代码见：<br><a href="https://github.com/rainyandsunny/AndroidUtil/tree/master/AndroidUtil/app/src/main/java/com/swjtu/deanstar/util" target="_blank" rel="external">https://github.com/rainyandsunny/AndroidUtil/tree/master/AndroidUtil/app/src/main/java/com/swjtu/deanstar/util</a></p>
+<h2 id="SurfaceView的使用"><a href="#SurfaceView的使用" class="headerlink" title="SurfaceView的使用"></a>SurfaceView的使用</h2>
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
