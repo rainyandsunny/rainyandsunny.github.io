@@ -401,7 +401,14 @@ ll.setLayoutAnimation(lac);
 <pre><code>LayoutAnimationController.ORDER_NORMAL(顺序)
 LayoutAnimationController.ORDER_RANDOM(随机)
 LayoutAnimationController.ORDER_REVERSE(反序)
-</code></pre>
+</code></pre><h2 id="Interpolators（插值器）"><a href="#Interpolators（插值器）" class="headerlink" title="Interpolators（插值器）"></a>Interpolators（插值器）</h2><p>插值器是动画中一个非常重要的概念，通过插值器，可以定义动画变换速率。</p>
+<h2 id="自定义动画"><a href="#自定义动画" class="headerlink" title="自定义动画"></a>自定义动画</h2><p>创建自定义动画很简单，继承Animation。只需要实现它的applyTransformation的逻辑就可以，还需要覆盖父类的initialize方法来实现一些初始化工作。</p>
+<pre><code>applyTransformation(float interpolatedTime, Transformation t)
+</code></pre><p>第一个参数interpolatedTime就是插值器的时间因子，这个因子是由动画当前完成的百分比和当前时间所对应的插值所计算得来的，取值范围为0~1.0。</p>
+<p>第二个参数Transformation，它是矩阵的封装类，一般使用这个矩阵对象，代码如下：</p>
+<pre><code>final Matrix matrix = t.getMatrix();
+</code></pre><p>通过改变获得的matrix对象，将动画效果实现出来。对于matrix的变换操作，基本可以实现任何效果的动画。</p>
+
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
