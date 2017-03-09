@@ -206,7 +206,202 @@
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		
+      		<h2 id="Android-View动画框架"><a href="#Android-View动画框架" class="headerlink" title="Android View动画框架"></a>Android View动画框架</h2><h3 id="透明度动画"><a href="#透明度动画" class="headerlink" title="透明度动画"></a>透明度动画</h3><p>为视图增加透明度的变换动画。</p>
+<pre><code>AlphaAnimation aa = new AlphaAnimation(0,1);
+aa.setDuration(1000);
+view.startAnimation(aa);
+</code></pre><h3 id="旋转动画"><a href="#旋转动画" class="headerlink" title="旋转动画"></a>旋转动画</h3><p>为视图增加旋转的变换动画。</p>
+<pre><code>RotateAnimation ra = new RotateAnimation(0,360,100,100);
+ra.setDurayion(1000);
+view.startAnimation(ra);
+</code></pre><p>其参数分别为旋转的起始角度和旋转中心点的坐标，当然，可以通过设置参数来控制旋转动画的参考系，代码如下所示（设置旋转参考系为自身中心点）。</p>
+<pre><code>RotateAnimation ra = new RotateAnimation(0,360,RotateAnimation.RELATIVE_TO_SELF,0.5F,
+RotateAnimation.RELATIVE_TO_SELF,0.5F);
+</code></pre><h3 id="位移动画"><a href="#位移动画" class="headerlink" title="位移动画"></a>位移动画</h3><p>为视图移动时增加位移动画。</p>
+<pre><code>TranslateAnimation ta = new TranslateAnimation(0,200,0,300);
+ta.setDuration(1000);
+view.startAnimation(ta);
+</code></pre><h3 id="缩放动画"><a href="#缩放动画" class="headerlink" title="缩放动画"></a>缩放动画</h3><p>为视图的缩放增加动画效果</p>
+<p>ScaleAnimation sa = new ScaleAnimation(0,2,0,2);<br>sa.setDuration(1000);<br>view.startAnimation(sa);</p>
+<p>缩放动画也可以设置缩放的中心点，代码如下：</p>
+<pre><code>ScaleAnimation sa = new ScaleAnimation(0,1,0,1,
+Animation.RELATIVE_TO_SELF,0.5F,
+Animation.RELATIVE_TO_SELF,0.5F);
+sa.setDuration(1000);
+view.startAnimation(sa);
+</code></pre><h3 id="动画集合"><a href="#动画集合" class="headerlink" title="动画集合"></a>动画集合</h3><p>通过AnimationSet，可以将动画以组合的形式展现出来。</p>
+<p>对于动画事件，Android也提供了对应的监听回调，要添加对应的监听方法，代码如下：</p>
+<pre><code>animation.setAnimationListener(new Animation.AnimationListener(){
+
+@Override
+public void onAnimationStart(Animation animation){
+}
+@Override
+public void onAnimationEnd(Animation animation){}
+
+@Override
+public void onAnimationRepeat(Animation animation){}
+
+});
+</code></pre><h2 id="Android属性动画分析"><a href="#Android属性动画分析" class="headerlink" title="Android属性动画分析"></a>Android属性动画分析</h2><p>Android3.0之前已有的动画框架Animation存在一些局限性——动画改变的只是显示，并不能响应事件。在3.0之后，提出了属性动画这样一个新的动画框架，用来实现更加丰富的动画效果。</p>
+<p>在Animation框架中使用最多的就是AnimationSet和ObjectAnimator配合，ObjectAnimator进行更精细化控制，只控制一个对象的一个属性值，而使用多个ObjectAnimator组合到AnimatorSet形成一个动画。而且ObjectAnimator能够自我驱动，可以调用setFrameDelay(long frameDelay)设置动画帧之间的间隙时间、调整帧率，减少动画过程中频繁绘制界面，而在不影响动画效果的前提下减少CPU的资源消耗。</p>
+<p>最重要的是，属性动画通过调用属性的get、set方法来真实地控制了一个View的属性值。</p>
+<h3 id="ObjectAnimator"><a href="#ObjectAnimator" class="headerlink" title="ObjectAnimator"></a>ObjectAnimator</h3><p>ObjectAnimator是属性动画框架中最重要的实行类，创建一个ObjectAnimator只需要通过静态工厂类直接返回一个ObjectAnimator。参数包括一个对象和对象的属性名字，但这个属性必须有get和set函数，内部会通过Java反射机制来调用set函数修改对象属性值。同样，可以调用setInterpolator设置相应的插值器。</p>
+<p>例如：</p>
+<pre><code>ObjectAnimator animator = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300);
+</code></pre><p><strong>注意：在使用ObjectAnimator的时候，要注意一点，那就是要操作的属性必须具有get、set方法，不然ObjectAnimator就无法起效。</strong></p>
+<p>下面是常用的可以直接使用属性动画的属性值：</p>
+<ol>
+<li>translationX和translationY：这两个属性作为一种增量来控制着View对象从它布局容器的左上角坐标偏移的位置。</li>
+<li>rotation、rotationX和rotationY：这三个属性控制View对象围绕支点进行2D和3D旋转。</li>
+<li>scaleX和scaleY：这两个属性控制着View对象围绕它的支点进行2D缩放。</li>
+<li>pivotX和pivotY：这两个属性控制着View对象的支点位置，围绕这个支点进行缩放变换处理。默许情况下，该支点的位置就是View对象的中心点。</li>
+<li>x和y：这是两个简单实用的属性，它描述了View对象在它的容器中的最终位置，它是最初的左上角坐标和translationX、translationY值的累计和。</li>
+<li>alpha：它表示View对象的alpha透明度。默认是1（不透明），0代表完全透明（不可见）。</li>
+</ol>
+<p>如果一个属性没有get、set方法。可以通过以下两种方法来解决。</p>
+<ol>
+<li>通过自定义一个属性类或者包装类，来间接地给这个属性增加get、set方法。</li>
+<li>通过ValueAnimator来实现。</li>
+</ol>
+<p>先来看看第一种方法。</p>
+<pre><code>private static class WrapperView{
+
+    private View mTarget；
+
+    public WrapperView(View target){
+        mTarget = target;
+    }
+
+    public int getWidth(){
+        return mTarget.getLayoutParams(0/width;
+    }
+
+    public void setWidth(int width){
+        mTarget.getLayoutParams().width = width;
+        mTarget.requestLayout();
+    }
+}
+</code></pre><p>通过以上代码，就给一个属性包装了一层。使用方法如下：</p>
+<pre><code>ViewWrapper wrapper = new ViewWrapper(mButton);
+ObjectAnimator.ofInt(wrapper,&quot;width&quot;,500).setDuration(5000).start();
+</code></pre><h3 id="PropertyValuesHolder"><a href="#PropertyValuesHolder" class="headerlink" title="PropertyValuesHolder"></a>PropertyValuesHolder</h3><p>类似视图动画中的AnimationSet，在属性动画中，如果针对同一个对象的多个属性，要同时作用多种动画，可以使用PropertyValuesHolder来实现。</p>
+<pre><code>PropertyValuesHolder pvh1 = PropertyValuesHolder.ofFloat(&quot;translationX&quot;,300f);
+PropertyValuesHolder pvh2 = PropertyValuesHolder.ofFloat(&quot;scaleX&quot;,1f,0,1f);
+PropertyValuesHolder pvh3 = PropertyValuesHolder.ofFloat(&quot;scaleY&quot;,1f,0,1f);
+
+ObjectAnimator.ofPropertyValuesHolder(view,pvh1,pvh2,pvh3).setDuration(1000).start();
+</code></pre><h3 id="ValueAnimator"><a href="#ValueAnimator" class="headerlink" title="ValueAnimator"></a>ValueAnimator</h3><p>ValueAnimator在属性动画中占据着非常重要的地位，是属性动画的核心。ObjectAnimator也是继承自ValueAnimator。</p>
+<p>ValueAnimator本身不提供任何动画效果，它更像一个数值发生器，用来产生具有一定规律的数字，从而让调用者来控制动画的实现过程，ValueAnimator的一般使用方法如下所示，通常情况下，在ValueAnimator的AnimatorUpdateListener中监听数值的变换，从而完成变换。</p>
+<pre><code>ValueAnimator animator = ValueAnimator.ofFloat(0,100);
+   animator.setTarget(mImageView);
+   animator.setDuration(1000).start();
+   animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(){
+
+       @Override
+       public void onAnimationUpdate(ValueAnimator animation){
+           Float value = (Float)animation.getAnimatedValue();
+           Log.d(&quot;yhp&quot;,&quot;value:&quot; + value);
+       }
+
+   });
+</code></pre><h3 id="动画事件的监听"><a href="#动画事件的监听" class="headerlink" title="动画事件的监听"></a>动画事件的监听</h3><p>一个完成的动画具有Start、Repeat、End、Cancel四个过程。</p>
+<pre><code> ObjectAnimator anim = ObjectAnimator.ofFloat(mImageView,&quot;alpha&quot;,1f,0.5f);
+        anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+当然，大部分的时候，只关心onAnimationEnd事件，所以AnimatorListenerAdapter来让我们选择必要的事件进行监听。
+
+
+anim.addListener(new AnimatorListenerAdapter(){
+
+    @Override
+    public void onAnimationEnd(Animator animation){}
+
+});
+</code></pre><h3 id="AnimatorSet"><a href="#AnimatorSet" class="headerlink" title="AnimatorSet"></a>AnimatorSet</h3><p>对一个属性同时作用于多个属性动画效果，用PropertyValuesHolder来实现，而AnimatorSet不仅能实现这样的效果，同时也能实现更为精确的顺序控制。</p>
+<pre><code>ObjectAnimator animator1 = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300f);
+
+ObjectAnimator animator2 = ObjectAnimator.ofFloat(view,&quot;scaleX&quot;,1f,0f,1f);
+
+ObjectAnimator animator3 = ObjectAnimator.ofFloat(view,&quot;scaleY&quot;,1f,0f,1f);
+
+AnimatorSet set = new AnimatorSet();
+set.setDuration(1000);
+set.playTogether(animator1,animator2,animator3);
+set.start();
+</code></pre><p>通过playTogether()、playSequentially()控制。</p>
+<h3 id="在XML中使用属性动画"><a href="#在XML中使用属性动画" class="headerlink" title="在XML中使用属性动画"></a>在XML中使用属性动画</h3><p>例如：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;objectAnimator xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:duration=&quot;1000&quot;
+    android:propertyName=&quot;scaleX&quot;
+    android:valueFrom=&quot;1.0&quot;
+    android:valueTo=&quot;2.0&quot;
+    android:valueType=&quot;floatType&quot;
+    &gt;
+
+&lt;/objectAnimator&gt;
+</code></pre><p>在代码中使用的时候也非常简单：</p>
+<pre><code>Animator anim = AnimatorInflater.loadAnimator(this,R.animator.scalex);
+anim.setTarget(view);
+anim.start();
+</code></pre><h3 id="View的animate方法"><a href="#View的animate方法" class="headerlink" title="View的animate方法"></a>View的animate方法</h3><p>在Android 3.0之后，View增加了animate方法来直接驱动属性动画，可以认为是属性动画的一种简写方式。代码如下：</p>
+<pre><code>view.animate().alpha(0).y(300).setDuration(300)
+               .withStartAction(new Runnable() {
+                   @Override
+                   public void run() {
+
+                   }
+               }).withEndAction(new Runnable() {
+           @Override
+           public void run() {
+               runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+
+                   }
+               });
+           }
+       });
+</code></pre><h2 id="Android布局动画"><a href="#Android布局动画" class="headerlink" title="Android布局动画"></a>Android布局动画</h2><p>所谓布局动画是指作用在ViewGroup上，给ViewGroup增加View时添加一个动画过渡效果。最简单的布局动画是在ViewGroup的XML中，使用如下代码来打开布局动画。</p>
+<pre><code>android:animateLayoutChanges=&quot;true&quot;
+</code></pre><p>还可以通过使用LayoutAnimationController类来自定义一个子View的过渡效果，代码如下：</p>
+<pre><code>LinearLayout ll = （LinearLayout)findViewById(R.id.ll);
+//设置过渡动画
+ScaleAnimation sa = new ScaleAnimation(0,1,0,1);
+sa.setDuration(2000);
+
+//设置布局动画的显示属性
+LayoutAnimationController lac = new LayoutAnimationController(sa,0.5F);
+lac.setOrder(LayoutAnimationController.ORDER_NORMAL);
+
+//为ViewGroup设置布局动画
+ll.setLayoutAnimation(lac);
+</code></pre><p>LayoutAnimationController的第一个参数，是需要作用的动画。而第二个参数，则是每个子View显示的delay时间。当delay时间不为0时，可以设置子View显示的顺序。</p>
+<pre><code>LayoutAnimationController.ORDER_NORMAL(顺序)
+LayoutAnimationController.ORDER_RANDOM(随机)
+LayoutAnimationController.ORDER_REVERSE(反序)
+</code></pre>
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
