@@ -449,7 +449,82 @@ matrix.setValues(mImageMatrix);
 <p>SCREEN :反转每个颜色，执行相同的操作（将他们相乘并除以255），然后再次反转。结果颜色=255-(((255-顶部颜色)*(255-底部颜色))/255) </p>
 <p><img src="http://og1qqf1es.bkt.clouddn.com/PorterDuff.Mode.png" alt="图示"></p>
 <p>圆角，圆形图片处理，代码见：<br><a href="https://github.com/rainyandsunny/AndroidUtil/tree/master/AndroidUtil/app/src/main/java/com/swjtu/deanstar/util" target="_blank" rel="external">https://github.com/rainyandsunny/AndroidUtil/tree/master/AndroidUtil/app/src/main/java/com/swjtu/deanstar/util</a></p>
-<h2 id="SurfaceView的使用"><a href="#SurfaceView的使用" class="headerlink" title="SurfaceView的使用"></a>SurfaceView的使用</h2>
+<h3 id="Shader"><a href="#Shader" class="headerlink" title="Shader"></a>Shader</h3><p>Shader又被称为着色器，渲染器，它用来实现一系列的渐变、渲染效果。Android中的Shader包括以下几种。</p>
+<ol>
+<li>BitmapShader——位图Shader</li>
+<li>LinearGradient——线性Shader</li>
+<li>RadialGradient——光束Shader</li>
+<li>SweepGradient——梯度Shader</li>
+<li>ComposeShader——混合Shader</li>
+</ol>
+<p>除了第一个Shader以外，其他的Shader都比较正常，实现了真正的渐变、渲染效果。BitmapShader产生的是一个图像。它的作用就是通过Paint对画布进行制定Bitmap的填充，填充时有以下几种模式：</p>
+<p>CLAMP——拉伸的是图片最后的那一个像素，不断重复<br>REPEAT重复——横向、纵向不断重复<br>MIRROR镜像——横向不断翻转重复，纵向不断翻转重复</p>
+<p>例如，我们可以用CLAMP来画出圆角图片等。</p>
+<pre><code> Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.timg,null);
+Paint mPaint = new Paint();
+Bitmap out = Bitmap.createBitmap(bitmap.getWidth()
+        ,bitmap.getHeight(),Bitmap.Config.ARGB_8888);
+BitmapShader mBitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP,Shader.TileMode.CLAMP);
+mPaint.setShader(mBitmapShader);
+Canvas canvas = new Canvas(out);
+canvas.drawCircle(500,250,200,mPaint);
+</code></pre><h3 id="PathEffect"><a href="#PathEffect" class="headerlink" title="PathEffect"></a>PathEffect</h3><ol>
+<li>CornerPathEffect</li>
+</ol>
+<p>将拐角处变得圆滑</p>
+<ol>
+<li>DiscretePathEffect</li>
+</ol>
+<p>使用这个效果，线段上就会出现很多杂点。</p>
+<ol>
+<li>DashPathEffect</li>
+</ol>
+<p>绘制虚线。用一个数组来设置各个点之间的间隔，另一个参数phase则用来控制绘制时数组的一个偏移量。</p>
+<ol>
+<li>PathDashPathEffect</li>
+</ol>
+<p>和DashPathEffect类似，它的功能更强大，可以设置显示点的图形，即方形点的虚线，圆形点的虚线。</p>
+<ol>
+<li>ComposePathEffect</li>
+</ol>
+<p>通过ComposePathEffect来组合PathEffect，这个方法的功能就是将路径特性组合起来形成一个新的效果。</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/patheffect.png" alt="PathEffect"></p>
+<p>依次为：无效果、CornerPathEffect、DiscretePathEffect、PathDashPathEffect，ComposePathEffect（CornerPathEffect，DashPathEffect）。</p>
+<h2 id="SurfaceView的使用"><a href="#SurfaceView的使用" class="headerlink" title="SurfaceView的使用"></a>SurfaceView的使用</h2><h3 id="SurfaceView与View的区别"><a href="#SurfaceView与View的区别" class="headerlink" title="SurfaceView与View的区别"></a>SurfaceView与View的区别</h3><p>View主要适用于主动更新的情况下，而SurfaceView主要适用于被动更新，例如频繁地刷新。</p>
+<p>View 在主线程中对画面进行刷新，而SurfaceView通过一个子线程来进行画面的刷新。</p>
+<p>View在绘图时没有使用双缓冲机制，而SurfaceView在底层实现中就已经实现了双缓冲机制。</p>
+<h3 id="SurfaceView的使用-1"><a href="#SurfaceView的使用-1" class="headerlink" title="SurfaceView的使用"></a>SurfaceView的使用</h3><p>SurfaceView的使用通常可以使用下面的模板：</p>
+<h4 id="1-创建SurfaceView"><a href="#1-创建SurfaceView" class="headerlink" title="1 创建SurfaceView"></a>1 创建SurfaceView</h4><p>创建自定义的SurfaceView继承自SurfaceView，并实现两个接口——SurfaceHolder.Callback和Runnable。</p>
+<pre><code>public class SurfaceViewTemplate extends SurfaceView
+implements SurfaceHolder.Callback,Runnable
+</code></pre><p>分别实现如下方法：</p>
+<pre><code>@Override
+public void surfaceCreated(SurfaceHolder holder){}
+
+@Override
+public void surfaceChanged(SurfaceHolder holder,int format,int width,int height){}
+
+@Override
+public void surfaceDestroyed(SurfaceHolder holder){}
+</code></pre><p>对于Runnable接口，实现run()方法。</p>
+<h4 id="2-初始化SurfaceView"><a href="#2-初始化SurfaceView" class="headerlink" title="2. 初始化SurfaceView"></a>2. 初始化SurfaceView</h4><p>在自定义SurfaceView的构造方法中，需要对SurfaceView进行初始化，在自定义的SurfaceView中，通常需要定义以下三个成员变量，代码如下：</p>
+<pre><code>//SurfaceHolder
+private SurfaceHolder mHolder;
+
+//用于绘图的Canvas
+private Canvas mCanvas;
+
+//子线程标志位
+private boolean mIsDrawing;
+</code></pre><p>初始化方法就是对SurfaceHolder进行初始化，通过以下代码来初始化一个SurfaceHolder对象，并注册SurfaceHolder的回调方法。</p>
+<pre><code>mHolder = getHolder();
+
+mHolder.addCallback(this);
+</code></pre><h4 id="3-使用SurfaceView"><a href="#3-使用SurfaceView" class="headerlink" title="3. 使用SurfaceView"></a>3. 使用SurfaceView</h4><p>通过SurfaceHolder对象的lockCanvas()方法，就可以获得当前Canvas绘图。接下来，就可以与在View中进行的绘制操作一样进行绘制了。获取到的Canvas对象还是继续上次的Canvas对象，而不是一个新的对象。因此之前的操作都将被保留，如果需要擦除，则可以在绘制前，通过drawColor()方法来进行清屏操作。</p>
+<p>绘制的时候，充分利用SurfaceView的三个回调方法，在surfaceCreated()方法中开启子线程进行绘制，而子线程使用一个while(mIsDrawing)的循环来不停地进行绘制，而在绘制的具体逻辑中，通过lockCanvas()方法获得的Canvas对象进行绘制，并通过unlockCanvasAndPost(mCanvas)方法对画布内容进行提交。</p>
+<p>SurfaceView的使用示例代码见：</p>
+<p><a href="https://github.com/rainyandsunny/AndroidUtil/blob/master/AndroidUtil/app/src/main/java/com/swjtu/deanstar/androidutil/View/SurfaceViewTeplate.java" target="_blank" rel="external">https://github.com/rainyandsunny/AndroidUtil/blob/master/AndroidUtil/app/src/main/java/com/swjtu/deanstar/androidutil/View/SurfaceViewTeplate.java</a></p>
+
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
