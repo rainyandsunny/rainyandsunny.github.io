@@ -415,7 +415,102 @@ protected void applyTransformation(){
     //通过matrix的各种操作来实现动画
     matrix.***;
 }
-</code></pre>
+</code></pre><h2 id="Android-5-X-SVG矢量动画机制"><a href="#Android-5-X-SVG矢量动画机制" class="headerlink" title="Android 5.X SVG矢量动画机制"></a>Android 5.X SVG矢量动画机制</h2><p>SVG：</p>
+<ol>
+<li>可伸缩矢量图形</li>
+<li>定义用于网络的基于矢量的图形</li>
+<li>使用XML格式定义图形</li>
+<li>图形在放大或改变尺寸的情况下其图形质量不会所有损失</li>
+</ol>
+<p>SVG比Bitmap（位图）的好处：</p>
+<p>Bitmap(位图)通过在每个像素点上存储色彩信息来表达图像，而SVG是一个绘图标准。SVG最大的优点就是放大不会失真。而且Bitmap需要为不同分辨率设计许多套图标，而矢量图形则不需要。</p>
+<h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a><path></path>标签</h3><p>使用<path></path>创建SVG，<path></path>标签所支持的指令有以下几种。</p>
+<p>M = moveto(M X,Y):将画笔移动到指定的坐标位置，但未发生绘制<br>L = lineto（L X,Y):画直线到指定的坐标位置<br>H = horizontal lineto(H X):画水平线到指定的X坐标位置<br>V = vertical lineto(V Y):画垂直线到指定的Y坐标位置<br>C = curveto(C X1,Y1,X2,Y2,ENDX,ENDY): 二次贝赛曲线<br>S = smooth curveto(S X2,Y2,ENDX,ENDY): 三次贝赛曲线<br>Q = quadratic Belzier curve(Q X,Y,ENDX,ENDY):二次贝赛曲线<br>T = smooth quadratic Belzier curveto(T ENDX,ENDY):映射前面路径后的终点<br>A = elliptical Arc(A RX,RY,XROTATION,FLAG1,FLAG2,X,Y):弧线<br>Z = closepath() : 关闭路径</p>
+<p>在使用上面的指令时，需要注意以下几点：</p>
+<p>坐标轴以（0，0）为中心，X轴水平向右，Y轴水平向下。</p>
+<p>所有指令大小写均可。大写绝对定位，参照全局坐标系。小写相对定位，参照父容器坐标系。</p>
+<p>指令和数据间的空格可以省略。</p>
+<p>同一个指令出现多次可以只用一个。</p>
+<h3 id="Android中使用SVG"><a href="#Android中使用SVG" class="headerlink" title="Android中使用SVG"></a>Android中使用SVG</h3><p>在Android 5.X中提供了下面两个新的API来帮助支持SVG：</p>
+<p>VectorDrawable （创建基于XML的SVG图）</p>
+<p>AnimatedVectorDrawable（实现动画效果）</p>
+<h4 id="VectorDrawable"><a href="#VectorDrawable" class="headerlink" title="VectorDrawable"></a>VectorDrawable</h4><p>在XML中创建一个静态的SVG图形。path是SVG树形结构中的最小单位，而通过Group可以将不同的path进行组合。</p>
+<pre><code>&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:height=&quot;200dp&quot;
+    android:width=&quot;200dp&quot;
+    android:viewportHeight=&quot;100&quot;
+    android:viewportWidth=&quot;100&quot;
+&gt;
+&lt;/vector&gt;
+</code></pre><p>height,width表示该SVG图形的具体大小，而viewportHeight，viewportWidth表示SVG图形划分的比例。比如上面的代码。将200dp话费为100份，如果在绘制时使用坐标（50，50），则意味着该坐标位于该SVG图形正中间。</p>
+<p>所以，width、height的比例与viewportWidth，viewportHeight的比例保持一致，不然图形就会发生压缩，形变。</p>
+<p>给<vector>标签增加显示path，代码如下：</vector></p>
+<pre><code>&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:height=&quot;200dp&quot;
+    android:width=&quot;200dp&quot;
+    android:viewportHeight=&quot;100&quot;
+    android:viewportWidth=&quot;100&quot;
+    &lt;group
+        android:name=&quot;test&quot;
+        android:rotation=&quot;0&quot;&gt;
+        &lt;path
+            android:fillColor=&quot;@android:color/holo_blue_light&quot;
+            android:pathData=&quot;
+                M 25 50
+                a 25,25 0 1,0 50,0
+            &quot;/&gt;
+
+    &lt;/group&gt;
+
+&lt;/vector&gt;
+</code></pre><p>通过添加<group>标签和<path></path>标签来绘制一个SVG图形，其中pathData就是绘制SVG图形所用到的指令。</group></p>
+<h4 id="AnimatedVectorDrawable"><a href="#AnimatedVectorDrawable" class="headerlink" title="AnimatedVectorDrawable"></a>AnimatedVectorDrawable</h4><p>AnimatedVectorDrawable的作用就是给VectorDrawable提供动画效果。AnimatedVectorDrawable比喻为一个胶水，通过AnimatedVectorDrawable来连接静态的VectorDrawable和动态的objectAnimator。</p>
+<p>AnimatedVectorDrawable的使用通过以下几步：</p>
+<ol>
+<li>在XML文件中通过<animated-vector>标签来声明对AnimatedVectorDrawable的使用，并指定其作用的path或者group。</animated-vector></li>
+</ol>
+<p><animated-vector xmlns:android="http://schemas.android.com/apk/res/android" android:drawable="@drawable/vector"><br>    <target android:name="test" android:animation="@anim/anim_path1"></target></animated-vector></p>
+<p></p>
+<p>对应的vector即为静态的VectorDrawable。</p>
+<pre><code>&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:height=&quot;200dp&quot;
+    android:width=&quot;200dp&quot;
+    android:viewportHeight=&quot;100&quot;
+    android:viewportWidth=&quot;100&quot;
+    &lt;group
+        android:name=&quot;test&quot;
+        android:rotation=&quot;0&quot;&gt;
+        &lt;path
+            android:strokeColor=&quot;@android:color/holo_blue_light&quot;
+            android:strokeWidth=&quot;2&quot;
+            android:pathData=&quot;
+                M 25 50
+                a 25,25 0 1,0 50,0
+            &quot;/&gt;
+
+    &lt;/group&gt;
+
+&lt;/vector&gt;
+</code></pre><p>AnimatedVectorDrawable中指定的target的name属性，必须与VectorDrawable中需要作用的name属性保持一致，这样系统才能找到要实现动画的元素。最后通过AnimatedVectorDrawable中target的animation属性，将一个动画作用到了对应name的元素上，objectAnimator代码如下：</p>
+<pre><code>&lt;objectAnimator
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:duration=&quot;4000&quot;
+    android:propertyName=&quot;rotation&quot;
+    android:valueFrom=&quot;0&quot;
+    android:valueTo=&quot;360&quot;
+/&gt;
+</code></pre><p>对动画效果的实现，通过属性动画来实现的，只是属性捎有不同。</p>
+<p>在<group>标签和<path></path>标签中添加了rotation、fillColor、pathData等属性，那么在objectAnimator中就可以通过指定android:propertyName=”XXXX”属性，可以控制动画的起始值。</group></p>
+<p><strong>如果指定属性为pathData，那么需要添加一个属性 android:valueType=”pathType”来告诉系统进行pathData变换。</strong></p>
+<p>当所有的xml文件准备好了以后，就可以在代码中控制SVG动画，可以非常方便地将一个AnimatedVectorDrawable XML文件设置给一个ImageView作为背景。</p>
+<pre><code>&lt;ImageView
+    android:id=&quot;@+id/image&quot;
+    android:src=&quot;@drawable/anim_vector&quot;
+    ......
+/&gt;
+</code></pre><p>在程序中，使用以下代码，即可开始SVG动画。</p>
+<p>((Animatable)imageView.getDrawable()).start();</p>
+
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
