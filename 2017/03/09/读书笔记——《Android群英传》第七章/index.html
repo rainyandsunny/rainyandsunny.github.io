@@ -408,7 +408,14 @@ LayoutAnimationController.ORDER_REVERSE(反序)
 <p>第二个参数Transformation，它是矩阵的封装类，一般使用这个矩阵对象，代码如下：</p>
 <pre><code>final Matrix matrix = t.getMatrix();
 </code></pre><p>通过改变获得的matrix对象，将动画效果实现出来。对于matrix的变换操作，基本可以实现任何效果的动画。</p>
+<pre><code>@Override
+protected void applyTransformation(){
 
+    final Matrix matrix = t.getMatrix();
+    //通过matrix的各种操作来实现动画
+    matrix.***;
+}
+</code></pre>
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
