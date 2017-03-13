@@ -229,6 +229,38 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2017/03/13/读书笔记——《Android群英传》第十章/">Android性能优化</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2017-03-13T01:37:28.000Z" itemprop="datePublished">
+          2017-03-13
+      </time>
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        布局优化Android UI渲染机制在Android中，系统通过VSYNC信号触发对UI的渲染、重绘，其间隔时间是16ms。15 = 1000/60（1秒内显示60帧画面的单位时间）。
+Android系统提供了检测UI渲染时间的工具，打开“开发者选项”，选择“Profile GPU Rendering”，并选中“On screen as bars”的选项，这时候在屏幕上将显示一个条形图。
+蓝色代表测量绘制Display List的时间，
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2017/03/13/读书笔记——《Android群英传》第十章/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2017/03/09/读书笔记——《Android群英传》第七章/">Android动画机制与使用技巧</a></h3>
                     <span>
                         <span class="post-meta">
@@ -536,46 +568,6 @@ public final class ViewHolder{
                     
                     <p class="pull-right readMore">
                         <a href="/2017/02/20/读书笔记——《Android群英传》第三章/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2017/02/20/读书笔记——《Android群英传》第二章/">ADB常用命令</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2017-02-20T02:18:02.000Z" itemprop="datePublished">
-          2017-02-20
-      </time>
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        ADB常用命令
-安装Apk程序——install
-
-adb install -r 应用程序.apk
-
-安装Apk程序——push
-
-adb push  例：adb push D:\Test.apk /system/app/
-adb install是将apk安装到data/data目录下，作为普通的用户应用程序。而adb push则不是安装命令，它是将一个文件写入手机存储系统。只要拥有相应的权限，就可以把任何apk放到任何目录下。
-
-从手
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2017/02/20/读书笔记——《Android群英传》第二章/">Read More...</a>
                     </p>
                     
                 </div>

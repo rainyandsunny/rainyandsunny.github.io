@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!--<![endif]-->
+
+<head>
+  <title>Android性能优化 | 小小黄金屋</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="小小黄金屋">
+    <meta name="author" content="Twist Fate">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="小小黄金屋" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+	
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+    
+
+    <!-- Custom stylesheet, (add custom styles here, always load last) -->
+    <!-- Load our stylesheet for IE8 -->
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- Google Webfonts (Monserrat 400/700, Open Sans 400/600) -->
+    <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- Load our fonts individually if IE8+, to avoid faux bold & italic rendering -->
+    <!--[if IE]>
+    <link href='http://fonts.useso.com/css?family=Montserrat:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+  
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Android</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">架构</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="http://go.kieran.top/" class="animsition-link">Kieran</a></li>
+                    
+                    <li><a href="http://domain.com/" class="animsition-link">Name</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">小小黄金屋</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/rainyandsunny/" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a></li>
+                            
+                            
+                            <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a></li>
+                            
+                            
+                            <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a></li>
+                            
+                            
+                            <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2017-03-13T01:37:28.000Z" itemprop="datePublished">
+          2017-03-13
+      </time>
+    
+</span>
+                <h1>Android性能优化</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<h2 id="布局优化"><a href="#布局优化" class="headerlink" title="布局优化"></a>布局优化</h2><h3 id="Android-UI渲染机制"><a href="#Android-UI渲染机制" class="headerlink" title="Android UI渲染机制"></a>Android UI渲染机制</h3><p>在Android中，系统通过VSYNC信号触发对UI的渲染、重绘，其间隔时间是16ms。15 = 1000/60（1秒内显示60帧画面的单位时间）。</p>
+<p>Android系统提供了检测UI渲染时间的工具，打开“开发者选项”，选择“Profile GPU Rendering”，并选中“On screen as bars”的选项，这时候在屏幕上将显示一个条形图。</p>
+<p>蓝色代表测量绘制Display List的时间，红色代表OpenGL渲染DIsplay List所需要的时间，黄色代表CPU等待GPU处理的时间。中间的绿色横线代表VSYNC时间16ms，需要尽量将所有条形图都控制在这条绿线之下。</p>
+<h3 id="避免Overdraw"><a href="#避免Overdraw" class="headerlink" title="避免Overdraw"></a>避免Overdraw</h3><p>Android系统在开发者选项中提供了这样一个检测工具——“Enable GPU Overdraw”。激活后，可以通过界面上的颜色来判断Overdraw的次数。尽量优化绘图层次，尽量增大蓝色的区域，减少红色区域。</p>
+<h3 id="优化布局层级"><a href="#优化布局层级" class="headerlink" title="优化布局层级"></a>优化布局层级</h3><p>在Android中，系统对View进行测量、布局和绘制时，都是通过对View数的遍历来进行操作的。如果一个View树的高度太高，就会严重影响测量、布局和绘制的速度。Google建议View树的高度不宜超过10层。</p>
+<h3 id="避免嵌套过多无用布局"><a href="#避免嵌套过多无用布局" class="headerlink" title="避免嵌套过多无用布局"></a>避免嵌套过多无用布局</h3><p>嵌套的布局会让View树的高度变得越来越高，因此在布局时，需要根据自身布局的特点来选择不同的Layout组件，从而避免通过某一种Layout组件来实现功能时的局限性，从而造成嵌套过多的情况发生。</p>
+<h4 id="使用标签重用Layout"><a href="#使用标签重用Layout" class="headerlink" title="使用标签重用Layout"></a>使用<include>标签重用Layout</include></h4><h4 id="使用实现View的延迟加载"><a href="#使用实现View的延迟加载" class="headerlink" title="使用实现View的延迟加载"></a>使用<viewstub>实现View的延迟加载</viewstub></h4><pre><code>&lt;ViewStub
+    android:layout=&quot;@layout/***&quot;
+    ...
+&gt;
+</code></pre><p>在代码中如何使用呢？</p>
+<pre><code>mViewStub = (ViewStub)findViewById(R.id.***);
+</code></pre><p>通过调用ViewStub的setVisibility()方法来显示这个View，代码如下所示：</p>
+<pre><code>mViewStub.setVisibility(View.VISIBLE);
+</code></pre><p>或者通过调用ViewStub的inflate()方法来显示这个View，代码如下：</p>
+<pre><code>View inflateView = mViewStub.inflate();
+</code></pre><p><viewstub>标签与设置View.GONE这种方式来隐藏这个View有什么区别？</viewstub></p>
+<p>共同点都是初始时不会显示，但是<viewstub>标签只会在显示时，才去渲染整个布局，而View.GONE,在初始化布局树的时候就已经添加到布局树上了，相比之下<viewstub>标签的布局具有更高的效率。</viewstub></viewstub></p>
+<h3 id="Hierarchy-Viewer"><a href="#Hierarchy-Viewer" class="headerlink" title="Hierarchy Viewer"></a>Hierarchy Viewer</h3><h2 id="内存优化"><a href="#内存优化" class="headerlink" title="内存优化"></a>内存优化</h2><h3 id="什么是内存？"><a href="#什么是内存？" class="headerlink" title="什么是内存？"></a>什么是内存？</h3><p>内存是指手机的RAM，它包括以下几个部分：</p>
+<p>栈：</p>
+<p>存放基本类型的数据和对象的引用，但对象本身不存放在栈中，而是存放在堆中。</p>
+<p>堆：</p>
+<p>堆内存用来存放由new创建的对象和数组。在堆中分配的内存，由Java虚拟机的自动垃圾回收器(GC)来管理。</p>
+<p>静态存储区域(Static Field)</p>
+<p>静态存储区域就是指在固定的位置存放应用程序运行时一直存放的数据，Java在内存中专门划分了一个静态存储区域来管理一些特殊的数据变量如静态的数据变量。</p>
+<p>常量池：</p>
+<p>JVM虚拟机必须为每个被装载的类型维护一个常量池。常量池就是该类型所用到常量的一个有序集合，包括直接常量（基本类型，String）和对其他类型，字段和方法的符号引用。</p>
+<p>在程序中，可以使用如下代码来获得堆的大小，所谓的内存分析，正是分析Heap中的内存状态。</p>
+<pre><code>ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+
+int heapSize = manager.getLargeMemoryClass();
+</code></pre><h3 id="获取系统内存信息"><a href="#获取系统内存信息" class="headerlink" title="获取系统内存信息"></a>获取系统内存信息</h3><h4 id="Process-Stats"><a href="#Process-Stats" class="headerlink" title="Process Stats"></a>Process Stats</h4><p>Process Stats是一个系统内存监视服务，可以通过“Setting-Developer options——Process Stats”来开启功能的界面。</p>
+<p>同样，也可以使用Dumpsys命令来获取这些信息。</p>
+<pre><code>adb shell dumpsys procstats
+</code></pre><h4 id="Meminfo"><a href="#Meminfo" class="headerlink" title="Meminfo"></a>Meminfo</h4><p>Meminfo也是系统上的一个非常重要的内存监视工具，可以通过在Settings——Apps——Running中打开这一界面。</p>
+<p>也可以使用Dumpsys命令。</p>
+<pre><code>adb shell dumpsys meminfo
+</code></pre><h3 id="内存优化实例"><a href="#内存优化实例" class="headerlink" title="内存优化实例"></a>内存优化实例</h3><h4 id="Bitmap优化"><a href="#Bitmap优化" class="headerlink" title="Bitmap优化"></a>Bitmap优化</h4><ol>
+<li>使用适当分辨率和大小的图片</li>
+<li>及时回收内存（及时调用bitmap.recycle()方法释放内存资源）</li>
+<li>使用图片缓存（通过内存缓存(LruCache)和硬盘缓存(DiskLruCache)）</li>
+</ol>
+<h4 id="代码优化"><a href="#代码优化" class="headerlink" title="代码优化"></a>代码优化</h4><ol>
+<li>对常量使用static修饰符；</li>
+<li>使用静态方法，静态方法会比普通方法提高15%左右的访问速度；</li>
+<li>减少不必要的成员变量，在AndroidLint工具已经集成检测，如果一个变量可以定义为局部变量，则建议不要定义为成员变量；</li>
+<li>减少不必要的对象，使用基础类型会比使用对象更加节省资源，同时避免频繁创建短作用域的变量；</li>
+<li>尽量不要使用枚举，少用迭代器；</li>
+<li>对Cursor、Receiver、Sensor、File等对象，要注意对它们的创建，回收与注册，解注册；</li>
+<li>使用RenderScript、OpenGL来进行非常复杂的绘图操作；</li>
+<li>使用SurfaceView来代替View进行大量、频繁得绘图操作；</li>
+<li>尽量使用视图缓存，而不是每次都执行inflate()方法解析视图。</li>
+</ol>
+<h2 id="Lint工具"><a href="#Lint工具" class="headerlink" title="Lint工具"></a>Lint工具</h2><p>养成写完代码后检查Lint提示的习惯，这不仅可以让你及时发现google代码中隐藏的一些问题，更能让你养成良好的代码风格。</p>
+<h2 id="使用Android-Studio的Memory-Monitor工具"><a href="#使用Android-Studio的Memory-Monitor工具" class="headerlink" title="使用Android Studio的Memory Monitor工具"></a>使用Android Studio的Memory Monitor工具</h2><h2 id="使用TraceView工具优化APP性能"><a href="#使用TraceView工具优化APP性能" class="headerlink" title="使用TraceView工具优化APP性能"></a>使用TraceView工具优化APP性能</h2><p>TraceView是一个Android下的可视化性能调查工具，用来分析TraceView日志。</p>
+<h3 id="生成TraceView日志的两种方法"><a href="#生成TraceView日志的两种方法" class="headerlink" title="生成TraceView日志的两种方法"></a>生成TraceView日志的两种方法</h3><h4 id="通过代码生成精确范围内的TraceView日志"><a href="#通过代码生成精确范围内的TraceView日志" class="headerlink" title="通过代码生成精确范围内的TraceView日志"></a>通过代码生成精确范围内的TraceView日志</h4><p>使用Debug类的方法开启TraceView监听。通过调用Debug.startMethodTracing()方法开启监听，通过调用Debug.stopMethodTracing()方法结束监听，通过这两个方法来包围要监听的代码块。</p>
+<p>TraceView的日志会保存在”/sdcard/dmtrace.trace”目录下，因此，需要在Mainifest文件中增加如下所示的权限：</p>
+<pre><code>&lt;uses-permission 
+    android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;
+/&gt;
+</code></pre><h4 id="通过Android-Device-Monitor生成TraceView日志"><a href="#通过Android-Device-Monitor生成TraceView日志" class="headerlink" title="通过Android　Device Monitor生成TraceView日志"></a>通过Android　Device Monitor生成TraceView日志</h4><p>在Android Studio的Android Device Monitor工具，选择要调试的进程，点击工具栏的”start method profiling”按钮。</p>
+<p>TraceView提供了以下两种监听方式：</p>
+<ol>
+<li>整体监听</li>
+<li>抽样监听</li>
+</ol>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/traceview.png" alt="traceView"></p>
+<p>一般要重点查看占用时间长，而且调用次数少的方法。</p>
+<h2 id="使用Mat"><a href="#使用Mat" class="headerlink" title="使用Mat"></a>使用Mat</h2><p>这个比较简单，就不说了。</p>
+<h2 id="使用Dumpsys命令分析系统状态"><a href="#使用Dumpsys命令分析系统状态" class="headerlink" title="使用Dumpsys命令分析系统状态"></a>使用Dumpsys命令分析系统状态</h2><p>使用Dumpsys命令可以列出Android系统相关的信息和服务状态。</p>
+<p>使用Dumpsys命令时，只需要输入“adb shell dumpsys + 参数”即可。常用的如下：</p>
+<p>activity：显示所有的Activity的栈信息<br>meminfo：内存信息<br>battery：电池信息<br>package：包信息<br>wifi：显示wifi信息<br>alarm：显示alarm信息<br>procstats：显示内存信息</p>
+<p>配合Linux下的shell命令，如“grep”，“find”，让该命令发挥作用。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2017/03/09/读书笔记——《Android群英传》第七章/">
+        Android动画机制与使用技巧 →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2017/03/13/读书笔记——《Android群英传》第十章/" data-title="Android性能优化" data-url="http://yoursite.com/2017/03/13/读书笔记——《Android群英传》第十章/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"rainyandsunny"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By Twist Fate. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/rainyandsunny/" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+        
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+    
+    resizeHero();
+    
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/jquery.flexslider-min.js"></script><!-- Flexslider plugin -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+<!-- Initiate flexslider plugin -->
+<script type="text/javascript">
+    $(document).ready(function($) {
+      $('.flexslider').flexslider({
+        animation: "fade",
+        prevText: "",
+        nextText: "",
+        directionNav: true
+      });
+    });
+</script>
+
+</body>
+</html>
