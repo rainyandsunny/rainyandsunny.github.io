@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!--<![endif]-->
+
+<head>
+  <title>Android Studio下的Unit，UI测试(译) | 小小黄金屋</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="小小黄金屋">
+    <meta name="author" content="Twist Fate">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="小小黄金屋" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+	
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+    
+
+    <!-- Custom stylesheet, (add custom styles here, always load last) -->
+    <!-- Load our stylesheet for IE8 -->
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- Google Webfonts (Monserrat 400/700, Open Sans 400/600) -->
+    <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- Load our fonts individually if IE8+, to avoid faux bold & italic rendering -->
+    <!--[if IE]>
+    <link href='http://fonts.useso.com/css?family=Montserrat:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+  
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Android</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">架构</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="http://go.kieran.top/" class="animsition-link">Kieran</a></li>
+                    
+                    <li><a href="http://domain.com/" class="animsition-link">Name</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">小小黄金屋</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/rainyandsunny/" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a></li>
+                            
+                            
+                            <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a></li>
+                            
+                            
+                            <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a></li>
+                            
+                            
+                            <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2017-05-22T06:27:36.000Z" itemprop="datePublished">
+          2017-05-22
+      </time>
+    
+</span>
+                <h1>Android Studio下的Unit，UI测试(译)</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>在这篇文章中，简单介绍下如何在Android Studio中启动测试。书写一个单元测试并在你本地的开发机器上运行，一级如何在设备上做功能UI测试。</p>
+<p>你将会学到：</p>
+<ol>
+<li>更新Gradle配置文件来引入JUnit，Android测试依赖库；</li>
+<li>写Unit测试，这将运行在你本地开发机器的Java虚拟机上；</li>
+<li>写Espresso测试，浙江运行在手机设备或模拟器上。</li>
+</ol>
+<p>环境：</p>
+<ol>
+<li>Android Studio：1.2+</li>
+<li>Android 4.0+ 测试机</li>
+</ol>
+<p>具体怎么做呢？分为以下几步：</p>
+<h3 id="1-创建一个Android-Studio工程"><a href="#1-创建一个Android-Studio工程" class="headerlink" title="1. 创建一个Android Studio工程"></a>1. 创建一个Android Studio工程</h3><p>如果你第一次启动Android Studio，从欢迎界面选择“Start a new Android Studio project”。如果已经有一个工程打开了，选择File—-&gt;New——&gt;New Project。</p>
+<p>这个“Create new project”向导会通过程序指导你。在第一个界面输入如下的内容：</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/createProject.png" alt="创建工程"></p>
+<p>你可以不用管剩下的选项，用默认值即可。一直点下一步直到工程创建成功。</p>
+<p>你可以点击运行按钮来检查app是不是正确运行了。</p>
+<h3 id="2-为你的工程配置Unit测试支持"><a href="#2-为你的工程配置Unit测试支持" class="headerlink" title="2. 为你的工程配置Unit测试支持"></a>2. 为你的工程配置Unit测试支持</h3><p>在你开始写测试之前，让我们通过一个小的清单来检查你的工程配置正确。</p>
+<p>首先，在Build Variants面板下的Test Artifact一栏中确保你选择了“Unit Tests”。</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/img-3.png" alt=""></p>
+<p>接下来，创建文件夹test，test/java在你的模块（module）下的src文件夹。注意：你使用默认的Android视图将无法完成这一步。你既可以通过你系统的资源管理器去创建需要的文件夹，或者通过下拉左上角的Project面板切换到Project视图。最后，你的工程目录树看上去应该是这样：</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/img-5.png" alt=""></p>
+<p>最后，打开你模块（module）下的build.gradle(Module:app)文件，添加JUnit4到dependencies节点下，然后点击Gradle sync按钮。</p>
+<p><strong>build.gradle</strong></p>
+<pre><code>dependencies {
+    compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])
+    compile &apos;com.android.support:appcompat-v7:22.1.1&apos;
+ testCompile &apos;junit:junit:4.12&apos;
+}
+</code></pre><h3 id="3-创建你第一个Unit测试"><a href="#3-创建你第一个Unit测试" class="headerlink" title="3. 创建你第一个Unit测试"></a>3. 创建你第一个Unit测试</h3><p>既然万事俱备，是时候开始写你第一个测试代码了。但是为了做这些，你首先需要一些需要被测试的代码（不然测试什么）。出于这个动机，让我们创建一个非常简单的Calculator类，这个类将被称为我们的”class under test”。</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/img-7.png" alt=""></p>
+<p>我们将添加一些常用的运算操作方法，例如加法和减法。复制粘贴下面的代码到你的IDE中。不要担心这些方法未实现，仅仅让它们return 0就可以了。</p>
+<p><strong>Calculator.java</strong></p>
+<pre><code>package com.example.testing.testingexample;
+
+public class Calculator {
+
+    public double sum(double a, double b){
+        return 0;
+    }
+
+    public double subtract(double a, double b){
+        return 0;
+    }
+
+    public double divide(double a, double b){
+        return 0;
+    }
+
+    public double multiply(double a, double b){
+        return 0;
+    }
+}
+</code></pre><p>Android Studio提供了一个快捷的方式来给你创建一个具体的测试类。右键点击Calculator类，选择Go yo—&gt;Test,最后选择”Create a new test…”<br><img src="http://og1qqf1es.bkt.clouddn.com/img-8.png" alt=""></p>
+<p>在打开的窗口上，选择JUnit 4与”setUp/@Before”选项，同样为我们所有的计算操作实现测试方法。</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/img-9.png" alt=""></p>
+<p>这将会实现一个测试类，里面包含待补充的测试方法，位于(app/src/test/java/com/example/testing/testingexample)。<br>这儿有一个你如何测试计算操作的例子。</p>
+<p><strong>CalculatorTest.java</strong></p>
+<pre><code>package com.example.testing.testingexample;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class CalculatorTest {
+
+    private Calculator mCalculator;
+
+    @Before
+    public void setUp() throws Exception {
+        mCalculator = new Calculator();
+    }
+
+    @Test
+    public void testSum() throws Exception {
+        //expected: 6, sum of 1 and 5
+        assertEquals(6d, mCalculator.sum(1d, 5d), 0);
+    }
+
+    @Test
+    public void testSubtract() throws Exception {
+        assertEquals(1d, mCalculator.subtract(5d, 4d), 0);
+    }
+
+    @Test
+    public void testDivide() throws Exception {
+        assertEquals(4d, mCalculator.divide(20d, 5d), 0);
+    }
+
+    @Test
+    public void testMultiply() throws Exception {
+        assertEquals(10d, mCalculator.multiply(2d, 5d), 0);
+    }
+}
+</code></pre><h3 id="4-运行你的测试"><a href="#4-运行你的测试" class="headerlink" title="4. 运行你的测试"></a>4. 运行你的测试</h3><p>最后一刻，运行你的测试代码。邮件点击CalculatorTest类，并选择Run—–&gt;CalculatorTest。你也可以在你的工程目录下使用如下的命令在命令行运行：</p>
+<pre><code>./gradlew test
+</code></pre><p>不管你采用何种方式运行你的测试代码，你都应该观察输出，告诉你4/4测试失败了。这儿有一个预期的结果，但是我们并没有实现具体的算数操作。</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/img-10.png" alt=""></p>
+<p>让我们修改下Calculator类中的这个方法： sum(double a,double b)，让它返回正确的计算结果并重新运行测试代码。你讲会看到仅仅3/4测试失败了。</p>
+<p><strong>Calculator.java</strong></p>
+<pre><code>public double sum(double a, double b){
+    return a + b;
+}
+</code></pre><p>作为练习，你可以实现剩下的方法，让所有的测试都通过。</p>
+<p><strong>你可能注意到了Android Studio从没有请求连接到设备或者启动一个模拟器去运行这些测试代码。那是因为这部分测试代码位于src/tests文件夹下，这是本地单元测试运行在你计算机上的Java虚拟机上面。你写测试代码，然后实现这些函数让测试通过，接着添加一些新的更多的tests,这是一个快速循环地工作流，我们称之为测试驱动开发。<br>另一个需要意识到的是当在本地运行测试的时候Gradle在classpath中提供了你一个android.jar，其中包含Android framework类，但是它们并没有充分利用（你总不能调用Activity的方法作为例子并期待它们工作）。你应该使用一个模拟的框架，例如Mockito来模拟任何一个你需要使用的Android方法。<br>为了测试运行在设备上的这部分代码并且充分利用Android Framework,继续学习下部分内容。</strong></p>
+<h3 id="5-为你的工程配置instrumentation测试"><a href="#5-为你的工程配置instrumentation测试" class="headerlink" title="5. 为你的工程配置instrumentation测试"></a>5. 为你的工程配置instrumentation测试</h3><p>虽然在Android framework中已经支持运行instrumentation测试，目前的开发工作集中在作为Android测试支持库的一部分发布的新的AndroidJUnitRunner。这个库也包含Espresso。什么是Espresso呢？一个运行UI功能测试的库。让我们通过修改当前模块（module）的build.gradle文件相关的节点来添加它们到我们的工程中。</p>
+<p><strong>build.gradle</strong></p>
+<pre><code>apply plugin: &apos;com.android.application&apos;
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion &quot;22.0.1&quot;
+
+    defaultConfig {
+        applicationId &quot;com.example.testing.testingexample&quot;
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName &quot;1.0&quot;
+
+        //ADD THIS LINE:
+        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+        }
+    }
+
+    //ADD THESE LINES:
+    packagingOptions {
+        exclude &apos;LICENSE.txt&apos;
+    }
+}
+
+dependencies {
+    compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])
+    compile &apos;com.android.support:appcompat-v7:22.0.0&apos; //← MAKE SURE IT’S 22.0.0
+    testCompile &apos;junit:junit:4.12&apos;
+
+    //ADD THESE LINES:
+    androidTestCompile &apos;com.android.support.test:runner:0.2&apos;
+    androidTestCompile &apos;com.android.support.test:rules:0.2&apos;
+    androidTestCompile &apos;com.android.support.test.espresso:espresso-core:2.1&apos;
+}
+</code></pre><p><em>重要的一点：由于一些dependency版本冲突，你可能不得不确保版本为22.0.0的库：com.android.support:appcompat-v7正被使用。同时，Android Studio可能会通知你Build Tools 22.0.1没有被安装。你应该接受建议的修复，这样Studio会安装正确的Build Tools。或者改变build.gradle中的这一行，让它指向你计算机安装过的版本。</em></p>
+<p>接下来要做的就是在Build Variants面板中切换到Android Instrumentation Tests。你的工程应该在这个时候自动同步。如果没有的话，点击Gradle sync按钮。</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/img-11.png" alt=""></p>
+<h3 id="6-为你的app添加简单的交互"><a href="#6-为你的app添加简单的交互" class="headerlink" title="6.为你的app添加简单的交互"></a>6.为你的app添加简单的交互</h3><p><img src="http://og1qqf1es.bkt.clouddn.com/img-12.png" alt=""></p>
+<p>在我们用Espresso开始UI测试之前，让我们添加一些简单的view以及交互动作到app。我们将使用一个EditText用来接受用户输入他的名字，以及一个Button来响应用户的输入，将结果输出到一个TextView中。打开res/layout/activity_main.xml然后粘贴下面的代码：</p>
+<p><strong>activity_main.xml</strong></p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot; android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot; android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+    android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot; tools:context=&quot;.MainActivity&quot;&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/textView&quot;
+        android:text=&quot;@string/hello_world&quot; android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot; /&gt;
+    &lt;EditText
+        android:hint=&quot;Enter your name here&quot;
+        android:id=&quot;@+id/editText&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_below=&quot;@+id/textView&quot;/&gt;
+    &lt;Button
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;Say hello!&quot;
+        android:layout_below=&quot;@+id/editText&quot;
+        android:onClick=&quot;sayHello&quot;/&gt;
+&lt;/RelativeLayout&gt;
+</code></pre><p>添加onClick回调到MainActivity.java中:</p>
+<p><strong>MainActivity.java</strong></p>
+<pre><code>public void sayHello(View v){
+    TextView textView = (TextView) findViewById(R.id.textView);
+    EditText editText = (EditText) findViewById(R.id.editText);
+    textView.setText(&quot;Hello, &quot; + editText.getText().toString() + &quot;!&quot;);
+}
+</code></pre><p>可以试着运行下app来看事件响应以及其他是否正确工作。在按Run 按钮之前，确保你的Run Configuration不是为了上一部分设置的。通过下拉菜单选择app。它看上去像下面这样：</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/img-13.png" alt=""></p>
+<h3 id="7-创建并运行一个Espresso测试"><a href="#7-创建并运行一个Espresso测试" class="headerlink" title="7.创建并运行一个Espresso测试"></a>7.创建并运行一个Espresso测试</h3><p><img src="http://og1qqf1es.bkt.clouddn.com/img-14.png" alt=""></p>
+<p>在项目预览中，找到你的测试包（测试包的命名以androidTest结束），接着创建一个新的java类。你可以命名为MainActivityInstrumentationTest。粘贴下面的代码：</p>
+<p><strong>MainActivityInstrumentationTest.java</strong></p>
+<pre><code>package com.example.testing.testingexample;
+
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.action.ViewActions;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.test.ActivityInstrumentationTestCase2;
+import android.test.suitebuilder.annotation.LargeTest;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
+@RunWith(AndroidJUnit4.class)
+@LargeTest
+public class MainActivityInstrumentationTest {
+
+    private static final String STRING_TO_BE_TYPED = &quot;Peter&quot;;
+
+    @Rule
+    public ActivityTestRule&lt;MainActivity&gt; mActivityRule = new ActivityTestRule&lt;&gt;(
+            MainActivity.class);
+
+    @Test
+    public void sayHello(){
+        onView(withId(R.id.editText)).perform(typeText(STRING_TO_BE_TYPED), closeSoftKeyboard()); //line 1
+
+        onView(withText(&quot;Say hello!&quot;)).perform(click()); //line 2
+
+        String expectedText = &quot;Hello, &quot; + STRING_TO_BE_TYPED + &quot;!&quot;;
+        onView(withId(R.id.textView)).check(matches(withText(expectedText))); //line 3
+    }
+
+}
+</code></pre><p>这个类会被AndroidJUnitRunner运行，并执行测试实现方法sayHello()。下面是每一行的具体功能：</p>
+<ol>
+<li>第一行，找到id为editText的view，并输入字符串”Peter”，接着关闭软键盘。</li>
+<li>接着，测试代码执行点击带有”say hello!”内容的view。这是我们的按钮，我们在布局文件中没有设置id，所以我们通过它的内容找到它。</li>
+<li>最后，TextView中的内容被拿来与期望的结果做比较，如果结果匹配那么测试将通过。</li>
+</ol>
+<p>怎么运行这个测试呢？右键单击这个类，选择Run—-&gt;MainActivityInstrume…(第二个选项，带有Android图标)</p>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/img-15.png" alt=""></p>
+<p>This will run your test on the emulator or connected device and, if you watch the screen, you can see the actions (like typing into the EditText) being performed by the runner. See the output in Android Studio for a report on passed and failed tests.</p>
+<p>这将会运行测试到模拟器或者连接的设备上，如果你观察屏幕，你会发现一些动作（比如在EditText输入的动作）被执行。观察Android Studio中的输出报告，查看是测试通过还是测试失败。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2017/04/19/Java-NIO/">
+        Java NIO →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2017/05/22/Android-Studio下的Unit，UI测试/" data-title="Android Studio下的Unit，UI测试(译)" data-url="http://yoursite.com/2017/05/22/Android-Studio下的Unit，UI测试/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"rainyandsunny"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By Twist Fate. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/rainyandsunny/" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+        
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+    
+    resizeHero();
+    
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/jquery.flexslider-min.js"></script><!-- Flexslider plugin -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+<!-- Initiate flexslider plugin -->
+<script type="text/javascript">
+    $(document).ready(function($) {
+      $('.flexslider').flexslider({
+        animation: "fade",
+        prevText: "",
+        nextText: "",
+        directionNav: true
+      });
+    });
+</script>
+
+</body>
+</html>

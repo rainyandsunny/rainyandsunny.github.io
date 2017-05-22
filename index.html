@@ -229,6 +229,82 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2017/05/22/Android-Studio下的Unit，UI测试/">Android Studio下的Unit，UI测试(译)</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2017-05-22T06:27:36.000Z" itemprop="datePublished">
+          2017-05-22
+      </time>
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        在这篇文章中，简单介绍下如何在Android Studio中启动测试。书写一个单元测试并在你本地的开发机器上运行，一级如何在设备上做功能UI测试。
+你将会学到：
+
+更新Gradle配置文件来引入JUnit，Android测试依赖库；
+写Unit测试，这将运行在你本地开发机器的Java虚拟机上；
+写Espresso测试，浙江运行在手机设备或模拟器上。
+
+环境：
+
+Android Studio：1.2+
+Android 4.0+ 测试机
+
+
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2017/05/22/Android-Studio下的Unit，UI测试/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2017/04/19/Java-NIO/">Java NIO</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2017-04-19T08:39:25.000Z" itemprop="datePublished">
+          2017-04-19
+      </time>
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        PathPath通常代表文件系统中的位置。
+创建一个Path调用Paths.get(String first,String … more)。第二个变量一般用不到，用来把额外的字符串合并起来形成Path字符串。
+在/usr/bin目录下的文件压缩工具zip创建一个绝对Path    Paths.get(“usr/bin/zip”)
+也可以用如下方式创建：
+FileSystems.getDefault().getPath(&quot;/us
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2017/04/19/Java-NIO/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2017/04/06/常用DOS命令（小工具专用）/">常用DOS命令（小工具专用）</a></h3>
                     <span>
                         <span class="post-meta">
@@ -494,79 +570,6 @@ MotionEvent提供的方法getX(): 获取点击事件距离控件左边的
                     
                     <p class="pull-right readMore">
                         <a href="/2017/03/03/读书笔记——《Android群英传》第五章/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2017/03/01/JVM垃圾回收（新手推荐）/">JVM垃圾回收（新手推荐）</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2017-03-01T07:34:29.000Z" itemprop="datePublished">
-          2017-03-01
-      </time>
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        提到JVM垃圾回收，总觉得离我们程序员有一定的距离。在JAVA中，那是系统自己干的事，我们关心那个干嘛？也就是说我们为什么要学习这个东西，大家开开心心地敲代码不好吗？
-还真的不好，一方面我觉得我们可以学习下JAVA语言设计上的一些思想，另一方面，在我们以后从事一些较为高级一点的开发，尤其是性能调优之类的，知道这些基础知识就显得很必要了。我打算从以下几个方面开始进行简单地说明。
-GC如何知道哪些对象是垃圾对象？GC不可能随便指派说哪个对象
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2017/03/01/JVM垃圾回收（新手推荐）/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2017/02/23/MVP-MVC/">MVP,MVC,MVVM(转)</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2017-02-23T02:22:00.000Z" itemprop="datePublished">
-          2017-02-23
-      </time>
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        之前看了好多，觉得还是这个讲的好。本文是转的链接
-MVC
-
-View 传送指令到 Controller
-Controller 完成业务逻辑后，要求 Model 改变状态
-Model 将新的数据发送到 View，用户得到反馈
-
-MVP
-
-各部分之间的通信，都是双向的。
-View 与 Model 不发生联系，都通过 Presenter 传递。
-View 非常薄，不部署任何业务逻辑，称为”被动视图”（Passive View），即没有任何主动
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2017/02/23/MVP-MVC/">Read More...</a>
                     </p>
                     
                 </div>
