@@ -211,29 +211,15 @@
 <p>看，下图是Camera2 API的类图。</p>
 <p><img src="http://og1qqf1es.bkt.clouddn.com/Selection_056.png" alt="Camera2"></p>
 <p>推荐你先读一下Android官方文档，带着你的疑问再回到本文中来。我将会解释文档中说的是什么意思，并列出使用Camera2 API的几个典型步骤。</p>
-<ol>
-<li><p>以CameraManager开始。我们使用CameraManager来迭代所有系统中可用的Camera，其中每个Camera都有一个特定的id，称之为CameraId。使用CameraId，我们可以得到Camera设备特定的属性。那么用什么来表示这些属性信息呢？CameraChracteristics。那么都有什么属性信息呢？比如“是前置还是后置Camera”，“支持输出的尺寸”等都能在这查到。</p>
-</li>
-<li><p>设置输出对象。Camera采集到的图像信息最终会到一些地方。使用SurfaceView或者SurfaceTexture来预览，ImageReader来拍照，MediaRecoder用来录像。这些所有的类背后都一个共同隐藏的组件——Surface。什么意思呢？  对于上面提到的这些类，你始终可以创建或者得到一个surface，并且连接surface到Camera作为拍照请求的目标。我们将在下面几步关于使用一系列targets来创建一个capture session以及添加一个target到capture request的问题时，重新回到target的概念上来。</p>
-</li>
-</ol>
-<ol>
-<li>得到CameraDevice。你可以调用CameraManager.open(cameraId)来得到一个CameraDevice。由于调用是异步的，你讲会在onOpened()回调中得到CameraDevice对象.</li>
-</ol>
-<ol>
-<li>从CameraDevice中创建一个CaptureRequest。<br>CaptureRequest是从相机设备捕获单个图像所需的设置和输出的不可变包。我们通常不直接创建CaptureRequest，那是因为这样容易出错，给定一个典型的用户案例设置，比如预览，几乎相似。<br>Builder模式在这个地方被使用。正如上面类图所示，CaptureRequest.Builder从CameraDevice以一个预定义的模板创建。</li>
-</ol>
+<p><strong>1.以CameraManager开始。</strong>我们使用CameraManager来迭代所有系统中可用的Camera，其中每个Camera都有一个特定的id，称之为CameraId。使用CameraId，我们可以得到Camera设备特定的属性。那么用什么来表示这些属性信息呢？CameraChracteristics。那么都有什么属性信息呢？比如“是前置还是后置Camera”，“支持输出的尺寸”等都能在这查到。</p>
+<p><strong>2.设置输出对象。</strong>Camera采集到的图像信息最终会到一些地方。使用SurfaceView或者SurfaceTexture来预览，ImageReader来拍照，MediaRecoder用来录像。这些所有的类背后都一个共同隐藏的组件——Surface。什么意思呢？  对于上面提到的这些类，你始终可以创建或者得到一个surface，并且连接surface到Camera作为拍照请求的目标。我们将在下面几步关于使用一系列targets来创建一个capture session以及添加一个target到capture request的问题时，重新回到target的概念上来。</p>
+<p><strong>3.得到CameraDevice。</strong>你可以调用CameraManager.open(cameraId)来得到一个CameraDevice。由于调用是异步的，你讲会在onOpened()回调中得到CameraDevice对象.</p>
+<p><strong>4.从CameraDevice中创建一个CaptureRequest。</strong><br>CaptureRequest是从相机设备捕获单个图像所需的设置和输出的不可变包。我们通常不直接创建CaptureRequest，那是因为这样容易出错，给定一个典型的用户案例设置，比如预览，几乎相似。<br>Builder模式在这个地方被使用。正如上面类图所示，CaptureRequest.Builder从CameraDevice以一个预定义的模板创建。</p>
 <pre><code>createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
 </code></pre><p>接着，我们使用builder来设置不同的内容。例如，你需要调用addTarget(Surface)来设置此特定CaptureRequest的输出目标。</p>
-<ol>
-<li>从CameraDevice中创建一个CaptureRequestSession。考虑一个CaptureRequestSession作为CaptureRequest将被提交的上下文。为了初始化一个CaptureRequestSession，你不得不提供初始化好的Surface作为目标surface（这个我们在第2步提到过）。同样需要注意的是，创建CaptureRequestSession的过程照样是异步的。</li>
-</ol>
-<ol>
-<li>提交CaptureRequest到CaptureRequestSession。现在是时候处理拍照请求了。这儿有两套API来做这件事。capture()被用来发出一次一次性拍照命令，setRepeatingRequest() 用于发出重复的显示预览请求。另外，在提交请求以开始预览或拍摄照片之前，您可能需要设置各种设置，如自动对焦模式和白平衡模式。</li>
-</ol>
-<ol>
-<li>得到拍照结果。拍照结果会通过CameraCaptureSession.CaptureCallback来异步地返回。在这个地方，当拍照开始或者结束的时候，你可以发出声音。拍照结果将在onCaptureProcessed方法上的CaptureResult中逐一返回给你，你也可以在onCaptureComplete方法的TotalCaptureResult参数中得到拍照结果。</li>
-</ol>
+<p><strong>5.从CameraDevice中创建一个CaptureRequestSession。</strong>考虑一个CaptureRequestSession作为CaptureRequest将被提交的上下文。为了初始化一个CaptureRequestSession，你不得不提供初始化好的Surface作为目标surface（这个我们在第2步提到过）。同样需要注意的是，创建CaptureRequestSession的过程照样是异步的。</p>
+<p><strong>6.提交CaptureRequest到CaptureRequestSession。</strong>现在是时候处理拍照请求了。这儿有两套API来做这件事。capture()被用来发出一次一次性拍照命令，setRepeatingRequest() 用于发出重复的显示预览请求。另外，在提交请求以开始预览或拍摄照片之前，您可能需要设置各种设置，如自动对焦模式和白平衡模式。</p>
+<p><strong>7.得到拍照结果</strong>。拍照结果会通过CameraCaptureSession.CaptureCallback来异步地返回。在这个地方，当拍照开始或者结束的时候，你可以发出声音。拍照结果将在onCaptureProcessed方法上的CaptureResult中逐一返回给你，你也可以在onCaptureComplete方法的TotalCaptureResult参数中得到拍照结果。</p>
 <p>那么我们的图像数据哪里去了？它们都完好无损并且被输出目标处理（第2步说的）。在所有的用例中，camera是生产者，targets(目标)。camera不断将拍照数据入队(enqueue)，当数据可用的时候，消费者会被通知来处理这些数据。TextureView会将这些拍照数据转换成纹理并会绘制到TextureView的区域上。MediaRecorder将图像传递给编解码器进行压缩，然后将其写入。对于ImageReader，你可以自己决定怎么去处理这些数据。</p>
 <p>原文地址:<a href="http://pierrchen.blogspot.se/2015/01/android-camera2-api-explained.html" target="_blank" rel="external">点击进入</a></p>
 
