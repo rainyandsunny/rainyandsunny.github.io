@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>Android 综合技术 | 小小黄金屋</title>
+  <title>Git使用 | 小小黄金屋</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -197,193 +197,45 @@
         <div class="row col-md-offset-2">
             <div class="col-md-8">
     			<span class="post-meta">
-      <time datetime="2017-06-23T06:03:33.000Z" itemprop="datePublished">
-          2017-06-23
+      <time datetime="2017-06-29T03:11:58.000Z" itemprop="datePublished">
+          2017-06-29
       </time>
     
 </span>
-                <h1>Android 综合技术</h1>
+                <h1>Git使用</h1>
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2">
-      		<h3 id="使用CrashHandler来获取应用的crash信息"><a href="#使用CrashHandler来获取应用的crash信息" class="headerlink" title="使用CrashHandler来获取应用的crash信息"></a>使用CrashHandler来获取应用的crash信息</h3><pre><code>public class CrashHandler implements UncaughtExceptionHandler {
-    private static final String TAG = &quot;CrashHandler&quot;;
-    private static final boolean DEBUG = true;
-
-    private static final String PATH = Environment.getExternalStorageDirectory().getPath() + &quot;/CrashTest/log/&quot;;
-    private static final String FILE_NAME = &quot;crash&quot;;
-    private static final String FILE_NAME_SUFFIX = &quot;.trace&quot;;
-
-    private static CrashHandler sInstance = new CrashHandler();
-    private UncaughtExceptionHandler mDefaultCrashHandler;
-    private Context mContext;
-
-    private CrashHandler() {
-    }
-
-    public static CrashHandler getInstance() {
-        return sInstance;
-    }
-
-    public void init(Context context) {
-        mDefaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler(this);
-        mContext = context.getApplicationContext();
-    }
-
-    /**
-     * 这个是最关键的函数，当程序中有未被捕获的异常，系统将会自动调用#uncaughtException方法
-     * thread为出现未捕获异常的线程，ex为未捕获的异常，有了这个ex，我们就可以得到异常信息。
-     */
-    @Override
-    public void uncaughtException(Thread thread, Throwable ex) {
-        try {
-            //导出异常信息到SD卡中
-            dumpExceptionToSDCard(ex);
-            uploadExceptionToServer();
-            //这里可以通过网络上传异常信息到服务器，便于开发人员分析日志从而解决bug
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ex.printStackTrace();
-
-        //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
-        if (mDefaultCrashHandler != null) {
-            mDefaultCrashHandler.uncaughtException(thread, ex);
-        } else {
-            Process.killProcess(Process.myPid());
-        }
-
-    }
-
-    private void dumpExceptionToSDCard(Throwable ex) throws IOException {
-        //如果SD卡不存在或无法使用，则无法把异常信息写入SD卡
-        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            if (DEBUG) {
-                Log.w(TAG, &quot;sdcard unmounted,skip dump exception&quot;);
-                return;
-            }
-        }
-
-        File dir = new File(PATH);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        long current = System.currentTimeMillis();
-        String time = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(new Date(current));
-        File file = new File(PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
-
-        try {
-            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-            pw.println(time);
-            dumpPhoneInfo(pw);
-            pw.println();
-            ex.printStackTrace(pw);
-            pw.close();
-        } catch (Exception e) {
-            Log.e(TAG, &quot;dump crash info failed&quot;);
-        }
-    }
-
-    private void dumpPhoneInfo(PrintWriter pw) throws NameNotFoundException {
-        PackageManager pm = mContext.getPackageManager();
-        PackageInfo pi = pm.getPackageInfo(mContext.getPackageName(), PackageManager.GET_ACTIVITIES);
-        pw.print(&quot;App Version: &quot;);
-        pw.print(pi.versionName);
-        pw.print(&apos;_&apos;);
-        pw.println(pi.versionCode);
-
-        //android版本号
-        pw.print(&quot;OS Version: &quot;);
-        pw.print(Build.VERSION.RELEASE);
-        pw.print(&quot;_&quot;);
-        pw.println(Build.VERSION.SDK_INT);
-
-        //手机制造商
-        pw.print(&quot;Vendor: &quot;);
-        pw.println(Build.MANUFACTURER);
-
-        //手机型号
-        pw.print(&quot;Model: &quot;);
-        pw.println(Build.MODEL);
-
-        //cpu架构
-        pw.print(&quot;CPU ABI: &quot;);
-        pw.println(Build.CPU_ABI);
-    }
-
-    private void uploadExceptionToServer() {
-      //TODO Upload Exception Message To Your Web Server
-    }
-
-}
-</code></pre><p>然后，在Application中注册即可。</p>
-<pre><code>@Override
-public void onCreate() {
-    super.onCreate();
-    sInstance = this;
-
-    //在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常
-    CrashHandler crashHandler = CrashHandler.getInstance();
-    crashHandler.init(this);
-}
-</code></pre><h3 id="使用multidex来解决方法数越界"><a href="#使用multidex来解决方法数越界" class="headerlink" title="使用multidex来解决方法数越界"></a>使用multidex来解决方法数越界</h3><p>在Android中单个dex文件所能包含的最大方法数为65536，包含Android Framework、依赖的jar包以及应用本身的代码中的所有方法。</p>
-<h4 id="第一步："><a href="#第一步：" class="headerlink" title="第一步："></a>第一步：</h4><p><img src="http://og1qqf1es.bkt.clouddn.com/multidex_1.png" alt=""></p>
-<h4 id="第二步："><a href="#第二步：" class="headerlink" title="第二步："></a>第二步：</h4><p><img src="http://og1qqf1es.bkt.clouddn.com/multidex_2.png" alt=""></p>
-<p>除了上面的工作，还要在代码中加入支持multidex的功能。</p>
-<h5 id="第一种"><a href="#第一种" class="headerlink" title="第一种"></a>第一种</h5><p>在manifest文件中指定Application为MultiDexApplication</p>
-<p><img src="http://og1qqf1es.bkt.clouddn.com/multidex_3.png" alt=""></p>
-<h5 id="第二种"><a href="#第二种" class="headerlink" title="第二种"></a>第二种</h5><p>让应用的Application继承MultiDexApplication</p>
-<p><img src="http://og1qqf1es.bkt.clouddn.com/multidex_4.png" alt=""></p>
-<h5 id="第三种"><a href="#第三种" class="headerlink" title="第三种"></a>第三种</h5><p>重写Application的attachBaseContext方法，这个方法比Application的onCreate要先执行。</p>
-<p><img src="http://og1qqf1es.bkt.clouddn.com/multidex_5.png" alt=""></p>
-<p>上面是multidex默认的配置，还可以通过build.gradle文件中一些其他配置来定制dex文件的生成过程。在有些情况，可能需要指定主dex文件中所要包含的类，这个时候就可以通过–main-dex-list选项来实现这个功能。</p>
-<p><img src="http://og1qqf1es.bkt.clouddn.com/multidex_6.png" alt=""></p>
-<p>–multi-dex表示当方法数越界时则生成多个dex文件，–main-dex-list指定了要在主dex中打包的类的列表，–minimal-main-dex 表明只有–main-dex-list所指定的类才能打包到主dex中。它的输入是一个文件，示例中是maindexlist.txt它的名字可以修改,但是内容是固定的。</p>
-<p><img src="http://og1qqf1es.bkt.clouddn.com/multidex_7.png" alt=""></p>
-<p><strong>multidex的jar包中的9个类必须打包到主dex中</strong>。</p>
-<p>使用multidex可能带来的问题：</p>
-<ol>
-<li>应用启动速度会降低。</li>
-<li>由于Dalvik linearAlloc的bug，可能导致使用multidex的应用无法在Android 4.0以前的手机上运行。所以需要做大量的兼容性测试。</li>
+      		<ol>
+<li>本地登录SSH认证<br>（1）本地SSH公钥生成。<br>打开git bash终端，输入：ssh-keygen –t rsa –C “邮箱地址”，邮箱地址为你的github账号邮箱。<br><img src="http://og1qqf1es.bkt.clouddn.com/git1.png" alt=""></li>
 </ol>
-<h3 id="Android的动态加载技术"><a href="#Android的动态加载技术" class="headerlink" title="Android的动态加载技术"></a>Android的动态加载技术</h3><p>不同的插件化方案有各的特色，但是它们都必须解决三个基础性问题：资源访问，Activity生命周期的管理和ClassLoader的管理。</p>
-<p>具体参考：<a href="https://github.com/singwhatiwanna/dynamic-load-apk。" target="_blank" rel="external">https://github.com/singwhatiwanna/dynamic-load-apk。</a></p>
-<h3 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h3><p>apktool: <a href="http://ibotpeaches.github.io/Apktool/" target="_blank" rel="external">http://ibotpeaches.github.io/Apktool/</a><br>dex2jar: <a href="https://github.com/pxb1988/dex2.jar" target="_blank" rel="external">https://github.com/pxb1988/dex2.jar</a><br>jd-gui: <a href="http://jd.benow.ca/" target="_blank" rel="external">http://jd.benow.ca/</a></p>
-<h4 id="使用dex2jar和jd-gui反编译apk"><a href="#使用dex2jar和jd-gui反编译apk" class="headerlink" title="使用dex2jar和jd-gui反编译apk"></a>使用dex2jar和jd-gui反编译apk</h4><p>dex2jar是一个将dex文件转换为jar包的工具。</p>
-<p>dex2jar使用方式如下：</p>
-<pre><code>Linux(Ubuntu): ./dex2jar.sh classes.dex
-windows: dex2jar.bat classes.dex
-</code></pre><p>jd-gui是图形化工具，直接双击打开后通过菜单打开jar包查看jar包的源码。</p>
-<h4 id="使用apktool对apk进行二次打包"><a href="#使用apktool对apk进行二次打包" class="headerlink" title="使用apktool对apk进行二次打包"></a>使用apktool对apk进行二次打包</h4><p>Linux</p>
-<pre><code>解包： ./apktool d -f CrashTest.apk CrashTest
-二次打包：
-./apktool b CrashTest CrashTest-fake.apk   
-</code></pre><p>Windows</p>
-<pre><code>解包： apktool.bat d -f CrashTest.apk CrashTest
-二次打包：
-apktool.bat b CrashTest CrashTest-fake.apk  
-签名：java -jar signapk.jar testkey.x509.pem testkey.pk8 CrashTest-fake.apk CrashTest-fake-signed.apk
-</code></pre>
+<p>（2）执行上一步命令成功后会在用户文件夹下生成ssh公钥文件。若能可以访问文件夹.ssh，则说明文件夹生成成功。<br><img src="http://og1qqf1es.bkt.clouddn.com/git2.png" alt=""></p>
+<p>（3）找到.ssh文件夹，选择后缀为.pub的文件并用记事本打开，复制里面的内容。<br>（4）登录github网站，在setting里面找到ssh key，选择new ssh key。将之前复制的内容添加到ssh可以里面。Title我们可以起计算机的名字，因为每个计算机的ssh key是唯一的，并且添加一次后无需再次添加。最后保存。<br><img src="http://og1qqf1es.bkt.clouddn.com/git3.png" alt=""></p>
+<p>（5）在git bash中输入ssh git@github.com进行连接认证。其中会询问是否需要进行连接，输入yes。如图所示，认证成功。<br><img src="http://og1qqf1es.bkt.clouddn.com/git4.png" alt=""></p>
+<ol>
+<li>git常用命令<br>git branch  查看本地所有分支<br>git status   查看当前状态<br>git commit  提交<br>git branch –a 查看所有的分支<br>git branch –r 查看远程所有分支<br>git commit –am “init” 提交并且加注释<br>git clone <em>*</em> 从服务器把代码拉下来<br>git rm 从git删除指定文件<br>git diff –cached 查看尚未提交的更新<br>git pull 本地与服务器端同步<br>git fetch 从远程获取最新版到本地，不会自动merge<br>git branch branch_0.1 master从主分支创建branch_0.1分支<br>git branch –m branch_0.1 branch_1.0 将branch_0.1重命名为branch_1.0<br>git checkout branch_1.0 切换到branch_1.0分支</li>
+</ol>
+<p><img src="http://og1qqf1es.bkt.clouddn.com/git5.png" alt=""></p>
+<p>回到远程仓库的状态<br>抛弃本地仓库的所有版本(commit)，回到远程仓库的状态。<br>git fetch –all &amp;&amp; git reset –hard origin/master<br>重设第一个commit<br>也就是把所有的改动都重新放回工作区，并清空所有的commit，这样就可以重新提交第一个commit了<br>git update-ref -d HEAD<br>展示工作区和暂存区的不同<br>输出工作区和暂存区的different(不同)。<br>git diff<br>还可以展示本地仓库中任意两个commit之间的文件变动：<br>git diff <commit-id> <commit-id><br>展示暂存区和最近版本的不同<br>输出暂存区和本地最近的版本(commit)的different(不同)。<br>git diff –cached<br>展示暂存区、工作区和最近版本的不同<br>输出工作区、暂存区 和本地最近的版本(commit)的different(不同)。<br>git diff HEAD<br>快速切换分支<br>git checkout -<br>删除已经合并到master的分支<br>git branch –merged master | grep -v ‘^*|  master’ | xargs -n 1 git branch -d<br>展示所有的分支关联的远程仓库<br>git branch -vv<br>关联远程分支<br>关联之后，git branch -vv就可以展示关联的远程分支名了，同时推送到远程仓库直接：git push，不需要指定远程仓库了。<br>git branch -u origin/mybranch<br>或者在push时加上-u参数<br>git push origin/mybranch -u<br>删除本地分支<br>git branch -d <local-branchname><br>删除远程分支<br>git push origin –delete <remote-branchname><br>或者<br>git push origin :<remote-branchname><br>查看标签<br>git tag<br>展示当前分支的最近的tag<br>git describe –tags –abbrev=0<br>本地创建标签<br>git tag <version-number><br>默认tag是打在最近的一次commit上，如果需要指定commit打tag：<br>$ git tag -a <version-number> -m “v1.0 发布(描述)” <commit-id><br>推送标签到远程仓库<br>首先要保证本地创建好了标签才可以推送标签到远程仓库：<br>git push origin <local-version-number><br>一次性推送所有标签，同步到远程仓库：<br>git push origin –tags<br>删除本地标签<br>git tag -d <tag-name><br>删除远程标签<br>删除远程标签需要先删除本地标签，再执行下面的命令<br>git push origin :refs/tags/<tag-name><br>放弃工作区的修改<br>git checkout <file-name><br>放弃所有修改：<br>git checkout .<br>回到某一个commit的状态，并重新增添一个commit<br>git revert <commit-id><br>回到某个commit的状态，并删除后面的commit<br>和revert的区别：reset命令会抹去某个commit id之后的所有commit<br>git reset <commit-id><br>修改上一个commit的描述<br>git commit –amend<br>查看commit历史<br>git log<br>查看某段代码是谁写的<br>blame的意思为‘责怪’，你懂的。<br>git blame <file-name><br>显示本地执行过git命令<br>就像shell的history一样<br>git reflog<br>修改作者名<br>git commit –amend –author=’Author Name <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#x65;&#109;&#97;&#105;&#108;&#64;&#97;&#100;&#x64;&#114;&#101;&#115;&#115;&#x2e;&#99;&#x6f;&#x6d;">&#x65;&#109;&#97;&#105;&#108;&#64;&#97;&#100;&#x64;&#114;&#101;&#115;&#115;&#x2e;&#99;&#x6f;&#x6d;</a>‘<br>修改远程仓库的url<br>git remote set-url origin <url><br>列出所有远程仓库<br>git remote<br>列出本地和远程分支<br>-a参数相当于：all<br>git branch -a<br>列出远程分支<br>-r参数相当于：remote<br>git branch -r<br>查看两个星期内的改动<br>git whatchanged –since=’2 weeks ago’<br>把A分支的某一个commit，放到B分支上<br>这个过程需要cherry-pick命令，参考<br>git checkout <branch-name> &amp;&amp; git cherry-pick <commit-id><br>给git命令起别名<br>简化命令<br>git config –global alias.<handle> <command>比如：git status 改成 git st，这样可以简化命令</handle></commit-id></branch-name></url></file-name></commit-id></commit-id></file-name></tag-name></tag-name></local-version-number></commit-id></version-number></version-number></remote-branchname></remote-branchname></local-branchname></commit-id></commit-id></p>
+<p>git config –global alias.st status<br>存储当前的修改，但不用提交commit<br>详解可以参考廖雪峰老师的git教程<br>git stash<br>保存当前状态，包括untracked的文件<br>untracked文件：新建的文件<br>git stash -u<br>展示所有stashes<br>git stash list<br>回到某个stash的状态<br>git stash apply <a href="&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#58;&#x73;&#116;&#x61;&#x73;&#104;&#64;&#x7b;&#x6e;&#125;">&#x73;&#116;&#x61;&#x73;&#104;&#64;&#x7b;&#x6e;&#125;</a><br>回到最后一个stash的状态，并删除这个stash<br>git stash pop<br>删除所有的stash<br>git stash clear<br>从stash中拿出某个文件的修改<br>git checkout <a href="&#109;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#115;&#x74;&#97;&#x73;&#x68;&#64;&#x7b;&#110;&#x7d;">&#115;&#x74;&#97;&#x73;&#x68;&#64;&#x7b;&#110;&#x7d;</a> – <file-path><br>展示所有tracked的文件<br>git ls-files -t<br>展示所有untracked的文件<br>git ls-files –others<br>展示所有忽略的文件<br>git ls-files –others -i –exclude-standard<br>强制删除untracked的文件<br>可以用来删除新建的文件。如果不指定文件文件名，则清空所有工作的untracked文件。clean命令，注意两点：</file-path></p>
+<ol>
+<li>clean后，删除的文件无法找回 2. 不会影响tracked的文件的改动，只会删除untracked的文件<br>git clean <file-name> -f<br>强制删除untracked的目录<br>可以用来删除新建的目录，注意:这个命令也可以用来删除untracked的文件。详情见上一条<br>git clean <directory-name> -df<br>重命名分支<br>git branch -m <new-branch-name><br>展示简化的commit历史<br>git log –pretty=oneline –graph –decorate –all<br>把某一个分支到导出成一个文件<br>git bundle create <file> <branch-name><br>从包中导入分支<br>新建一个分支，分支内容就是上面git bundle create命令导出的内容<br>git clone repo.bundle <repo-dir> -b <branch-name><br>执行rebase之前自动stash<br>git rebase –autostash<br>从远程仓库根据ID，拉下某一状态，到本地分支<br>git fetch origin pull/<id>/head:<branch-name><br>详细展示一行中的修改<br>git diff –word-diff<br>清除gitignore文件中记录的文件<br>git clean -X -f<br>展示所有alias和configs<br>git config –list<br>展示忽略的文件<br>git status –ignored<br>commit历史中显示Branch1有的，但是Branch2没有commit<br>git log Branch1 ^Branch2<br>在commit log中显示GPG签名<br>git log –show-signature<br>删除全局设置<br>git config –global –unset <entry-name><br>新建并切换到新分支上，同时这个分支没有任何commit<br>相当于保存修改，但是重写commit历史<br>git checkout –orphan <branch-name><br>展示任意分支某一文件的内容<br>git show <branch-name>:<file-name><br>clone下来指定的单一分支<br>git clone -b <branch-name> –single-branch <a href="https://github.com/user/repo.git" target="_blank" rel="external">https://github.com/user/repo.git</a><br>创建并切换到该分支<br>git checkout -b <branch-name><br>忽略文件的权限变化<br>不再将文件的权限变化视作改动<br>git config core.fileMode false<br>展示本地所有的分支的commit<br>最新的放在最上面<br>git for-each-ref –sort=-committerdate –format=’%(refname:short)’ refs/heads/<br>在commit log中查找相关内容<br>通过grep查找，given-text：所需要查找的字段<br>git log –all –grep=’<given-text>‘<br>把暂存区的指定file放到工作区中<br>git reset <file-name><br>强制推送<br>git push -f <remote-name> <branch-name><br>增加远程仓库<br>git remote add origin <remote-url></remote-url></branch-name></remote-name></file-name></given-text></branch-name></branch-name></file-name></branch-name></branch-name></entry-name></branch-name></id></branch-name></repo-dir></branch-name></file></new-branch-name></directory-name></file-name></li>
+</ol>
+
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
         <nav class="pagination" role="pagination">
     
-    <a class="pull-left" href="/2017/06/29/Git使用/" style="float: left;">
-        ← Git使用
-    </a>
     
-    
-    <a class="pull-right" href="/2017/05/26/xcode-opengl环境搭建/">
-        xcode opengl环境搭建 →
+    <a class="pull-right" href="/2017/06/23/Android-综合技术/">
+        Android 综合技术 →
     </a>
     
 </nav>
 
         <div class="duoshuo">
-<div class="ds-thread" data-thread-key="2017/06/23/Android-综合技术/" data-title="Android 综合技术" data-url="http://yoursite.com/2017/06/23/Android-综合技术/"></div>
+<div class="ds-thread" data-thread-key="2017/06/29/Git使用/" data-title="Git使用" data-url="http://yoursite.com/2017/06/29/Git使用/"></div>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"rainyandsunny"};
 (function() {
