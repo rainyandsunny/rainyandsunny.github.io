@@ -229,6 +229,46 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2017/02/20/读书笔记——《Android群英传》第二章/">ADB常用命令</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2017-02-20T02:18:02.000Z" itemprop="datePublished">
+          2017-02-20
+      </time>
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        ADB常用命令
+安装Apk程序——install
+
+adb install -r 应用程序.apk
+
+安装Apk程序——push
+
+adb push  例：adb push D:\Test.apk /system/app/
+adb install是将apk安装到data/data目录下，作为普通的用户应用程序。而adb push则不是安装命令，它是将一个文件写入手机存储系统。只要拥有相应的权限，就可以把任何apk放到任何目录下。
+
+从手
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2017/02/20/读书笔记——《Android群英传》第二章/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2017/02/17/读书笔记——《Android开发艺术探索》第一章/">Activity的生命周期，启动模式与Intent—filter匹配规则</a></h3>
                     <span>
                         <span class="post-meta">
@@ -564,45 +604,6 @@ getId(
                     
                     <p class="pull-right readMore">
                         <a href="/2017/01/16/Android-Camera/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2017/01/12/Android反编译/">Android反编译</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2017-01-12T07:19:54.000Z" itemprop="datePublished">
-          2017-01-12
-      </time>
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        工具：
-apktool：资源文件获取
-dex2jar：源码文件获取
-jd-gui：源码查看
-反编译过程：1. 得到资源文件解压apktool.rar
-apktool.bat d -f [apk文件] [输出文件夹]
-将反编译完的文件重新打包成apk
-apktool.bat b [反编译出的文件夹名字]
-2. 得到Java源代码(1).将要反编译的apk解压，得到classex.dex文件
-(2).dex2jar.bat classes.
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2017/01/12/Android反编译/">Read More...</a>
                     </p>
                     
                 </div>
